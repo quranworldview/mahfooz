@@ -1,0 +1,254 @@
+[
+  {
+    "id": "ghunnah",
+    "css_class": "tj-g",
+    "color": "#2E7D32",
+    "name": {
+      "en": "Ghunnah",
+      "hi": "ग़ुन्ना",
+      "ur": "غنہ"
+    },
+    "one_liner": {
+      "en": "Nasal humming sound — on meem or noon with a shaddah.",
+      "hi": "नाक की आवाज़ — मीम या नून पर शद्दह होने पर।",
+      "ur": "ناک کی آواز — میم یا نون پر شدہ ہونے پر۔"
+    },
+    "example_arabic": "إِنَّ",
+    "example_note": {
+      "en": "إِنَّ — noon with shaddah",
+      "hi": "إِنَّ — नून पर शद्दह",
+      "ur": "إِنَّ — نون پر شدہ"
+    }
+  },
+  {
+    "id": "ikhfa",
+    "css_class": "tj-i",
+    "color": "#E65100",
+    "name": {
+      "en": "Ikhfa",
+      "hi": "इख़्फ़ा",
+      "ur": "اخفاء"
+    },
+    "one_liner": {
+      "en": "Concealment — noon saakin or tanwin hides before 15 letters.",
+      "hi": "छुपाना — नून साकिन या तनवीन 15 हर्फ़ों से पहले छुप जाती है।",
+      "ur": "چھپانا — نون ساکن یا تنوین 15 حروف سے پہلے چھپ جاتی ہے۔"
+    },
+    "example_arabic": "مِن شَرِّ",
+    "example_note": {
+      "en": "مِن شَرِّ — noon before sheen",
+      "hi": "مِن شَرِّ — نून से पहले شीन",
+      "ur": "مِن شَرِّ — نون سے پہلے شین"
+    }
+  },
+  {
+    "id": "idghaam",
+    "css_class": "tj-d",
+    "color": "#1565C0",
+    "name": {
+      "en": "Idghaam",
+      "hi": "इदग़ाम",
+      "ur": "ادغام"
+    },
+    "one_liner": {
+      "en": "Merging — noon saakin or tanwin merges into the next letter.",
+      "hi": "मिलाना — नून साकिन या तनवीन अगले हर्फ़ में मिल जाती है।",
+      "ur": "ملانا — نون ساکن یا تنوین اگلے حرف میں مل جاتی ہے۔"
+    },
+    "example_arabic": "مِن وَّلِيٍّ",
+    "example_note": {
+      "en": "مِن وَّلِيٍّ — noon merges into waw",
+      "hi": "مِن وَّلِيٍّ — نून واو میں مل جاتی है",
+      "ur": "مِن وَّلِيٍّ — نون واو میں مل جاتی ہے"
+    }
+  },
+  {
+    "id": "iqlab",
+    "css_class": "tj-q",
+    "color": "#C62828",
+    "name": {
+      "en": "Iqlab",
+      "hi": "इक़लाब",
+      "ur": "اقلاب"
+    },
+    "one_liner": {
+      "en": "Conversion — noon saakin or tanwin becomes a meem sound before ba.",
+      "hi": "बदलना — नून साकिन या तनवीन बा से पहले मीम की आवाज़ बन जाती है।",
+      "ur": "بدلنا — نون ساکن یا تنوین با سے پہلے میم کی آواز بن جاتی ہے۔"
+    },
+    "example_arabic": "مِن بَعْدِ",
+    "example_note": {
+      "en": "مِن بَعْدِ — noon before ba",
+      "hi": "مِن بَعْدِ — نون سے پہلے با",
+      "ur": "مِن بَعْدِ — نون سے پہلے با"
+    }
+  },
+  {
+    "id": "izhar",
+    "css_class": "tj-z",
+    "color": "#00695C",
+    "name": {
+      "en": "Izhar",
+      "hi": "इज़हार",
+      "ur": "اظہار"
+    },
+    "one_liner": {
+      "en": "Clear pronunciation — noon saakin or tanwin is clear before throat letters.",
+      "hi": "साफ़ पढ़ना — नून साकिन या तनवीन गले के हर्फ़ों से पहले साफ़ पढ़ी जाती है।",
+      "ur": "صاف پڑھنا — نون ساکن یا تنوین گلے کے حروف سے پہلے صاف پڑھی جاتی ہے۔"
+    },
+    "example_arabic": "مَنْ آمَنَ",
+    "example_note": {
+      "en": "مَنْ آمَنَ — noon before hamza (throat letter)",
+      "hi": "مَنْ آمَنَ — نون से पहले همزہ",
+      "ur": "مَنْ آمَنَ — نون سے پہلے ہمزہ"
+    }
+  },
+  {
+    "id": "qalqalah",
+    "css_class": "tj-k",
+    "color": "#6D4C41",
+    "name": {
+      "en": "Qalqalah",
+      "hi": "क़लक़लह",
+      "ur": "قلقلہ"
+    },
+    "one_liner": {
+      "en": "Echoing bounce — letters ق ط ب ج د vibrate when saakin or at stop.",
+      "hi": "गूंज — ق ط ب ج د — ये हर्फ़ साकिन होने या वक़्फ़ पर गूंजते हैं।",
+      "ur": "گونج — ق ط ب ج د — یہ حروف ساکن یا وقف پر گونجتے ہیں۔"
+    },
+    "example_arabic": "قُلْ",
+    "example_note": {
+      "en": "قُلْ — laam saakin after qaf gives qalqalah",
+      "hi": "قُلْ — लाम साकिन क़ाफ़ के बाद",
+      "ur": "قُلْ — لام ساکن قاف کے بعد"
+    }
+  },
+  {
+    "id": "madd",
+    "css_class": "tj-m",
+    "color": "#6A1B9A",
+    "name": {
+      "en": "Madd",
+      "hi": "मद्द",
+      "ur": "مد"
+    },
+    "one_liner": {
+      "en": "Elongation — long vowel held for 2 to 6 counts depending on the type.",
+      "hi": "खिंचाव — लंबी आवाज़ को क़िस्म के हिसाब से 2 से 6 हरकत तक खींचा जाता है।",
+      "ur": "کھینچاو — لمبی آواز کو قسم کے حساب سے 2 سے 6 حرکت تک کھینچا جاتا ہے۔"
+    },
+    "example_arabic": "ٱلرَّحْمَٰنِ",
+    "example_note": {
+      "en": "ٱلرَّحْمَٰنِ — alef madd stretched",
+      "hi": "ٱلرَّحْمَٰنِ — الف مد खिंचाव",
+      "ur": "ٱلرَّحْمَٰنِ — الف مد کھینچاو"
+    }
+  },
+  {
+    "id": "lshams",
+    "css_class": "tj-l",
+    "color": "#827717",
+    "name": {
+      "en": "Laam Shamsiyyah",
+      "hi": "लाम शम्सिय्यह",
+      "ur": "لام شمسیہ"
+    },
+    "one_liner": {
+      "en": "Solar laam — the laam of ال merges into the next letter (sun letters).",
+      "hi": "शमसी लाम — ال का लाम अगले हर्फ़ में मिल जाता है (शमसी हर्फ़)।",
+      "ur": "شمسی لام — ال کا لام اگلے حرف میں مل جاتا ہے (شمسی حروف)۔"
+    },
+    "example_arabic": "ٱلنَّاسِ",
+    "example_note": {
+      "en": "ٱلنَّاسِ — laam merges into noon (shaddah shows the merge)",
+      "hi": "ٱلنَّاسِ — لام نون میں مل جاتا ہے",
+      "ur": "ٱلنَّاسِ — لام نون میں مل جاتا ہے"
+    }
+  },
+  {
+    "id": "lqamar",
+    "css_class": "tj-z",
+    "color": "#00695C",
+    "name": {
+      "en": "Laam Qamariyyah",
+      "hi": "लाम क़मरिय्यह",
+      "ur": "لام قمریہ"
+    },
+    "one_liner": {
+      "en": "Lunar laam — the laam of ال is clearly pronounced before moon letters.",
+      "hi": "क़मरी लाम — ال का लाम क़मरी हर्फ़ों से पहले साफ़ पढ़ा जाता है।",
+      "ur": "قمری لام — ال کا لام قمری حروف سے پہلے صاف پڑھا جاتا ہے۔"
+    },
+    "example_arabic": "ٱلْحَمْدُ",
+    "example_note": {
+      "en": "ٱلْحَمْدُ — laam clearly pronounced before ha",
+      "hi": "ٱلْحَمْدُ — لام حاء سے پہلے صاف",
+      "ur": "ٱلْحَمْدُ — لام حاء سے پہلے صاف"
+    }
+  },
+  {
+    "id": "madd_natural",
+    "css_class": "tj-m",
+    "color": "#6A1B9A",
+    "name": {
+      "en": "Madd Tabee'i (Natural)",
+      "hi": "मद्द तबईई (फ़ितरी)",
+      "ur": "مد طبعی (فطری)"
+    },
+    "one_liner": {
+      "en": "Natural elongation — 2 counts. No hamza or saakin follows.",
+      "hi": "फ़ितरी खिंचाव — 2 हरकत। बाद में न हमज़ह न साकिन।",
+      "ur": "فطری کھینچاو — 2 حرکت۔ بعد میں نہ ہمزہ نہ ساکن۔"
+    },
+    "example_arabic": "نَسْتَعِينُ",
+    "example_note": {
+      "en": "نَسْتَعِينُ — waw madd, 2 counts",
+      "hi": "نَسْتَعِينُ — واو مد، 2 حرکت",
+      "ur": "نَسْتَعِينُ — واو مد، 2 حرکت"
+    }
+  },
+  {
+    "id": "madd_connected",
+    "css_class": "tj-m",
+    "color": "#6A1B9A",
+    "name": {
+      "en": "Madd Muttasil (Connected)",
+      "hi": "मद्द मुत्तसिल (मिला हुआ)",
+      "ur": "مد متصل (ملا ہوا)"
+    },
+    "one_liner": {
+      "en": "Connected elongation — 4-5 counts. Madd letter followed by hamza in same word.",
+      "hi": "मिला हुआ खिंचाव — 4-5 हरकत। मद्द हर्फ़ के बाद हमज़ह एक ही लफ़्ज़ में।",
+      "ur": "ملا ہوا کھینچاو — 4-5 حرکت۔ مد حرف کے بعد ہمزہ ایک ہی لفظ میں۔"
+    },
+    "example_arabic": "جَآءَ",
+    "example_note": {
+      "en": "جَآءَ — alef madd before hamza",
+      "hi": "جَآءَ — الف مد سے پہلے ہمزہ",
+      "ur": "جَآءَ — الف مد سے پہلے ہمزہ"
+    }
+  },
+  {
+    "id": "madd_separated",
+    "css_class": "tj-m",
+    "color": "#6A1B9A",
+    "name": {
+      "en": "Madd Munfasil (Separated)",
+      "hi": "मद्द मुनफ़सिल (अलग)",
+      "ur": "مد منفصل (الگ)"
+    },
+    "one_liner": {
+      "en": "Separated elongation — 4-5 counts. Madd letter in one word, hamza starts next.",
+      "hi": "अलग खिंचाव — 4-5 हरकत। एक लफ़्ज़ में मद्द, अगला लफ़्ज़ हमज़ह से शुरू।",
+      "ur": "الگ کھینچاو — 4-5 حرکت۔ ایک لفظ میں مد، اگلا لفظ ہمزہ سے شروع۔"
+    },
+    "example_arabic": "إِنَّآ أَعْطَيْنَٰكَ",
+    "example_note": {
+      "en": "إِنَّآ أَعْطَيْنَٰكَ — alef madd, next word starts with hamza",
+      "hi": "إِنَّآ أَعْطَيْنَٰكَ — الف مد، اگلا لفظ ہمزہ سے",
+      "ur": "إِنَّآ أَعْطَيْنَٰكَ — الف مد، اگلا لفظ ہمزہ سے"
+    }
+  }
+]

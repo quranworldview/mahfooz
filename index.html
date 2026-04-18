@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr" data-theme="system" data-script="indopak"
+      data-quran-size="md" data-trans-size="md">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="theme-color" content="#0C0A05" media="(prefers-color-scheme: dark)">
+  <meta name="theme-color" content="#F2EBD9" media="(prefers-color-scheme: light)">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="description" content="محفوظ — The Qur'an Hifz and Tajweed Companion">
+  <title>محفوظ · Mahfooz</title>
+  <link rel="icon" href="icons/icon-192.png" type="image/png">
+  <link rel="apple-touch-icon" href="icons/icon-192.png">
+  <link rel="manifest" href="manifest.json">
+  <link rel="stylesheet" href="css/design.css">
+  <link rel="stylesheet" href="css/components.css">
+  <style>
+    #boot-loader {
+      position:fixed;inset:0;z-index:9999;
+      display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;
+      background:#0C0A05;transition:opacity 0.4s ease;
+    }
+    #boot-loader.hidden{opacity:0;pointer-events:none;}
+    .boot-logo{width:64px;height:64px;border-radius:16px;overflow:hidden;
+      border:1px solid rgba(212,160,23,0.4);animation:bootPulse 1.5s ease-in-out infinite;}
+    .boot-logo img{width:100%;height:100%;object-fit:cover;}
+    .boot-text{font-family:'Amiri',serif;font-size:24px;color:rgba(212,160,23,0.8);direction:rtl;}
+    @keyframes bootPulse{0%,100%{box-shadow:0 0 0 0 rgba(212,160,23,0);}50%{box-shadow:0 0 20px 4px rgba(212,160,23,0.2);}}
+  </style>
+</head>
+<body>
+
+<div id="boot-loader">
+  <div class="boot-logo"><img src="icons/logo-dark.png" alt="Mahfooz"></div>
+  <div class="boot-text">محفوظ</div>
+</div>
+
+<div id="app">
+
+  <!-- LEFT SIDEBAR — desktop only -->
+  <div id="app-sidebar-left">
+    <div style="width:72px;height:72px;border-radius:18px;overflow:hidden;
+                border:1px solid var(--border-gold);margin-bottom:12px;
+                box-shadow:0 0 24px var(--gold-glow);">
+      <img id="logo-left" class="mahfooz-logo" src="icons/logo-dark.png" alt="Mahfooz"
+           style="width:100%;height:100%;object-fit:cover;">
+    </div>
+    <div class="arabic" style="font-size:26px;color:var(--gold);line-height:1.5;margin-bottom:2px;">محفوظ</div>
+    <div style="font-family:var(--font-display);font-size:0.8125rem;color:var(--ink-3);font-style:italic;margin-bottom:4px;">Mahfooz</div>
+    <div style="font-size:0.6875rem;color:var(--ink-3);max-width:140px;line-height:1.6;margin-bottom:4px;">Preserve the Qur'an in your heart.</div>
+
+    <div id="sidebar-nav">
+      <button class="sidebar-nav-item active" id="snav-home" onclick="showScreen('home')">
+        <span class="sidebar-nav-icon">🏠</span> Home
+      </button>
+      <button class="sidebar-nav-item" id="snav-memorize" onclick="showScreen('memorize')">
+        <span class="sidebar-nav-icon">📖</span> Memorize
+      </button>
+      <button class="sidebar-nav-item" id="snav-review" onclick="showScreen('review')">
+        <span class="sidebar-nav-icon">🔄</span> Review
+      </button>
+      <button class="sidebar-nav-item" id="snav-progress" onclick="showScreen('progress')">
+        <span class="sidebar-nav-icon">📊</span> Progress
+      </button>
+    </div>
+
+    <div style="margin-top:16px;width:100%;">
+      <div style="font-size:0.5625rem;font-weight:700;text-transform:uppercase;letter-spacing:0.12em;color:var(--ink-3);margin-bottom:8px;text-align:center;">Language</div>
+      <div class="lang-pills" style="justify-content:center;">
+        <button class="lang-pill" id="snav-lang-en" onclick="setLang('en')">EN</button>
+        <button class="lang-pill" id="snav-lang-hi" onclick="setLang('hi')">HI</button>
+        <button class="lang-pill" id="snav-lang-ur" onclick="setLang('ur')">UR</button>
+      </div>
+    </div>
+
+    <div style="margin-top:auto;padding-top:16px;border-top:1px solid var(--border);width:100%;text-align:center;">
+      <button id="sidebar-theme-btn" onclick="cycleTheme()"
+              style="width:100%;background:var(--bg-surface);border:1px solid var(--border);
+                     border-radius:var(--r-md);padding:8px 12px;font-family:var(--font-body);
+                     font-size:0.8125rem;color:var(--ink-3);cursor:pointer;
+                     display:flex;align-items:center;justify-content:center;gap:6px;
+                     transition:all var(--t-fast);margin-bottom:8px;">
+        <span id="theme-icon">💻</span><span id="theme-label">System</span>
+      </button>
+      <button onclick="showMenu()"
+              style="width:100%;background:none;border:1px solid var(--border);
+                     border-radius:var(--r-md);padding:8px 12px;font-family:var(--font-body);
+                     font-size:0.8125rem;color:var(--ink-3);cursor:pointer;">
+        ⚙ Settings
+      </button>
+      <div class="arabic" style="font-size:11px;color:var(--ink-3);margin-top:14px;line-height:2;opacity:0.6;">
+        وَمَا تَوْفِيقِي إِلَّا بِاللَّهِ
+      </div>
+    </div>
+  </div>
+
+  <!-- CENTER — the app -->
+  <div id="app-main">
+    <div style="display:flex;align-items:center;justify-content:center;
+                height:100vh;flex-direction:column;gap:14px;background:var(--bg);">
+      <div style="width:48px;height:48px;border-radius:12px;overflow:hidden;
+                  border:1px solid var(--border-gold);">
+        <img class="mahfooz-logo" src="icons/logo-dark.png" style="width:100%;height:100%;object-fit:cover;">
+      </div>
+      <div style="font-size:0.8125rem;color:var(--ink-3);">Loading…</div>
+    </div>
+  </div>
+
+  <!-- RIGHT SIDEBAR — desktop only -->
+  <div id="app-sidebar-right">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:20px;padding-bottom:16px;border-bottom:1px solid var(--border);">
+      <div style="width:34px;height:34px;border-radius:50%;background:var(--gold-dim);border:1px solid var(--border-gold);display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;">🕌</div>
+      <div>
+        <div id="sidebar-username" style="font-size:0.875rem;font-weight:500;color:var(--ink);">—</div>
+        <div style="font-size:0.6875rem;color:var(--ink-3);">Student</div>
+      </div>
+    </div>
+
+    <div style="font-size:0.5625rem;font-weight:700;text-transform:uppercase;letter-spacing:0.12em;color:var(--ink-3);margin-bottom:10px;">Your Progress</div>
+    <div style="display:flex;flex-direction:column;gap:6px;margin-bottom:auto;">
+      <div style="background:var(--bg-surface);border:1px solid var(--border);border-radius:var(--r-md);padding:12px 14px;display:flex;align-items:center;gap:10px;">
+        <span style="font-size:1.125rem;">📖</span>
+        <div>
+          <div id="stat-ayat" style="font-family:var(--font-display);font-size:1.375rem;font-weight:300;color:var(--gold);line-height:1;">0</div>
+          <div style="font-size:0.5625rem;color:var(--ink-3);text-transform:uppercase;letter-spacing:0.07em;margin-top:1px;">Ayat Sealed</div>
+        </div>
+      </div>
+      <div style="background:var(--bg-surface);border:1px solid var(--border);border-radius:var(--r-md);padding:12px 14px;display:flex;align-items:center;gap:10px;">
+        <span style="font-size:1.125rem;">🔥</span>
+        <div>
+          <div id="stat-streak" style="font-family:var(--font-display);font-size:1.375rem;font-weight:300;color:var(--gold);line-height:1;">0</div>
+          <div style="font-size:0.5625rem;color:var(--ink-3);text-transform:uppercase;letter-spacing:0.07em;margin-top:1px;">Day Streak</div>
+        </div>
+      </div>
+      <div style="background:var(--bg-surface);border:1px solid var(--border);border-radius:var(--r-md);padding:12px 14px;display:flex;align-items:center;gap:10px;">
+        <span style="font-size:1.125rem;color:var(--gold);">✦</span>
+        <div>
+          <div id="stat-xp" style="font-family:var(--font-display);font-size:1.375rem;font-weight:300;color:var(--gold);line-height:1;">0</div>
+          <div style="font-size:0.5625rem;color:var(--ink-3);text-transform:uppercase;letter-spacing:0.07em;margin-top:1px;">XP Earned</div>
+        </div>
+      </div>
+    </div>
+
+    <div id="sidebar-review-due" style="display:none;margin-top:12px;background:var(--gold-dim);border:1px solid var(--border-gold);border-radius:var(--r-md);padding:10px 14px;cursor:pointer;font-size:0.8125rem;color:var(--gold);" onclick="showScreen('review')">
+      🔔 Review due →
+    </div>
+
+    <div style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border);">
+      <div style="font-size:0.5625rem;font-weight:700;text-transform:uppercase;letter-spacing:0.12em;color:var(--ink-3);margin-bottom:8px;">Arabic Script</div>
+      <div style="display:flex;gap:6px;">
+        <button onclick="applyScript('indopak');updateScriptBtns();" id="script-indopak"
+                style="flex:1;padding:8px;border-radius:var(--r-sm);border:1px solid var(--border-gold);background:var(--gold-dim);color:var(--gold);font-family:var(--font-body);font-size:0.75rem;cursor:pointer;">
+          Indo-Pak
+        </button>
+        <button onclick="applyScript('uthmani');updateScriptBtns();" id="script-uthmani"
+                style="flex:1;padding:8px;border-radius:var(--r-sm);border:1px solid var(--border-mid);background:var(--bg-surface);color:var(--ink-3);font-family:var(--font-body);font-size:0.75rem;cursor:pointer;">
+          Uthmani
+        </button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script type="module" src="js/app.js"></script>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    requestAnimationFrame(() => {
+      setTimeout(() => {
+        const l = document.getElementById('boot-loader');
+        if (l) { l.classList.add('hidden'); setTimeout(() => l.remove(), 400); }
+      }, 200);
+    });
+  });
+
+  function cycleTheme() {
+    const order = ['system','dark','light'];
+    const cur = localStorage.getItem('qwv_theme') || 'system';
+    const next = order[(order.indexOf(cur)+1) % order.length];
+    if (window.applyTheme) window.applyTheme(next);
+    updateThemeBtn(next);
+  }
+  function updateThemeBtn(mode) {
+    const icons = {system:'💻',dark:'🌙',light:'☀️'};
+    const labels = {system:'System',dark:'Dark',light:'Light'};
+    const i = document.getElementById('theme-icon');
+    const l = document.getElementById('theme-label');
+    if (i) i.textContent = icons[mode] || '💻';
+    if (l) l.textContent = labels[mode] || 'System';
+  }
+  function updateScriptBtns() {
+    const cur = localStorage.getItem('qwv_script') || 'indopak';
+    ['indopak','uthmani'].forEach(s => {
+      const btn = document.getElementById('script-'+s);
+      if (!btn) return;
+      const a = s === cur;
+      btn.style.borderColor = a ? 'var(--border-gold)' : 'var(--border-mid)';
+      btn.style.background  = a ? 'var(--gold-dim)'    : 'var(--bg-surface)';
+      btn.style.color       = a ? 'var(--gold)'        : 'var(--ink-3)';
+    });
+  }
+  window.updateSidebarStats = function() {
+    const ayat   = parseInt(localStorage.getItem('mahfooz_ayat_count') || '0');
+    const streak = parseInt(localStorage.getItem('mahfooz_streak')     || '0');
+    const xp     = parseInt(localStorage.getItem('mahfooz_xp')         || '0');
+    const ae = document.getElementById('stat-ayat');
+    const se = document.getElementById('stat-streak');
+    const xe = document.getElementById('stat-xp');
+    if (ae) ae.textContent = ayat;
+    if (se) se.textContent = streak;
+    if (xe) xe.textContent = xp;
+  };
+  window.updateSidebarNav = function(screen) {
+    ['home','memorize','review','progress'].forEach(s => {
+      const b = document.getElementById('snav-'+s);
+      if (b) b.classList.toggle('active', s === screen);
+    });
+    const lang = localStorage.getItem('qwv_lang') || 'hi';
+    ['en','hi','ur'].forEach(l => {
+      const b = document.getElementById('snav-lang-'+l);
+      if (b) b.classList.toggle('active', l === lang);
+    });
+    updateThemeBtn(localStorage.getItem('qwv_theme') || 'system');
+    updateScriptBtns();
+    updateSidebarStats();
+  };
+</script>
+</body>
+</html>

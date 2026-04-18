@@ -1,0 +1,212 @@
+[
+  {
+    "id": 1,
+    "type": "miracle",
+    "en": "Al-Ikhlas — just 4 ayat — the Prophet ﷺ said it equals one-third of the Qur'an in reward.",
+    "hi": "सूरह इख़लास — सिर्फ़ 4 आयतें — नबी ﷺ ने फ़रमाया इसका सवाब क़ुरआन के एक तिहाई के बराबर है।",
+    "ur": "سورہ اخلاص — صرف 4 آیات — نبی ﷺ نے فرمایا اس کا ثواب قرآن کے ایک تہائی کے برابر ہے۔"
+  },
+  {
+    "id": 2,
+    "type": "fact",
+    "en": "The word رَحْمَة (mercy) appears 79 times in the Qur'an — more than the word عَذَاب (punishment).",
+    "hi": "लफ़्ज़ رَحْمَة (रहमत) क़ुरआन में 79 बार आया है — عَذَاب (अज़ाब) से ज़्यादा।",
+    "ur": "لفظ رَحْمَة (رحمت) قرآن میں 79 بار آیا ہے — عَذَاب (عذاب) سے زیادہ۔"
+  },
+  {
+    "id": 3,
+    "type": "historical",
+    "en": "The Qur'an was revealed over 23 years — yet not a single letter has ever been changed.",
+    "hi": "क़ुरआन 23 सालों में नाज़िल हुआ — मगर आज तक एक भी हर्फ़ नहीं बदला।",
+    "ur": "قرآن 23 سالوں میں نازل ہوا — مگر آج تک ایک بھی حرف نہیں بدلا۔"
+  },
+  {
+    "id": 4,
+    "type": "prophetic",
+    "en": "The Prophet ﷺ said: 'The best of you are those who learn the Qur'an and teach it.' — Bukhari",
+    "hi": "नबी ﷺ ने फ़रमाया: 'तुम में सबसे बेहतर वो है जो क़ुरआन सीखे और सिखाए।' — बुख़ारी",
+    "ur": "نبی ﷺ نے فرمایا: 'تم میں سب سے بہتر وہ ہے جو قرآن سیکھے اور سکھائے۔' — بخاری"
+  },
+  {
+    "id": 5,
+    "type": "miracle",
+    "en": "Al-Fatiha is recited at least 17 times every day in salah — it is the most repeated text in human history.",
+    "hi": "सूरह फ़ातिहा रोज़ नमाज़ में कम से कम 17 बार पढ़ी जाती है — ये इंसानी तारीख़ में सबसे ज़्यादा दोहराया जाने वाला मतन है।",
+    "ur": "سورہ فاتحہ نماز میں روزانہ کم از کم 17 بار پڑھی جاتی ہے — یہ انسانی تاریخ میں سب سے زیادہ دہرایا جانے والا متن ہے۔"
+  },
+  {
+    "id": 6,
+    "type": "linguistic",
+    "en": "The word اللَّه (Allah) appears 2,699 times in the Qur'an. Every hafiz carries this name 2,699 times in their heart.",
+    "hi": "लफ़्ज़ اللَّه (अल्लाह) क़ुरआन में 2,699 बार आया है। हर हाफ़िज़ यह नाम 2,699 बार दिल में रखता है।",
+    "ur": "لفظ اللَّه قرآن میں 2,699 بار آیا ہے۔ ہر حافظ یہ نام 2,699 بار دل میں رکھتا ہے۔"
+  },
+  {
+    "id": 7,
+    "type": "miracle",
+    "en": "Surah Al-Mulk — 30 ayat — protects its memorizer in the grave, according to the Prophet ﷺ.",
+    "hi": "सूरह मुल्क — 30 आयतें — अपने हाफ़िज़ को क़ब्र में अज़ाब से बचाती है, नबी ﷺ के फ़रमान के मुताबिक़।",
+    "ur": "سورہ ملک — 30 آیات — اپنے حافظ کو قبر میں عذاب سے بچاتی ہے، نبی ﷺ کے فرمان کے مطابق۔"
+  },
+  {
+    "id": 8,
+    "type": "fact",
+    "en": "The word نُور (light) appears 43 times in the Qur'an. Every hafiz carries 43 lights in their heart.",
+    "hi": "लफ़्ज़ نُور (नूर) क़ुरआन में 43 बार आया है। हर हाफ़िज़ 43 नूर दिल में रखता है।",
+    "ur": "لفظ نُور قرآن میں 43 بار آیا ہے۔ ہر حافظ 43 نور دل میں رکھتا ہے۔"
+  },
+  {
+    "id": 9,
+    "type": "historical",
+    "en": "There are over 10 million huffaz in the world today — more than any other memorized text in human history.",
+    "hi": "आज दुनिया में 10 मिलियन से ज़्यादा हुफ़्फ़ाज़ हैं — इंसानी तारीख़ में किसी भी मतन के सबसे ज़्यादा हाफ़िज़।",
+    "ur": "آج دنیا میں 10 ملین سے زیادہ حفاظ ہیں — انسانی تاریخ میں کسی بھی متن کے سب سے زیادہ حافظ۔"
+  },
+  {
+    "id": 10,
+    "type": "linguistic",
+    "en": "The root ح-ف-ظ (hifz) means to preserve, guard, and protect. When you memorize the Qur'an, you become its guardian.",
+    "hi": "जड़ ح-ف-ظ (हिफ़्ज़) का मतलब है: महफ़ूज़ रखना, निगहबानी करना। जब आप क़ुरआन याद करते हैं, आप इसके निगहबान बन जाते हैं।",
+    "ur": "جڑ ح-ف-ظ (حفظ) کا مطلب ہے: محفوظ رکھنا، نگہبانی کرنا۔ جب آپ قرآن یاد کرتے ہیں، آپ اس کے نگہبان بن جاتے ہیں۔"
+  },
+  {
+    "id": 11,
+    "type": "prophetic",
+    "en": "The Prophet ﷺ said: 'Allah raises some people by this Book and lowers others.' — Muslim",
+    "hi": "नबी ﷺ ने फ़रमाया: 'अल्लाह इस किताब से कुछ लोगों को बुलंद करता है और कुछ को पस्त।' — मुस्लिम",
+    "ur": "نبی ﷺ نے فرمایا: 'اللہ اس کتاب سے کچھ لوگوں کو بلند کرتا ہے اور کچھ کو پست۔' — مسلم"
+  },
+  {
+    "id": 12,
+    "type": "miracle",
+    "en": "Ayatul Kursi — just one ayah — is described by the Prophet ﷺ as the greatest ayah in the Qur'an.",
+    "hi": "आयतुल कुर्सी — सिर्फ़ एक आयत — नबी ﷺ ने इसे पूरे क़ुरआन की सबसे अज़ीम आयत बताया।",
+    "ur": "آیت الکرسی — صرف ایک آیت — نبی ﷺ نے اسے پورے قرآن کی سب سے عظیم آیت بتایا۔"
+  },
+  {
+    "id": 13,
+    "type": "fact",
+    "en": "The Qur'an contains 6,236 ayat, 114 surahs, and 30 juz — a structure that has remained unchanged for 1,400 years.",
+    "hi": "क़ुरआन में 6,236 आयतें, 114 सूरहें और 30 जुज़ हैं — एक ऐसा ढाँचा जो 1,400 सालों से नहीं बदला।",
+    "ur": "قرآن میں 6,236 آیات، 114 سورتیں اور 30 جزء ہیں — ایک ایسا ڈھانچہ جو 1,400 سالوں سے نہیں بدلا۔"
+  },
+  {
+    "id": 14,
+    "type": "linguistic",
+    "en": "The word صَبْر (patience) and its derivatives appear 90 times in the Qur'an — Allah loves those who are patient.",
+    "hi": "लफ़्ज़ صَبْر (सब्र) और इसकी मुश्तक़्क़ात क़ुरआन में 90 बार आई हैं — अल्लाह साबिर लोगों से मोहब्बत करता है।",
+    "ur": "لفظ صَبْر اور اس کی مشتقات قرآن میں 90 بار آئی ہیں — اللہ صابر لوگوں سے محبت کرتا ہے۔"
+  },
+  {
+    "id": 15,
+    "type": "historical",
+    "en": "The companions of the Prophet ﷺ memorized the Qur'an as it was revealed — some memorizing a single ayah for weeks.",
+    "hi": "नबी ﷺ के सहाबा ने क़ुरआन नाज़िल होते ही याद किया — कुछ ने एक आयत को हफ़्तों याद किया।",
+    "ur": "نبی ﷺ کے صحابہ نے قرآن نازل ہوتے ہی یاد کیا — کچھ نے ایک آیت کو ہفتوں یاد کیا۔"
+  },
+  {
+    "id": 16,
+    "type": "prophetic",
+    "en": "The Prophet ﷺ said: 'The one who recites the Qur'an skillfully will be with the noble, righteous angels.' — Bukhari",
+    "hi": "नबी ﷺ ने फ़रमाया: 'जो क़ुरआन माहिराना तरीक़े से पढ़े, वो नेक फ़रिश्तों के साथ होगा।' — बुख़ारी",
+    "ur": "نبی ﷺ نے فرمایا: 'جو قرآن ماہرانہ طریقے سے پڑھے، وہ نیک فرشتوں کے ساتھ ہوگا۔' — بخاری"
+  },
+  {
+    "id": 17,
+    "type": "miracle",
+    "en": "Al-Baqarah is the longest surah — 286 ayat. Its last two ayat are described by the Prophet ﷺ as a treasure from under the Throne.",
+    "hi": "सूरह बक़रह सबसे लंबी सूरह है — 286 आयतें। इसकी आख़िरी दो आयतें नबी ﷺ ने अर्श के नीचे का ख़ज़ाना बताया।",
+    "ur": "سورہ بقرہ سب سے لمبی سورہ ہے — 286 آیات۔ اس کی آخری دو آیات نبی ﷺ نے عرش کے نیچے کا خزانہ بتایا۔"
+  },
+  {
+    "id": 18,
+    "type": "linguistic",
+    "en": "The Qur'an uses 77,430 words — and yet scholars say it cannot be translated perfectly into any language.",
+    "hi": "क़ुरआन में 77,430 लफ़्ज़ हैं — मगर उलमा कहते हैं इसका किसी भी ज़बान में मुकम्मल तर्जुमा नहीं हो सकता।",
+    "ur": "قرآن میں 77,430 الفاظ ہیں — مگر علماء کہتے ہیں اس کا کسی بھی زبان میں مکمل ترجمہ نہیں ہو سکتا۔"
+  },
+  {
+    "id": 19,
+    "type": "fact",
+    "en": "Surah Yasin is called 'the heart of the Qur'an' — it covers resurrection, the mercy of Allah, and the reality of life.",
+    "hi": "सूरह यासीन को 'क़ुरआन का दिल' कहा जाता है — इसमें क़यामत, अल्लाह की रहमत, और ज़िंदगी की हक़ीक़त है।",
+    "ur": "سورہ یسین کو 'قرآن کا دل' کہا جاتا ہے — اس میں قیامت، اللہ کی رحمت، اور زندگی کی حقیقت ہے۔"
+  },
+  {
+    "id": 20,
+    "type": "prophetic",
+    "en": "The Prophet ﷺ said: 'Whoever recites Ayatul Kursi after every prayer, nothing stands between him and Paradise except death.'",
+    "hi": "नबी ﷺ ने फ़रमाया: 'जो हर नमाज़ के बाद आयतुल कुर्सी पढ़े, उसके और जन्नत के बीच सिर्फ़ मौत का परदा है।'",
+    "ur": "نبی ﷺ نے فرمایا: 'جو ہر نماز کے بعد آیت الکرسی پڑھے، اس کے اور جنت کے درمیان صرف موت کا پردہ ہے۔'"
+  },
+  {
+    "id": 21,
+    "type": "miracle",
+    "en": "The Qur'an challenges all of humanity: 'Produce a surah like it.' 1,400 years later — the challenge stands unanswered.",
+    "hi": "क़ुरआन ने पूरी इंसानियत को चैलेंज दिया: 'इस जैसी एक सूरह बना लाओ।' 1,400 साल बाद — ये चैलेंज अभी भी बाक़ी है।",
+    "ur": "قرآن نے پوری انسانیت کو چیلنج دیا: 'اس جیسی ایک سورہ بنا لاؤ۔' 1,400 سال بعد — یہ چیلنج ابھی بھی باقی ہے۔"
+  },
+  {
+    "id": 22,
+    "type": "historical",
+    "en": "The first complete written compilation of the Qur'an was made by Caliph Abu Bakr RA — within two years of the Prophet's ﷺ passing.",
+    "hi": "क़ुरआन का पहला मुकम्मल लिखित नुस्ख़ा ख़लीफ़ा अबू बक्र रज़ी० ने तैयार कराया — नबी ﷺ की वफ़ात के दो साल के अंदर।",
+    "ur": "قرآن کا پہلا مکمل تحریری نسخہ خلیفہ ابو بکر رضی اللہ عنہ نے تیار کرایا — نبی ﷺ کی وفات کے دو سال کے اندر۔"
+  },
+  {
+    "id": 23,
+    "type": "linguistic",
+    "en": "The word قَلْب (heart) appears 132 times in the Qur'an — it is the Qur'an's most beloved address.",
+    "hi": "लफ़्ज़ قَلْب (दिल) क़ुरआन में 132 बार आया है — ये क़ुरआन का सबसे महबूब मुख़ातब है।",
+    "ur": "لفظ قَلْب (دل) قرآن میں 132 بار آیا ہے — یہ قرآن کا سب سے محبوب مخاطب ہے۔"
+  },
+  {
+    "id": 24,
+    "type": "prophetic",
+    "en": "The Prophet ﷺ said: 'Whoever reads one letter of the Qur'an gets one reward, and that reward is multiplied ten times.' — Tirmidhi",
+    "hi": "नबी ﷺ ने फ़रमाया: 'जो एक हर्फ़ क़ुरआन का पढ़े, उसे एक नेकी मिलेगी और वो नेकी दस गुना होगी।' — तिर्मिज़ी",
+    "ur": "نبی ﷺ نے فرمایا: 'جو ایک حرف قرآن کا پڑھے، اسے ایک نیکی ملے گی اور وہ نیکی دس گنا ہوگی۔' — ترمذی"
+  },
+  {
+    "id": 25,
+    "type": "miracle",
+    "en": "The three shortest surahs — Al-Kawthar, Al-Asr, Al-Ikhlas — together contain the essence of the entire Qur'an.",
+    "hi": "तीन सबसे छोटी सूरहें — अल-कौसर, अल-अस्र, अल-इख़लास — मिलकर पूरे क़ुरआन का निचोड़ रखती हैं।",
+    "ur": "تین سب سے چھوٹی سورتیں — الکوثر، العصر، الاخلاص — مل کر پورے قرآن کا نچوڑ رکھتی ہیں۔"
+  },
+  {
+    "id": 26,
+    "type": "fact",
+    "en": "Al-Asr — only 3 ayat — Imam Al-Shafi'i said: 'If people pondered only this surah, it would be enough for them.'",
+    "hi": "सूरह अस्र — सिर्फ़ 3 आयतें — इमाम शाफ़िई ने कहा: 'अगर लोग सिर्फ़ इसी सूरह पर ग़ौर करें, तो यही उनके लिए काफ़ी है।'",
+    "ur": "سورہ عصر — صرف 3 آیات — امام شافعی نے کہا: 'اگر لوگ صرف اسی سورہ پر غور کریں، تو یہی ان کے لیے کافی ہے۔'"
+  },
+  {
+    "id": 27,
+    "type": "historical",
+    "en": "In the Battle of Yamama, 70 huffaz were martyred. This loss was the catalyst for the first written compilation of the Qur'an.",
+    "hi": "यमामा की जंग में 70 हुफ़्फ़ाज़ शहीद हुए। इस नुक़सान ने क़ुरआन के पहले लिखित जमा का सबब बना।",
+    "ur": "یمامہ کی جنگ میں 70 حفاظ شہید ہوئے۔ اس نقصان نے قرآن کے پہلے تحریری جمع کا سبب بنا۔"
+  },
+  {
+    "id": 28,
+    "type": "linguistic",
+    "en": "The word إِيمَان (faith) and its derivatives appear over 800 times in the Qur'an — it is the Qur'an's most central theme.",
+    "hi": "लफ़्ज़ إِيمَان (ईमान) और इसकी मुश्तक़्क़ात क़ुरआन में 800 से ज़्यादा बार आई हैं — ये क़ुरआन का सबसे अहम मौज़ू है।",
+    "ur": "لفظ إِيمَان اور اس کی مشتقات قرآن میں 800 سے زیادہ بار آئی ہیں — یہ قرآن کا سب سے اہم موضوع ہے۔"
+  },
+  {
+    "id": 29,
+    "type": "miracle",
+    "en": "The Qur'an describes the water cycle, embryonic development, and the expanding universe — 1,400 years before science confirmed them.",
+    "hi": "क़ुरआन ने पानी का चक्र, जनीन की नशो-नुमा, और फैलता कायनात का ज़िक्र किया — साइंस के 1,400 साल पहले।",
+    "ur": "قرآن نے پانی کا چکر، جنین کی نشو و نما، اور پھیلتی کائنات کا ذکر کیا — سائنس سے 1,400 سال پہلے۔"
+  },
+  {
+    "id": 30,
+    "type": "prophetic",
+    "en": "The Prophet ﷺ said: 'The heart that has no Qur'an in it is like a ruined house.' — Tirmidhi",
+    "hi": "नबी ﷺ ने फ़रमाया: 'जिस दिल में क़ुरआन नहीं वो वीरान घर जैसा है।' — तिर्मिज़ी",
+    "ur": "نبی ﷺ نے فرمایا: 'جس دل میں قرآن نہیں وہ ویران گھر جیسا ہے۔' — ترمذی"
+  }
+]

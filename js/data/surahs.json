@@ -1,0 +1,1142 @@
+[
+  {
+    "num": 1,
+    "name_en": "Al-Fatiha",
+    "name_ar": "الْفَاتِحَة",
+    "name_hi": "अल-फ़ातिहा",
+    "name_ur": "الفاتحہ",
+    "ayat": 7,
+    "juz": 1,
+    "tier": 1
+  },
+  {
+    "num": 2,
+    "name_en": "Al-Baqarah",
+    "name_ar": "الْبَقَرَة",
+    "name_hi": "अल-बक़रह",
+    "name_ur": "البقرہ",
+    "ayat": 286,
+    "juz": 1,
+    "tier": 3
+  },
+  {
+    "num": 3,
+    "name_en": "Ali 'Imran",
+    "name_ar": "آلِ عِمۡرَان",
+    "name_hi": "आल-ए-इमरान",
+    "name_ur": "آل عمران",
+    "ayat": 200,
+    "juz": 3,
+    "tier": 3
+  },
+  {
+    "num": 4,
+    "name_en": "An-Nisa",
+    "name_ar": "النِّسَاء",
+    "name_hi": "अन-निसा",
+    "name_ur": "النساء",
+    "ayat": 176,
+    "juz": 4,
+    "tier": 3
+  },
+  {
+    "num": 5,
+    "name_en": "Al-Ma'idah",
+    "name_ar": "الْمَائِدَة",
+    "name_hi": "अल-माइदह",
+    "name_ur": "المائدہ",
+    "ayat": 120,
+    "juz": 6,
+    "tier": 3
+  },
+  {
+    "num": 6,
+    "name_en": "Al-An'am",
+    "name_ar": "الْأَنعَام",
+    "name_hi": "अल-अनआम",
+    "name_ur": "الانعام",
+    "ayat": 165,
+    "juz": 7,
+    "tier": 3
+  },
+  {
+    "num": 7,
+    "name_en": "Al-A'raf",
+    "name_ar": "الْأَعۡرَاف",
+    "name_hi": "अल-आराफ़",
+    "name_ur": "الاعراف",
+    "ayat": 206,
+    "juz": 8,
+    "tier": 3
+  },
+  {
+    "num": 8,
+    "name_en": "Al-Anfal",
+    "name_ar": "الْأَنفَال",
+    "name_hi": "अल-अनफ़ाल",
+    "name_ur": "الانفال",
+    "ayat": 75,
+    "juz": 9,
+    "tier": 3
+  },
+  {
+    "num": 9,
+    "name_en": "At-Tawbah",
+    "name_ar": "التَّوۡبَة",
+    "name_hi": "अत-तौबह",
+    "name_ur": "التوبہ",
+    "ayat": 129,
+    "juz": 10,
+    "tier": 3
+  },
+  {
+    "num": 10,
+    "name_en": "Yunus",
+    "name_ar": "يُونُس",
+    "name_hi": "यूनुस",
+    "name_ur": "یونس",
+    "ayat": 109,
+    "juz": 11,
+    "tier": 3
+  },
+  {
+    "num": 11,
+    "name_en": "Hud",
+    "name_ar": "هُود",
+    "name_hi": "हूद",
+    "name_ur": "ہود",
+    "ayat": 123,
+    "juz": 11,
+    "tier": 3
+  },
+  {
+    "num": 12,
+    "name_en": "Yusuf",
+    "name_ar": "يُوسُف",
+    "name_hi": "यूसुफ़",
+    "name_ur": "یوسف",
+    "ayat": 111,
+    "juz": 12,
+    "tier": 3
+  },
+  {
+    "num": 13,
+    "name_en": "Ar-Ra'd",
+    "name_ar": "الرَّعۡد",
+    "name_hi": "अर-राद",
+    "name_ur": "الرعد",
+    "ayat": 43,
+    "juz": 13,
+    "tier": 3
+  },
+  {
+    "num": 14,
+    "name_en": "Ibrahim",
+    "name_ar": "إِبۡرَاهِيم",
+    "name_hi": "इब्राहीम",
+    "name_ur": "ابراہیم",
+    "ayat": 52,
+    "juz": 13,
+    "tier": 3
+  },
+  {
+    "num": 15,
+    "name_en": "Al-Hijr",
+    "name_ar": "الْحِجۡر",
+    "name_hi": "अल-हिज्र",
+    "name_ur": "الحجر",
+    "ayat": 99,
+    "juz": 14,
+    "tier": 3
+  },
+  {
+    "num": 16,
+    "name_en": "An-Nahl",
+    "name_ar": "النَّحۡل",
+    "name_hi": "अन-नहल",
+    "name_ur": "النحل",
+    "ayat": 128,
+    "juz": 14,
+    "tier": 3
+  },
+  {
+    "num": 17,
+    "name_en": "Al-Isra",
+    "name_ar": "الْإِسۡرَاء",
+    "name_hi": "अल-इसरा",
+    "name_ur": "الاسراء",
+    "ayat": 111,
+    "juz": 15,
+    "tier": 3
+  },
+  {
+    "num": 18,
+    "name_en": "Al-Kahf",
+    "name_ar": "الْكَهۡف",
+    "name_hi": "अल-कहफ़",
+    "name_ur": "الکہف",
+    "ayat": 110,
+    "juz": 15,
+    "tier": 2
+  },
+  {
+    "num": 19,
+    "name_en": "Maryam",
+    "name_ar": "مَرۡيَم",
+    "name_hi": "मरयम",
+    "name_ur": "مریم",
+    "ayat": 98,
+    "juz": 16,
+    "tier": 2
+  },
+  {
+    "num": 20,
+    "name_en": "Ta-Ha",
+    "name_ar": "طه",
+    "name_hi": "ता-हा",
+    "name_ur": "طہ",
+    "ayat": 135,
+    "juz": 16,
+    "tier": 3
+  },
+  {
+    "num": 21,
+    "name_en": "Al-Anbiya",
+    "name_ar": "الْأَنبِيَاء",
+    "name_hi": "अल-अंबिया",
+    "name_ur": "الانبیاء",
+    "ayat": 112,
+    "juz": 17,
+    "tier": 3
+  },
+  {
+    "num": 22,
+    "name_en": "Al-Hajj",
+    "name_ar": "الْحَجّ",
+    "name_hi": "अल-हज्ज",
+    "name_ur": "الحج",
+    "ayat": 78,
+    "juz": 17,
+    "tier": 3
+  },
+  {
+    "num": 23,
+    "name_en": "Al-Mu'minun",
+    "name_ar": "الْمُؤۡمِنُون",
+    "name_hi": "अल-मुमिनून",
+    "name_ur": "المومنون",
+    "ayat": 118,
+    "juz": 18,
+    "tier": 3
+  },
+  {
+    "num": 24,
+    "name_en": "An-Nur",
+    "name_ar": "النُّور",
+    "name_hi": "अन-नूर",
+    "name_ur": "النور",
+    "ayat": 64,
+    "juz": 18,
+    "tier": 3
+  },
+  {
+    "num": 25,
+    "name_en": "Al-Furqan",
+    "name_ar": "الْفُرۡقَان",
+    "name_hi": "अल-फ़ुरक़ान",
+    "name_ur": "الفرقان",
+    "ayat": 77,
+    "juz": 18,
+    "tier": 3
+  },
+  {
+    "num": 26,
+    "name_en": "Ash-Shu'ara",
+    "name_ar": "الشُّعَرَاء",
+    "name_hi": "अश-शुअरा",
+    "name_ur": "الشعراء",
+    "ayat": 227,
+    "juz": 19,
+    "tier": 3
+  },
+  {
+    "num": 27,
+    "name_en": "An-Naml",
+    "name_ar": "النَّمۡل",
+    "name_hi": "अन-नम्ल",
+    "name_ur": "النمل",
+    "ayat": 93,
+    "juz": 19,
+    "tier": 3
+  },
+  {
+    "num": 28,
+    "name_en": "Al-Qasas",
+    "name_ar": "الْقَصَص",
+    "name_hi": "अल-क़सस",
+    "name_ur": "القصص",
+    "ayat": 88,
+    "juz": 20,
+    "tier": 3
+  },
+  {
+    "num": 29,
+    "name_en": "Al-Ankabut",
+    "name_ar": "الْعَنكَبُوت",
+    "name_hi": "अल-अनकबूत",
+    "name_ur": "العنکبوت",
+    "ayat": 69,
+    "juz": 20,
+    "tier": 3
+  },
+  {
+    "num": 30,
+    "name_en": "Ar-Rum",
+    "name_ar": "الرُّوم",
+    "name_hi": "अर-रूम",
+    "name_ur": "الروم",
+    "ayat": 60,
+    "juz": 21,
+    "tier": 3
+  },
+  {
+    "num": 31,
+    "name_en": "Luqman",
+    "name_ar": "لُقۡمَان",
+    "name_hi": "लुक़मान",
+    "name_ur": "لقمان",
+    "ayat": 34,
+    "juz": 21,
+    "tier": 3
+  },
+  {
+    "num": 32,
+    "name_en": "As-Sajdah",
+    "name_ar": "السَّجۡدَة",
+    "name_hi": "अस-सजदह",
+    "name_ur": "السجدہ",
+    "ayat": 30,
+    "juz": 21,
+    "tier": 3
+  },
+  {
+    "num": 33,
+    "name_en": "Al-Ahzab",
+    "name_ar": "الْأَحۡزَاب",
+    "name_hi": "अल-अहज़ाब",
+    "name_ur": "الاحزاب",
+    "ayat": 73,
+    "juz": 21,
+    "tier": 3
+  },
+  {
+    "num": 34,
+    "name_en": "Saba",
+    "name_ar": "سَبَأ",
+    "name_hi": "सबा",
+    "name_ur": "سبا",
+    "ayat": 54,
+    "juz": 22,
+    "tier": 3
+  },
+  {
+    "num": 35,
+    "name_en": "Fatir",
+    "name_ar": "فَاطِر",
+    "name_hi": "फ़ातिर",
+    "name_ur": "فاطر",
+    "ayat": 45,
+    "juz": 22,
+    "tier": 3
+  },
+  {
+    "num": 36,
+    "name_en": "Ya-Sin",
+    "name_ar": "يس",
+    "name_hi": "या-सीन",
+    "name_ur": "یسین",
+    "ayat": 83,
+    "juz": 22,
+    "tier": 2
+  },
+  {
+    "num": 37,
+    "name_en": "As-Saffat",
+    "name_ar": "الصَّافَّات",
+    "name_hi": "अस-साफ़्फ़ात",
+    "name_ur": "الصافات",
+    "ayat": 182,
+    "juz": 23,
+    "tier": 3
+  },
+  {
+    "num": 38,
+    "name_en": "Sad",
+    "name_ar": "ص",
+    "name_hi": "साद",
+    "name_ur": "ص",
+    "ayat": 88,
+    "juz": 23,
+    "tier": 3
+  },
+  {
+    "num": 39,
+    "name_en": "Az-Zumar",
+    "name_ar": "الزُّمَر",
+    "name_hi": "अज़-ज़ुमर",
+    "name_ur": "الزمر",
+    "ayat": 75,
+    "juz": 23,
+    "tier": 3
+  },
+  {
+    "num": 40,
+    "name_en": "Ghafir",
+    "name_ar": "غَافِر",
+    "name_hi": "ग़ाफ़िर",
+    "name_ur": "غافر",
+    "ayat": 85,
+    "juz": 24,
+    "tier": 3
+  },
+  {
+    "num": 41,
+    "name_en": "Fussilat",
+    "name_ar": "فُصِّلَت",
+    "name_hi": "फ़ुस्सिलत",
+    "name_ur": "فصلت",
+    "ayat": 54,
+    "juz": 24,
+    "tier": 3
+  },
+  {
+    "num": 42,
+    "name_en": "Ash-Shura",
+    "name_ar": "الشُّورَىٰ",
+    "name_hi": "अश-शूरा",
+    "name_ur": "الشوری",
+    "ayat": 53,
+    "juz": 25,
+    "tier": 3
+  },
+  {
+    "num": 43,
+    "name_en": "Az-Zukhruf",
+    "name_ar": "الزُّخۡرُف",
+    "name_hi": "अज़-ज़ुख़रुफ़",
+    "name_ur": "الزخرف",
+    "ayat": 89,
+    "juz": 25,
+    "tier": 3
+  },
+  {
+    "num": 44,
+    "name_en": "Ad-Dukhan",
+    "name_ar": "الدُّخَان",
+    "name_hi": "अद-दुखान",
+    "name_ur": "الدخان",
+    "ayat": 59,
+    "juz": 25,
+    "tier": 3
+  },
+  {
+    "num": 45,
+    "name_en": "Al-Jathiyah",
+    "name_ar": "الْجَاثِيَة",
+    "name_hi": "अल-जासिया",
+    "name_ur": "الجاثیہ",
+    "ayat": 37,
+    "juz": 25,
+    "tier": 3
+  },
+  {
+    "num": 46,
+    "name_en": "Al-Ahqaf",
+    "name_ar": "الْأَحۡقَاف",
+    "name_hi": "अल-अहक़ाफ़",
+    "name_ur": "الاحقاف",
+    "ayat": 35,
+    "juz": 26,
+    "tier": 3
+  },
+  {
+    "num": 47,
+    "name_en": "Muhammad",
+    "name_ar": "مُحَمَّد",
+    "name_hi": "मुहम्मद",
+    "name_ur": "محمد",
+    "ayat": 38,
+    "juz": 26,
+    "tier": 3
+  },
+  {
+    "num": 48,
+    "name_en": "Al-Fath",
+    "name_ar": "الْفَتۡح",
+    "name_hi": "अल-फ़तह",
+    "name_ur": "الفتح",
+    "ayat": 29,
+    "juz": 26,
+    "tier": 3
+  },
+  {
+    "num": 49,
+    "name_en": "Al-Hujurat",
+    "name_ar": "الْحُجُرَات",
+    "name_hi": "अल-हुजुरात",
+    "name_ur": "الحجرات",
+    "ayat": 18,
+    "juz": 26,
+    "tier": 3
+  },
+  {
+    "num": 50,
+    "name_en": "Qaf",
+    "name_ar": "ق",
+    "name_hi": "क़ाफ़",
+    "name_ur": "ق",
+    "ayat": 45,
+    "juz": 26,
+    "tier": 3
+  },
+  {
+    "num": 51,
+    "name_en": "Adh-Dhariyat",
+    "name_ar": "الذَّارِيَات",
+    "name_hi": "अज़-ज़ारियात",
+    "name_ur": "الذاریات",
+    "ayat": 60,
+    "juz": 26,
+    "tier": 3
+  },
+  {
+    "num": 52,
+    "name_en": "At-Tur",
+    "name_ar": "الطُّور",
+    "name_hi": "अत-तूर",
+    "name_ur": "الطور",
+    "ayat": 49,
+    "juz": 27,
+    "tier": 3
+  },
+  {
+    "num": 53,
+    "name_en": "An-Najm",
+    "name_ar": "النَّجۡم",
+    "name_hi": "अन-नज्म",
+    "name_ur": "النجم",
+    "ayat": 62,
+    "juz": 27,
+    "tier": 3
+  },
+  {
+    "num": 54,
+    "name_en": "Al-Qamar",
+    "name_ar": "الْقَمَر",
+    "name_hi": "अल-क़मर",
+    "name_ur": "القمر",
+    "ayat": 55,
+    "juz": 27,
+    "tier": 3
+  },
+  {
+    "num": 55,
+    "name_en": "Ar-Rahman",
+    "name_ar": "الرَّحۡمَٰن",
+    "name_hi": "अर-रहमान",
+    "name_ur": "الرحمٰن",
+    "ayat": 78,
+    "juz": 27,
+    "tier": 2
+  },
+  {
+    "num": 56,
+    "name_en": "Al-Waqi'ah",
+    "name_ar": "الْوَاقِعَة",
+    "name_hi": "अल-वाक़िआ",
+    "name_ur": "الواقعہ",
+    "ayat": 96,
+    "juz": 27,
+    "tier": 2
+  },
+  {
+    "num": 57,
+    "name_en": "Al-Hadid",
+    "name_ar": "الْحَدِيد",
+    "name_hi": "अल-हदीद",
+    "name_ur": "الحدید",
+    "ayat": 29,
+    "juz": 27,
+    "tier": 3
+  },
+  {
+    "num": 58,
+    "name_en": "Al-Mujadila",
+    "name_ar": "الْمُجَادِلَة",
+    "name_hi": "अल-मुजादिला",
+    "name_ur": "المجادلہ",
+    "ayat": 22,
+    "juz": 28,
+    "tier": 3
+  },
+  {
+    "num": 59,
+    "name_en": "Al-Hashr",
+    "name_ar": "الْحَشۡر",
+    "name_hi": "अल-हश्र",
+    "name_ur": "الحشر",
+    "ayat": 24,
+    "juz": 28,
+    "tier": 3
+  },
+  {
+    "num": 60,
+    "name_en": "Al-Mumtahanah",
+    "name_ar": "الْمُمۡتَحَنَة",
+    "name_hi": "अल-मुम्तहिना",
+    "name_ur": "الممتحنہ",
+    "ayat": 13,
+    "juz": 28,
+    "tier": 3
+  },
+  {
+    "num": 61,
+    "name_en": "As-Saf",
+    "name_ar": "الصَّفّ",
+    "name_hi": "अस-सफ़्फ़",
+    "name_ur": "الصف",
+    "ayat": 14,
+    "juz": 28,
+    "tier": 3
+  },
+  {
+    "num": 62,
+    "name_en": "Al-Jumu'ah",
+    "name_ar": "الْجُمُعَة",
+    "name_hi": "अल-जुमुआ",
+    "name_ur": "الجمعہ",
+    "ayat": 11,
+    "juz": 28,
+    "tier": 3
+  },
+  {
+    "num": 63,
+    "name_en": "Al-Munafiqun",
+    "name_ar": "الْمُنَافِقُون",
+    "name_hi": "अल-मुनाफ़िक़ून",
+    "name_ur": "المنافقون",
+    "ayat": 11,
+    "juz": 28,
+    "tier": 3
+  },
+  {
+    "num": 64,
+    "name_en": "At-Taghabun",
+    "name_ar": "التَّغَابُن",
+    "name_hi": "अत-तग़ाबुन",
+    "name_ur": "التغابن",
+    "ayat": 18,
+    "juz": 28,
+    "tier": 3
+  },
+  {
+    "num": 65,
+    "name_en": "At-Talaq",
+    "name_ar": "الطَّلَاق",
+    "name_hi": "अत-तलाक़",
+    "name_ur": "الطلاق",
+    "ayat": 12,
+    "juz": 28,
+    "tier": 3
+  },
+  {
+    "num": 66,
+    "name_en": "At-Tahrim",
+    "name_ar": "التَّحۡرِيم",
+    "name_hi": "अत-तहरीम",
+    "name_ur": "التحریم",
+    "ayat": 12,
+    "juz": 28,
+    "tier": 3
+  },
+  {
+    "num": 67,
+    "name_en": "Al-Mulk",
+    "name_ar": "الْمُلۡك",
+    "name_hi": "अल-मुल्क",
+    "name_ur": "الملک",
+    "ayat": 30,
+    "juz": 29,
+    "tier": 2
+  },
+  {
+    "num": 68,
+    "name_en": "Al-Qalam",
+    "name_ar": "الْقَلَم",
+    "name_hi": "अल-क़लम",
+    "name_ur": "القلم",
+    "ayat": 52,
+    "juz": 29,
+    "tier": 3
+  },
+  {
+    "num": 69,
+    "name_en": "Al-Haqqah",
+    "name_ar": "الْحَاقَّة",
+    "name_hi": "अल-हाक़्क़ा",
+    "name_ur": "الحاقہ",
+    "ayat": 52,
+    "juz": 29,
+    "tier": 3
+  },
+  {
+    "num": 70,
+    "name_en": "Al-Ma'arij",
+    "name_ar": "الْمَعَارِج",
+    "name_hi": "अल-मआरिज",
+    "name_ur": "المعارج",
+    "ayat": 44,
+    "juz": 29,
+    "tier": 3
+  },
+  {
+    "num": 71,
+    "name_en": "Nuh",
+    "name_ar": "نُوح",
+    "name_hi": "नूह",
+    "name_ur": "نوح",
+    "ayat": 28,
+    "juz": 29,
+    "tier": 3
+  },
+  {
+    "num": 72,
+    "name_en": "Al-Jinn",
+    "name_ar": "الْجِنّ",
+    "name_hi": "अल-जिन्न",
+    "name_ur": "الجن",
+    "ayat": 28,
+    "juz": 29,
+    "tier": 3
+  },
+  {
+    "num": 73,
+    "name_en": "Al-Muzzammil",
+    "name_ar": "الْمُزَّمِّل",
+    "name_hi": "अल-मुज़्ज़म्मिल",
+    "name_ur": "المزمل",
+    "ayat": 20,
+    "juz": 29,
+    "tier": 3
+  },
+  {
+    "num": 74,
+    "name_en": "Al-Muddaththir",
+    "name_ar": "الْمُدَّثِّر",
+    "name_hi": "अल-मुद्दस्सिर",
+    "name_ur": "المدثر",
+    "ayat": 56,
+    "juz": 29,
+    "tier": 3
+  },
+  {
+    "num": 75,
+    "name_en": "Al-Qiyamah",
+    "name_ar": "الْقِيَامَة",
+    "name_hi": "अल-क़ियामह",
+    "name_ur": "القیامہ",
+    "ayat": 40,
+    "juz": 29,
+    "tier": 3
+  },
+  {
+    "num": 76,
+    "name_en": "Al-Insan",
+    "name_ar": "الْإِنسَان",
+    "name_hi": "अल-इन्सान",
+    "name_ur": "الانسان",
+    "ayat": 31,
+    "juz": 29,
+    "tier": 3
+  },
+  {
+    "num": 77,
+    "name_en": "Al-Mursalat",
+    "name_ar": "الْمُرۡسَلَات",
+    "name_hi": "अल-मुरसलात",
+    "name_ur": "المرسلات",
+    "ayat": 50,
+    "juz": 29,
+    "tier": 3
+  },
+  {
+    "num": 78,
+    "name_en": "An-Naba",
+    "name_ar": "النَّبَأ",
+    "name_hi": "अन-नबा",
+    "name_ur": "النبا",
+    "ayat": 40,
+    "juz": 30,
+    "tier": 3
+  },
+  {
+    "num": 79,
+    "name_en": "An-Nazi'at",
+    "name_ar": "النَّازِعَات",
+    "name_hi": "अन-नाज़िआत",
+    "name_ur": "النازعات",
+    "ayat": 46,
+    "juz": 30,
+    "tier": 3
+  },
+  {
+    "num": 80,
+    "name_en": "Abasa",
+    "name_ar": "عَبَسَ",
+    "name_hi": "अबस",
+    "name_ur": "عبس",
+    "ayat": 42,
+    "juz": 30,
+    "tier": 3
+  },
+  {
+    "num": 81,
+    "name_en": "At-Takwir",
+    "name_ar": "التَّكۡوِير",
+    "name_hi": "अत-तक्वीर",
+    "name_ur": "التکویر",
+    "ayat": 29,
+    "juz": 30,
+    "tier": 3
+  },
+  {
+    "num": 82,
+    "name_en": "Al-Infitar",
+    "name_ar": "الِانفِطَار",
+    "name_hi": "अल-इनफ़ितार",
+    "name_ur": "الانفطار",
+    "ayat": 19,
+    "juz": 30,
+    "tier": 3
+  },
+  {
+    "num": 83,
+    "name_en": "Al-Mutaffifin",
+    "name_ar": "الْمُطَفِّفِين",
+    "name_hi": "अल-मुतफ़्फ़िफ़ीन",
+    "name_ur": "المطففین",
+    "ayat": 36,
+    "juz": 30,
+    "tier": 3
+  },
+  {
+    "num": 84,
+    "name_en": "Al-Inshiqaq",
+    "name_ar": "الِانشِقَاق",
+    "name_hi": "अल-इनशिक़ाक़",
+    "name_ur": "الانشقاق",
+    "ayat": 25,
+    "juz": 30,
+    "tier": 3
+  },
+  {
+    "num": 85,
+    "name_en": "Al-Buruj",
+    "name_ar": "الْبُرُوج",
+    "name_hi": "अल-बुरूज",
+    "name_ur": "البروج",
+    "ayat": 22,
+    "juz": 30,
+    "tier": 3
+  },
+  {
+    "num": 86,
+    "name_en": "At-Tariq",
+    "name_ar": "الطَّارِق",
+    "name_hi": "अत-तारिक़",
+    "name_ur": "الطارق",
+    "ayat": 17,
+    "juz": 30,
+    "tier": 3
+  },
+  {
+    "num": 87,
+    "name_en": "Al-A'la",
+    "name_ar": "الْأَعۡلَىٰ",
+    "name_hi": "अल-आला",
+    "name_ur": "الاعلیٰ",
+    "ayat": 19,
+    "juz": 30,
+    "tier": 3
+  },
+  {
+    "num": 88,
+    "name_en": "Al-Ghashiyah",
+    "name_ar": "الْغَاشِيَة",
+    "name_hi": "अल-ग़ाशिया",
+    "name_ur": "الغاشیہ",
+    "ayat": 26,
+    "juz": 30,
+    "tier": 3
+  },
+  {
+    "num": 89,
+    "name_en": "Al-Fajr",
+    "name_ar": "الْفَجۡر",
+    "name_hi": "अल-फ़ज्र",
+    "name_ur": "الفجر",
+    "ayat": 30,
+    "juz": 30,
+    "tier": 3
+  },
+  {
+    "num": 90,
+    "name_en": "Al-Balad",
+    "name_ar": "الْبَلَد",
+    "name_hi": "अल-बलद",
+    "name_ur": "البلد",
+    "ayat": 20,
+    "juz": 30,
+    "tier": 3
+  },
+  {
+    "num": 91,
+    "name_en": "Ash-Shams",
+    "name_ar": "الشَّمۡس",
+    "name_hi": "अश-शम्स",
+    "name_ur": "الشمس",
+    "ayat": 15,
+    "juz": 30,
+    "tier": 3
+  },
+  {
+    "num": 92,
+    "name_en": "Al-Layl",
+    "name_ar": "اللَّيۡل",
+    "name_hi": "अल-लैल",
+    "name_ur": "اللیل",
+    "ayat": 21,
+    "juz": 30,
+    "tier": 3
+  },
+  {
+    "num": 93,
+    "name_en": "Ad-Duha",
+    "name_ar": "الضُّحَىٰ",
+    "name_hi": "अज़-ज़ुहा",
+    "name_ur": "الضحیٰ",
+    "ayat": 11,
+    "juz": 30,
+    "tier": 3
+  },
+  {
+    "num": 94,
+    "name_en": "Ash-Sharh",
+    "name_ar": "الشَّرۡح",
+    "name_hi": "अश-शर्ह",
+    "name_ur": "الشرح",
+    "ayat": 8,
+    "juz": 30,
+    "tier": 3
+  },
+  {
+    "num": 95,
+    "name_en": "At-Tin",
+    "name_ar": "التِّين",
+    "name_hi": "अत-तीन",
+    "name_ur": "التین",
+    "ayat": 8,
+    "juz": 30,
+    "tier": 3
+  },
+  {
+    "num": 96,
+    "name_en": "Al-Alaq",
+    "name_ar": "الْعَلَق",
+    "name_hi": "अल-अलक़",
+    "name_ur": "العلق",
+    "ayat": 19,
+    "juz": 30,
+    "tier": 3
+  },
+  {
+    "num": 97,
+    "name_en": "Al-Qadr",
+    "name_ar": "الْقَدۡر",
+    "name_hi": "अल-क़द्र",
+    "name_ur": "القدر",
+    "ayat": 5,
+    "juz": 30,
+    "tier": 3
+  },
+  {
+    "num": 98,
+    "name_en": "Al-Bayyinah",
+    "name_ar": "الْبَيِّنَة",
+    "name_hi": "अल-बय्यिनह",
+    "name_ur": "البینہ",
+    "ayat": 8,
+    "juz": 30,
+    "tier": 3
+  },
+  {
+    "num": 99,
+    "name_en": "Az-Zalzalah",
+    "name_ar": "الزَّلۡزَلَة",
+    "name_hi": "अज़-ज़ल्ज़ला",
+    "name_ur": "الزلزلہ",
+    "ayat": 8,
+    "juz": 30,
+    "tier": 3
+  },
+  {
+    "num": 100,
+    "name_en": "Al-Adiyat",
+    "name_ar": "الْعَادِيَات",
+    "name_hi": "अल-आदियात",
+    "name_ur": "العادیات",
+    "ayat": 11,
+    "juz": 30,
+    "tier": 3
+  },
+  {
+    "num": 101,
+    "name_en": "Al-Qari'ah",
+    "name_ar": "الْقَارِعَة",
+    "name_hi": "अल-क़ारिआ",
+    "name_ur": "القارعہ",
+    "ayat": 11,
+    "juz": 30,
+    "tier": 3
+  },
+  {
+    "num": 102,
+    "name_en": "At-Takathur",
+    "name_ar": "التَّكَاثُر",
+    "name_hi": "अत-तकासुर",
+    "name_ur": "التکاثر",
+    "ayat": 8,
+    "juz": 30,
+    "tier": 3
+  },
+  {
+    "num": 103,
+    "name_en": "Al-Asr",
+    "name_ar": "الْعَصۡر",
+    "name_hi": "अल-अस्र",
+    "name_ur": "العصر",
+    "ayat": 3,
+    "juz": 30,
+    "tier": 1
+  },
+  {
+    "num": 104,
+    "name_en": "Al-Humazah",
+    "name_ar": "الْهُمَزَة",
+    "name_hi": "अल-हुमज़ा",
+    "name_ur": "الہمزہ",
+    "ayat": 9,
+    "juz": 30,
+    "tier": 3
+  },
+  {
+    "num": 105,
+    "name_en": "Al-Fil",
+    "name_ar": "الْفِيل",
+    "name_hi": "अल-फ़ील",
+    "name_ur": "الفیل",
+    "ayat": 5,
+    "juz": 30,
+    "tier": 3
+  },
+  {
+    "num": 106,
+    "name_en": "Quraysh",
+    "name_ar": "قُرَيۡش",
+    "name_hi": "क़ुरैश",
+    "name_ur": "قریش",
+    "ayat": 4,
+    "juz": 30,
+    "tier": 3
+  },
+  {
+    "num": 107,
+    "name_en": "Al-Ma'un",
+    "name_ar": "الْمَاعُون",
+    "name_hi": "अल-माऊन",
+    "name_ur": "الماعون",
+    "ayat": 7,
+    "juz": 30,
+    "tier": 3
+  },
+  {
+    "num": 108,
+    "name_en": "Al-Kawthar",
+    "name_ar": "الْكَوۡثَر",
+    "name_hi": "अल-कौसर",
+    "name_ur": "الکوثر",
+    "ayat": 3,
+    "juz": 30,
+    "tier": 1
+  },
+  {
+    "num": 109,
+    "name_en": "Al-Kafirun",
+    "name_ar": "الْكَافِرُون",
+    "name_hi": "अल-काफ़िरून",
+    "name_ur": "الکافرون",
+    "ayat": 6,
+    "juz": 30,
+    "tier": 3
+  },
+  {
+    "num": 110,
+    "name_en": "An-Nasr",
+    "name_ar": "النَّصۡر",
+    "name_hi": "अन-नस्र",
+    "name_ur": "النصر",
+    "ayat": 3,
+    "juz": 30,
+    "tier": 3
+  },
+  {
+    "num": 111,
+    "name_en": "Al-Masad",
+    "name_ar": "الْمَسَد",
+    "name_hi": "अल-मसद",
+    "name_ur": "المسد",
+    "ayat": 5,
+    "juz": 30,
+    "tier": 3
+  },
+  {
+    "num": 112,
+    "name_en": "Al-Ikhlas",
+    "name_ar": "الْإِخۡلَاص",
+    "name_hi": "अल-इख़लास",
+    "name_ur": "الاخلاص",
+    "ayat": 4,
+    "juz": 30,
+    "tier": 1
+  },
+  {
+    "num": 113,
+    "name_en": "Al-Falaq",
+    "name_ar": "الْفَلَق",
+    "name_hi": "अल-फ़लक़",
+    "name_ur": "الفلق",
+    "ayat": 5,
+    "juz": 30,
+    "tier": 1
+  },
+  {
+    "num": 114,
+    "name_en": "An-Nas",
+    "name_ar": "النَّاس",
+    "name_hi": "अन-नास",
+    "name_ur": "الناس",
+    "ayat": 6,
+    "juz": 30,
+    "tier": 1
+  }
+]

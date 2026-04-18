@@ -1,0 +1,2534 @@
+{
+  "ٱلله": {
+    "lesson": 1,
+    "arabic": "ٱللَّهُ",
+    "transliteration": "Allāh",
+    "meaning": {
+      "en": "Allah — The One God, The Only God",
+      "hi": "अल्लाह — एक ख़ुदा, बस एक",
+      "ur": "اللہ — ایک خدا، بس ایک"
+    },
+    "root": "ا ل ه",
+    "frequency": 1
+  },
+  "ٱللَّهُ": {
+    "lesson": 1,
+    "arabic": "ٱللَّهُ",
+    "transliteration": "Allāh",
+    "meaning": {
+      "en": "Allah — The One God, The Only God",
+      "hi": "अल्लाह — एक ख़ुदा, बस एक",
+      "ur": "اللہ — ایک خدا، بس ایک"
+    },
+    "root": "ا ل ه",
+    "frequency": 1
+  },
+  "اللّٰه": {
+    "lesson": 1,
+    "arabic": "ٱللَّهُ",
+    "transliteration": "Allāh",
+    "meaning": {
+      "en": "Allah — The One God, The Only God",
+      "hi": "अल्लाह — एक ख़ुदा, बस एक",
+      "ur": "اللہ — ایک خدا، بس ایک"
+    },
+    "root": "ا ل ه",
+    "frequency": 1
+  },
+  "اللٰه": {
+    "lesson": 1,
+    "arabic": "ٱللَّهُ",
+    "transliteration": "Allāh",
+    "meaning": {
+      "en": "Allah — The One God, The Only God",
+      "hi": "अल्लाह — एक ख़ुदा, बस एक",
+      "ur": "اللہ — ایک خدا، بس ایک"
+    },
+    "root": "ا ل ه",
+    "frequency": 1
+  },
+  "هو": {
+    "lesson": 2,
+    "arabic": "هُوَ",
+    "transliteration": "Huwa",
+    "meaning": {
+      "en": "He / It",
+      "hi": "वह (वो)",
+      "ur": "وہ"
+    },
+    "root": "ه و",
+    "frequency": 2
+  },
+  "هُوَ": {
+    "lesson": 2,
+    "arabic": "هُوَ",
+    "transliteration": "Huwa",
+    "meaning": {
+      "en": "He / It",
+      "hi": "वह (वो)",
+      "ur": "وہ"
+    },
+    "root": "ه و",
+    "frequency": 2
+  },
+  "من": {
+    "lesson": 3,
+    "arabic": "مِنْ",
+    "transliteration": "Min",
+    "meaning": {
+      "en": "From / Of / Some of",
+      "hi": "से / में से / कुछ",
+      "ur": "سے / میں سے / کچھ"
+    },
+    "root": "م ن",
+    "frequency": 3
+  },
+  "مِنْ": {
+    "lesson": 3,
+    "arabic": "مِنْ",
+    "transliteration": "Min",
+    "meaning": {
+      "en": "From / Of / Some of",
+      "hi": "से / में से / कुछ",
+      "ur": "سے / میں سے / کچھ"
+    },
+    "root": "م ن",
+    "frequency": 3
+  },
+  "في": {
+    "lesson": 4,
+    "arabic": "فِي",
+    "transliteration": "Fī",
+    "meaning": {
+      "en": "In / Inside / Within",
+      "hi": "में / अंदर",
+      "ur": "میں / اندر"
+    },
+    "root": "ف ي",
+    "frequency": 4
+  },
+  "فِي": {
+    "lesson": 4,
+    "arabic": "فِي",
+    "transliteration": "Fī",
+    "meaning": {
+      "en": "In / Inside / Within",
+      "hi": "में / अंदर",
+      "ur": "میں / اندر"
+    },
+    "root": "ف ي",
+    "frequency": 4
+  },
+  "على": {
+    "lesson": 5,
+    "arabic": "عَلَى",
+    "transliteration": "'Alā",
+    "meaning": {
+      "en": "On / Upon / Over",
+      "hi": "पर / ऊपर",
+      "ur": "پر / اوپر"
+    },
+    "root": "ع ل و",
+    "frequency": 5
+  },
+  "عَلَى": {
+    "lesson": 5,
+    "arabic": "عَلَى",
+    "transliteration": "'Alā",
+    "meaning": {
+      "en": "On / Upon / Over",
+      "hi": "पर / ऊपर",
+      "ur": "پر / اوپر"
+    },
+    "root": "ع ل و",
+    "frequency": 5
+  },
+  "إن": {
+    "lesson": 6,
+    "arabic": "إِنَّ",
+    "transliteration": "Inna",
+    "meaning": {
+      "en": "Verily / Indeed / Truly",
+      "hi": "बेशक / यक़ीनन / दरअसल",
+      "ur": "بے شک / یقیناً / درحقیقت"
+    },
+    "root": "أ ن ن",
+    "frequency": 6
+  },
+  "إِنَّ": {
+    "lesson": 6,
+    "arabic": "إِنَّ",
+    "transliteration": "Inna",
+    "meaning": {
+      "en": "Verily / Indeed / Truly",
+      "hi": "बेशक / यक़ीनन / दरअसल",
+      "ur": "بے شک / یقیناً / درحقیقت"
+    },
+    "root": "أ ن ن",
+    "frequency": 6
+  },
+  "و": {
+    "lesson": 7,
+    "arabic": "وَ",
+    "transliteration": "Wa",
+    "meaning": {
+      "en": "And",
+      "hi": "और",
+      "ur": "اور"
+    },
+    "root": "و",
+    "frequency": 7
+  },
+  "وَ": {
+    "lesson": 7,
+    "arabic": "وَ",
+    "transliteration": "Wa",
+    "meaning": {
+      "en": "And",
+      "hi": "और",
+      "ur": "اور"
+    },
+    "root": "و",
+    "frequency": 7
+  },
+  "إلى": {
+    "lesson": 8,
+    "arabic": "إِلَى",
+    "transliteration": "Ilā",
+    "meaning": {
+      "en": "To / Towards",
+      "hi": "की तरफ़ / तक",
+      "ur": "کی طرف / تک"
+    },
+    "root": "أ ل و",
+    "frequency": 8
+  },
+  "إِلَى": {
+    "lesson": 8,
+    "arabic": "إِلَى",
+    "transliteration": "Ilā",
+    "meaning": {
+      "en": "To / Towards",
+      "hi": "की तरफ़ / तक",
+      "ur": "کی طرف / تک"
+    },
+    "root": "أ ل و",
+    "frequency": 8
+  },
+  "عن": {
+    "lesson": 9,
+    "arabic": "عَنْ",
+    "transliteration": "'An",
+    "meaning": {
+      "en": "About / From / Away from",
+      "hi": "के बारे में / से / से दूर",
+      "ur": "کے بارے میں / سے / سے دور"
+    },
+    "root": "ع ن",
+    "frequency": 9
+  },
+  "عَنْ": {
+    "lesson": 9,
+    "arabic": "عَنْ",
+    "transliteration": "'An",
+    "meaning": {
+      "en": "About / From / Away from",
+      "hi": "के बारे में / से / से दूर",
+      "ur": "کے بارے میں / سے / سے دور"
+    },
+    "root": "ع ن",
+    "frequency": 9
+  },
+  "لا": {
+    "lesson": 10,
+    "arabic": "لَا",
+    "transliteration": "Lā",
+    "meaning": {
+      "en": "No / Not",
+      "hi": "नहीं / न",
+      "ur": "نہیں / نہ"
+    },
+    "root": "ل ا",
+    "frequency": 10
+  },
+  "لَا": {
+    "lesson": 10,
+    "arabic": "لَا",
+    "transliteration": "Lā",
+    "meaning": {
+      "en": "No / Not",
+      "hi": "नहीं / न",
+      "ur": "نہیں / نہ"
+    },
+    "root": "ل ا",
+    "frequency": 10
+  },
+  "ب": {
+    "lesson": 11,
+    "arabic": "بِ",
+    "transliteration": "Bi",
+    "meaning": {
+      "en": "With / By / In",
+      "hi": "के साथ / से / में",
+      "ur": "کے ساتھ / سے / میں"
+    },
+    "root": "ب",
+    "frequency": 11
+  },
+  "بِ": {
+    "lesson": 11,
+    "arabic": "بِ",
+    "transliteration": "Bi",
+    "meaning": {
+      "en": "With / By / In",
+      "hi": "के साथ / से / में",
+      "ur": "کے ساتھ / سے / میں"
+    },
+    "root": "ب",
+    "frequency": 11
+  },
+  "ل": {
+    "lesson": 12,
+    "arabic": "لِ",
+    "transliteration": "Li",
+    "meaning": {
+      "en": "For / To / Belonging to",
+      "hi": "के लिए / का / की",
+      "ur": "کے لیے / کا / کی"
+    },
+    "root": "ل",
+    "frequency": 12
+  },
+  "لِ": {
+    "lesson": 12,
+    "arabic": "لِ",
+    "transliteration": "Li",
+    "meaning": {
+      "en": "For / To / Belonging to",
+      "hi": "के लिए / का / की",
+      "ur": "کے لیے / کا / کی"
+    },
+    "root": "ل",
+    "frequency": 12
+  },
+  "ما": {
+    "lesson": 13,
+    "arabic": "مَا",
+    "transliteration": "Mā",
+    "meaning": {
+      "en": "What / That which / Not",
+      "hi": "क्या / जो / नहीं",
+      "ur": "کیا / جو / نہیں"
+    },
+    "root": "م ا",
+    "frequency": 13
+  },
+  "مَا": {
+    "lesson": 13,
+    "arabic": "مَا",
+    "transliteration": "Mā",
+    "meaning": {
+      "en": "What / That which / Not",
+      "hi": "क्या / जो / नहीं",
+      "ur": "کیا / جو / نہیں"
+    },
+    "root": "م ا",
+    "frequency": 13
+  },
+  "قال": {
+    "lesson": 14,
+    "arabic": "قَالَ",
+    "transliteration": "Qāla",
+    "meaning": {
+      "en": "He said",
+      "hi": "उसने कहा",
+      "ur": "اس نے کہا"
+    },
+    "root": "ق و ل",
+    "frequency": 14
+  },
+  "قَالَ": {
+    "lesson": 14,
+    "arabic": "قَالَ",
+    "transliteration": "Qāla",
+    "meaning": {
+      "en": "He said",
+      "hi": "उसने कहा",
+      "ur": "اس نے کہا"
+    },
+    "root": "ق و ل",
+    "frequency": 14
+  },
+  "كان": {
+    "lesson": 15,
+    "arabic": "كَانَ",
+    "transliteration": "Kāna",
+    "meaning": {
+      "en": "He was / It was",
+      "hi": "वह था / यह था",
+      "ur": "وہ تھا / یہ تھا"
+    },
+    "root": "ك و ن",
+    "frequency": 15
+  },
+  "كَانَ": {
+    "lesson": 15,
+    "arabic": "كَانَ",
+    "transliteration": "Kāna",
+    "meaning": {
+      "en": "He was / It was",
+      "hi": "वह था / यह था",
+      "ur": "وہ تھا / یہ تھا"
+    },
+    "root": "ك و ن",
+    "frequency": 15
+  },
+  "رب": {
+    "lesson": 16,
+    "arabic": "رَبّ",
+    "transliteration": "Rabb",
+    "meaning": {
+      "en": "Lord / Sustainer / Nurturer",
+      "hi": "रब / पालने वाला / परवरदिगार",
+      "ur": "رب / پالنے والا / پروردگار"
+    },
+    "root": "ر ب ب",
+    "frequency": 16
+  },
+  "رَبّ": {
+    "lesson": 16,
+    "arabic": "رَبّ",
+    "transliteration": "Rabb",
+    "meaning": {
+      "en": "Lord / Sustainer / Nurturer",
+      "hi": "रब / पालने वाला / परवरदिगार",
+      "ur": "رب / پالنے والا / پروردگار"
+    },
+    "root": "ر ب ب",
+    "frequency": 16
+  },
+  "كل": {
+    "lesson": 17,
+    "arabic": "كُلّ",
+    "transliteration": "Kull",
+    "meaning": {
+      "en": "Every / All / Each",
+      "hi": "हर / सब / हर एक",
+      "ur": "ہر / سب / ہر ایک"
+    },
+    "root": "ك ل ل",
+    "frequency": 17
+  },
+  "كُلّ": {
+    "lesson": 17,
+    "arabic": "كُلّ",
+    "transliteration": "Kull",
+    "meaning": {
+      "en": "Every / All / Each",
+      "hi": "हर / सब / हर एक",
+      "ur": "ہر / سب / ہر ایک"
+    },
+    "root": "ك ل ل",
+    "frequency": 17
+  },
+  "ٱلذى": {
+    "lesson": 18,
+    "arabic": "ٱلَّذِى",
+    "transliteration": "Alladhī",
+    "meaning": {
+      "en": "The one who / That which / Who",
+      "hi": "जो / वह जो / जिसने",
+      "ur": "جو / وہ جو / جس نے"
+    },
+    "root": "ل ذ ي",
+    "frequency": 18
+  },
+  "ٱلَّذِى": {
+    "lesson": 18,
+    "arabic": "ٱلَّذِى",
+    "transliteration": "Alladhī",
+    "meaning": {
+      "en": "The one who / That which / Who",
+      "hi": "जो / वह जो / जिसने",
+      "ur": "جو / وہ جو / جس نے"
+    },
+    "root": "ل ذ ي",
+    "frequency": 18
+  },
+  "ٱلَّذِي": {
+    "lesson": 18,
+    "arabic": "ٱلَّذِى",
+    "transliteration": "Alladhī",
+    "meaning": {
+      "en": "The one who / That which / Who",
+      "hi": "जो / वह जो / जिसने",
+      "ur": "جو / وہ جو / جس نے"
+    },
+    "root": "ل ذ ي",
+    "frequency": 18
+  },
+  "ٱلذي": {
+    "lesson": 18,
+    "arabic": "ٱلَّذِى",
+    "transliteration": "Alladhī",
+    "meaning": {
+      "en": "The one who / That which / Who",
+      "hi": "जो / वह जो / जिसने",
+      "ur": "جو / وہ جو / جس نے"
+    },
+    "root": "ل ذ ي",
+    "frequency": 18
+  },
+  "يوم": {
+    "lesson": 19,
+    "arabic": "يَوْم",
+    "transliteration": "Yawm",
+    "meaning": {
+      "en": "Day",
+      "hi": "दिन",
+      "ur": "دن"
+    },
+    "root": "ي و م",
+    "frequency": 19
+  },
+  "يَوْم": {
+    "lesson": 19,
+    "arabic": "يَوْم",
+    "transliteration": "Yawm",
+    "meaning": {
+      "en": "Day",
+      "hi": "दिन",
+      "ur": "دن"
+    },
+    "root": "ي و م",
+    "frequency": 19
+  },
+  "نفس": {
+    "lesson": 20,
+    "arabic": "نَفْس",
+    "transliteration": "Nafs",
+    "meaning": {
+      "en": "Soul / Self / Person",
+      "hi": "नफ़्स / रूह / ज़ात / शख़्स",
+      "ur": "نفس / روح / ذات / شخص"
+    },
+    "root": "ن ف س",
+    "frequency": 20
+  },
+  "نَفْس": {
+    "lesson": 20,
+    "arabic": "نَفْس",
+    "transliteration": "Nafs",
+    "meaning": {
+      "en": "Soul / Self / Person",
+      "hi": "नफ़्स / रूह / ज़ात / शख़्स",
+      "ur": "نفس / روح / ذات / شخص"
+    },
+    "root": "ن ف س",
+    "frequency": 20
+  },
+  "أنت": {
+    "lesson": 21,
+    "arabic": "أَنتَ",
+    "transliteration": "Anta",
+    "meaning": {
+      "en": "You (singular, masculine)",
+      "hi": "तुम / आप (एकवचन, मुज़क्कर)",
+      "ur": "تم / آپ (واحد، مذکر)"
+    },
+    "root": "أ ن ت",
+    "frequency": 21
+  },
+  "أَنتَ": {
+    "lesson": 21,
+    "arabic": "أَنتَ",
+    "transliteration": "Anta",
+    "meaning": {
+      "en": "You (singular, masculine)",
+      "hi": "तुम / आप (एकवचन, मुज़क्कर)",
+      "ur": "تم / آپ (واحد، مذکر)"
+    },
+    "root": "أ ن ت",
+    "frequency": 21
+  },
+  "قلب": {
+    "lesson": 26,
+    "arabic": "قَلْب",
+    "transliteration": "Qalb",
+    "meaning": {
+      "en": "Heart",
+      "hi": "दिल / क़ल्ब",
+      "ur": "دل / قلب"
+    },
+    "root": "ق ل ب",
+    "frequency": 26
+  },
+  "قَلْب": {
+    "lesson": 26,
+    "arabic": "قَلْب",
+    "transliteration": "Qalb",
+    "meaning": {
+      "en": "Heart",
+      "hi": "दिल / क़ल्ब",
+      "ur": "دل / قلب"
+    },
+    "root": "ق ل ب",
+    "frequency": 26
+  },
+  "ٱلرحمـٰن": {
+    "lesson": 21,
+    "arabic": "ٱلرَّحْمَـٰن",
+    "transliteration": "Ar-Raḥmān",
+    "meaning": {
+      "en": "The Most Compassionate / The Entirely Merciful",
+      "hi": "रहमान / बहुत मेहरबान",
+      "ur": "رحمان / بہت مہربان"
+    },
+    "root": "ر ح م",
+    "frequency": 21
+  },
+  "ٱلرَّحْمَـٰن": {
+    "lesson": 21,
+    "arabic": "ٱلرَّحْمَـٰن",
+    "transliteration": "Ar-Raḥmān",
+    "meaning": {
+      "en": "The Most Compassionate / The Entirely Merciful",
+      "hi": "रहमान / बहुत मेहरबान",
+      "ur": "رحمان / بہت مہربان"
+    },
+    "root": "ر ح م",
+    "frequency": 21
+  },
+  "أنا": {
+    "lesson": 22,
+    "arabic": "أَنَا",
+    "transliteration": "Ana",
+    "meaning": {
+      "en": "I / Me",
+      "hi": "मैं",
+      "ur": "میں"
+    },
+    "root": "أ ن ا",
+    "frequency": 22
+  },
+  "أَنَا": {
+    "lesson": 22,
+    "arabic": "أَنَا",
+    "transliteration": "Ana",
+    "meaning": {
+      "en": "I / Me",
+      "hi": "मैं",
+      "ur": "میں"
+    },
+    "root": "أ ن ا",
+    "frequency": 22
+  },
+  "ٱلرحيم": {
+    "lesson": 22,
+    "arabic": "ٱلرَّحِيم",
+    "transliteration": "Ar-Raḥīm",
+    "meaning": {
+      "en": "The Most Merciful / The Especially Merciful",
+      "hi": "रहीम / निहायत रहम वाला",
+      "ur": "رحیم / نہایت رحم والا"
+    },
+    "root": "ر ح م",
+    "frequency": 22
+  },
+  "ٱلرَّحِيم": {
+    "lesson": 22,
+    "arabic": "ٱلرَّحِيم",
+    "transliteration": "Ar-Raḥīm",
+    "meaning": {
+      "en": "The Most Merciful / The Especially Merciful",
+      "hi": "रहीम / निहायत रहम वाला",
+      "ur": "رحیم / نہایت رحم والا"
+    },
+    "root": "ر ح م",
+    "frequency": 22
+  },
+  "عليم": {
+    "lesson": 23,
+    "arabic": "عَلِيم",
+    "transliteration": "'Alīm",
+    "meaning": {
+      "en": "All-Knowing / The Omniscient",
+      "hi": "सब कुछ जानने वाला / अलीम",
+      "ur": "سب کچھ جاننے والا / علیم"
+    },
+    "root": "ع ل م",
+    "frequency": 23
+  },
+  "عَلِيم": {
+    "lesson": 23,
+    "arabic": "عَلِيم",
+    "transliteration": "'Alīm",
+    "meaning": {
+      "en": "All-Knowing / The Omniscient",
+      "hi": "सब कुछ जानने वाला / अलीम",
+      "ur": "سب کچھ جاننے والا / علیم"
+    },
+    "root": "ع ل م",
+    "frequency": 23
+  },
+  "نحن": {
+    "lesson": 23,
+    "arabic": "نَحْنُ",
+    "transliteration": "Naḥnu",
+    "meaning": {
+      "en": "We",
+      "hi": "हम",
+      "ur": "ہم"
+    },
+    "root": "ن ح ن",
+    "frequency": 23
+  },
+  "نَحْنُ": {
+    "lesson": 23,
+    "arabic": "نَحْنُ",
+    "transliteration": "Naḥnu",
+    "meaning": {
+      "en": "We",
+      "hi": "हम",
+      "ur": "ہم"
+    },
+    "root": "ن ح ن",
+    "frequency": 23
+  },
+  "هم": {
+    "lesson": 24,
+    "arabic": "هُمْ",
+    "transliteration": "Hum",
+    "meaning": {
+      "en": "They",
+      "hi": "वे (बहुवचन)",
+      "ur": "وہ (جمع)"
+    },
+    "root": "ه م",
+    "frequency": 24
+  },
+  "هُمْ": {
+    "lesson": 24,
+    "arabic": "هُمْ",
+    "transliteration": "Hum",
+    "meaning": {
+      "en": "They",
+      "hi": "वे (बहुवचन)",
+      "ur": "وہ (جمع)"
+    },
+    "root": "ه م",
+    "frequency": 24
+  },
+  "نور": {
+    "lesson": 24,
+    "arabic": "نُور",
+    "transliteration": "Nūr",
+    "meaning": {
+      "en": "Light",
+      "hi": "नूर / रोशनी",
+      "ur": "نور / روشنی"
+    },
+    "root": "ن و ر",
+    "frequency": 24
+  },
+  "نُور": {
+    "lesson": 24,
+    "arabic": "نُور",
+    "transliteration": "Nūr",
+    "meaning": {
+      "en": "Light",
+      "hi": "नूर / रोशनी",
+      "ur": "نور / روشنی"
+    },
+    "root": "ن و ر",
+    "frequency": 24
+  },
+  "قدير": {
+    "lesson": 24,
+    "arabic": "قَدِير",
+    "transliteration": "Qadīr",
+    "meaning": {
+      "en": "The All-Powerful / All-Capable",
+      "hi": "हर चीज़ पर क़ादिर / क़ुदरत वाला",
+      "ur": "ہر چیز پر قادر / قدرت والا"
+    },
+    "root": "ق د ر",
+    "frequency": 24
+  },
+  "قَدِير": {
+    "lesson": 24,
+    "arabic": "قَدِير",
+    "transliteration": "Qadīr",
+    "meaning": {
+      "en": "The All-Powerful / All-Capable",
+      "hi": "हर चीज़ पर क़ादिर / क़ुदरत वाला",
+      "ur": "ہر چیز پر قادر / قدرت والا"
+    },
+    "root": "ق د ر",
+    "frequency": 24
+  },
+  "أن": {
+    "lesson": 25,
+    "arabic": "أَنَّ",
+    "transliteration": "Anna",
+    "meaning": {
+      "en": "That / Indeed that",
+      "hi": "कि / बेशक कि",
+      "ur": "کہ / بے شک کہ"
+    },
+    "root": "أ ن ن",
+    "frequency": 25
+  },
+  "أَنَّ": {
+    "lesson": 25,
+    "arabic": "أَنَّ",
+    "transliteration": "Anna",
+    "meaning": {
+      "en": "That / Indeed that",
+      "hi": "कि / बेशक कि",
+      "ur": "کہ / بے شک کہ"
+    },
+    "root": "أ ن ن",
+    "frequency": 25
+  },
+  "إيمان": {
+    "lesson": 25,
+    "arabic": "إِيمَان",
+    "transliteration": "Īmān",
+    "meaning": {
+      "en": "Faith / Belief",
+      "hi": "ईमान / यक़ीन",
+      "ur": "ایمان / یقین"
+    },
+    "root": "أ م ن",
+    "frequency": 25
+  },
+  "إِيمَان": {
+    "lesson": 25,
+    "arabic": "إِيمَان",
+    "transliteration": "Īmān",
+    "meaning": {
+      "en": "Faith / Belief",
+      "hi": "ईमान / यक़ीन",
+      "ur": "ایمان / یقین"
+    },
+    "root": "أ م ن",
+    "frequency": 25
+  },
+  "سميع": {
+    "lesson": 25,
+    "arabic": "سَمِيع",
+    "transliteration": "Samī'",
+    "meaning": {
+      "en": "The All-Hearing",
+      "hi": "सब सुनने वाला",
+      "ur": "سب سننے والا"
+    },
+    "root": "س م ع",
+    "frequency": 25
+  },
+  "سَمِيع": {
+    "lesson": 25,
+    "arabic": "سَمِيع",
+    "transliteration": "Samī'",
+    "meaning": {
+      "en": "The All-Hearing",
+      "hi": "सब सुनने वाला",
+      "ur": "سب سننے والا"
+    },
+    "root": "س م ع",
+    "frequency": 25
+  },
+  "أو": {
+    "lesson": 26,
+    "arabic": "أَوْ",
+    "transliteration": "Aw",
+    "meaning": {
+      "en": "Or",
+      "hi": "या",
+      "ur": "یا"
+    },
+    "root": "أ و",
+    "frequency": 26
+  },
+  "أَوْ": {
+    "lesson": 26,
+    "arabic": "أَوْ",
+    "transliteration": "Aw",
+    "meaning": {
+      "en": "Or",
+      "hi": "या",
+      "ur": "یا"
+    },
+    "root": "أ و",
+    "frequency": 26
+  },
+  "أرض": {
+    "lesson": 27,
+    "arabic": "أَرْض",
+    "transliteration": "Arḍ",
+    "meaning": {
+      "en": "Earth / Land / Ground",
+      "hi": "ज़मीन",
+      "ur": "زمین"
+    },
+    "root": "أ ر ض",
+    "frequency": 27
+  },
+  "أَرْض": {
+    "lesson": 27,
+    "arabic": "أَرْض",
+    "transliteration": "Arḍ",
+    "meaning": {
+      "en": "Earth / Land / Ground",
+      "hi": "ज़मीन",
+      "ur": "زمین"
+    },
+    "root": "أ ر ض",
+    "frequency": 27
+  },
+  "ناس": {
+    "lesson": 28,
+    "arabic": "نَاس",
+    "transliteration": "Nās",
+    "meaning": {
+      "en": "People / Mankind / Humanity",
+      "hi": "लोग / इंसान / बनी-नौ-इंसान",
+      "ur": "لوگ / انسان / بنی نوع انسان"
+    },
+    "root": "ن و س",
+    "frequency": 28
+  },
+  "نَاس": {
+    "lesson": 28,
+    "arabic": "نَاس",
+    "transliteration": "Nās",
+    "meaning": {
+      "en": "People / Mankind / Humanity",
+      "hi": "लोग / इंसान / बनी-नौ-इंसान",
+      "ur": "لوگ / انسان / بنی نوع انسان"
+    },
+    "root": "ن و س",
+    "frequency": 28
+  },
+  "عمل": {
+    "lesson": 29,
+    "arabic": "عَمَل",
+    "transliteration": "'Amal",
+    "meaning": {
+      "en": "Deed / Action / Work",
+      "hi": "अमल / काम / करतूत",
+      "ur": "عمل / کام / کارنامہ"
+    },
+    "root": "ع م ل",
+    "frequency": 29
+  },
+  "عَمَل": {
+    "lesson": 29,
+    "arabic": "عَمَل",
+    "transliteration": "'Amal",
+    "meaning": {
+      "en": "Deed / Action / Work",
+      "hi": "अमल / काम / करतूत",
+      "ur": "عمل / کام / کارنامہ"
+    },
+    "root": "ع م ل",
+    "frequency": 29
+  },
+  "صبر": {
+    "lesson": 30,
+    "arabic": "صَبْر",
+    "transliteration": "Ṣabr",
+    "meaning": {
+      "en": "Patience / Steadfastness / Perseverance",
+      "hi": "सब्र / साबित-क़दमी / इस्तिक़ामत",
+      "ur": "صبر / ثابت قدمی / استقامت"
+    },
+    "root": "ص ب ر",
+    "frequency": 30
+  },
+  "صَبْر": {
+    "lesson": 30,
+    "arabic": "صَبْر",
+    "transliteration": "Ṣabr",
+    "meaning": {
+      "en": "Patience / Steadfastness / Perseverance",
+      "hi": "सब्र / साबित-क़दमी / इस्तिक़ामत",
+      "ur": "صبر / ثابت قدمی / استقامت"
+    },
+    "root": "ص ب ر",
+    "frequency": 30
+  },
+  "خلق": {
+    "lesson": 31,
+    "arabic": "خَلَقَ",
+    "transliteration": "Khalaqa",
+    "meaning": {
+      "en": "He created",
+      "hi": "उसने पैदा किया",
+      "ur": "اس نے پیدا کیا"
+    },
+    "root": "خ ل ق",
+    "frequency": 31
+  },
+  "خَلَقَ": {
+    "lesson": 31,
+    "arabic": "خَلَقَ",
+    "transliteration": "Khalaqa",
+    "meaning": {
+      "en": "He created",
+      "hi": "उसने पैदा किया",
+      "ur": "اس نے پیدا کیا"
+    },
+    "root": "خ ل ق",
+    "frequency": 31
+  },
+  "عبد": {
+    "lesson": 32,
+    "arabic": "عَبَدَ",
+    "transliteration": "'Abada / Ya'budu",
+    "meaning": {
+      "en": "He worshipped / To worship",
+      "hi": "उसने इबादत की / इबादत करना",
+      "ur": "اس نے عبادت کی / عبادت کرنا"
+    },
+    "root": "ع ب د",
+    "frequency": 32
+  },
+  "عَبَدَ": {
+    "lesson": 32,
+    "arabic": "عَبَدَ",
+    "transliteration": "'Abada / Ya'budu",
+    "meaning": {
+      "en": "He worshipped / To worship",
+      "hi": "उसने इबादत की / इबादत करना",
+      "ur": "اس نے عبادت کی / عبادت کرنا"
+    },
+    "root": "ع ب د",
+    "frequency": 32
+  },
+  "عَبَدَ / يَعْبُدُ": {
+    "lesson": 32,
+    "arabic": "عَبَدَ",
+    "transliteration": "'Abada / Ya'budu",
+    "meaning": {
+      "en": "He worshipped / To worship",
+      "hi": "उसने इबादत की / इबादत करना",
+      "ur": "اس نے عبادت کی / عبادت کرنا"
+    },
+    "root": "ع ب د",
+    "frequency": 32
+  },
+  "عبد / يعبد": {
+    "lesson": 32,
+    "arabic": "عَبَدَ",
+    "transliteration": "'Abada / Ya'budu",
+    "meaning": {
+      "en": "He worshipped / To worship",
+      "hi": "उसने इबादत की / इबादत करना",
+      "ur": "اس نے عبادت کی / عبادت کرنا"
+    },
+    "root": "ع ب د",
+    "frequency": 32
+  },
+  "آمن": {
+    "lesson": 33,
+    "arabic": "آمَنَ",
+    "transliteration": "Āmana",
+    "meaning": {
+      "en": "He believed / He had faith",
+      "hi": "वह ईमान لाया / उसने यक़ीन किया",
+      "ur": "وہ ایمان لایا / اس نے یقین کیا"
+    },
+    "root": "أ م ن",
+    "frequency": 33
+  },
+  "آمَنَ": {
+    "lesson": 33,
+    "arabic": "آمَنَ",
+    "transliteration": "Āmana",
+    "meaning": {
+      "en": "He believed / He had faith",
+      "hi": "वह ईमान لाया / उसने यक़ीन किया",
+      "ur": "وہ ایمان لایا / اس نے یقین کیا"
+    },
+    "root": "أ م ن",
+    "frequency": 33
+  },
+  "أرسل": {
+    "lesson": 34,
+    "arabic": "أَرْسَلَ",
+    "transliteration": "Arsala",
+    "meaning": {
+      "en": "He sent / He dispatched",
+      "hi": "उसने भेजा",
+      "ur": "اس نے بھیجا"
+    },
+    "root": "ر س ل",
+    "frequency": 34
+  },
+  "أَرْسَلَ": {
+    "lesson": 34,
+    "arabic": "أَرْسَلَ",
+    "transliteration": "Arsala",
+    "meaning": {
+      "en": "He sent / He dispatched",
+      "hi": "उसने भेजा",
+      "ur": "اس نے بھیجا"
+    },
+    "root": "ر س ل",
+    "frequency": 34
+  },
+  "هدى": {
+    "lesson": 35,
+    "arabic": "هَدَى",
+    "transliteration": "Hadā",
+    "meaning": {
+      "en": "He guided / He showed the way",
+      "hi": "उसने हिदायत दी / राह दिखाई",
+      "ur": "اس نے ہدایت دی / راہ دکھائی"
+    },
+    "root": "ه د ي",
+    "frequency": 35
+  },
+  "هَدَى": {
+    "lesson": 35,
+    "arabic": "هَدَى",
+    "transliteration": "Hadā",
+    "meaning": {
+      "en": "He guided / He showed the way",
+      "hi": "उसने हिदायत दी / राह दिखाई",
+      "ur": "اس نے ہدایت دی / راہ دکھائی"
+    },
+    "root": "ه د ي",
+    "frequency": 35
+  },
+  "تاب": {
+    "lesson": 36,
+    "arabic": "تَابَ",
+    "transliteration": "Tāba",
+    "meaning": {
+      "en": "He repented / He turned back",
+      "hi": "उसने तौबा की / वह लौटा",
+      "ur": "اس نے توبہ کی / وہ لوٹا"
+    },
+    "root": "ت و ب",
+    "frequency": 36
+  },
+  "تَابَ": {
+    "lesson": 36,
+    "arabic": "تَابَ",
+    "transliteration": "Tāba",
+    "meaning": {
+      "en": "He repented / He turned back",
+      "hi": "उसने तौबा की / वह लौटा",
+      "ur": "اس نے توبہ کی / وہ لوٹا"
+    },
+    "root": "ت و ب",
+    "frequency": 36
+  },
+  "دعا": {
+    "lesson": 37,
+    "arabic": "دَعَا",
+    "transliteration": "Da'ā",
+    "meaning": {
+      "en": "He called / He prayed / He invoked",
+      "hi": "उसने پکارا / दुआ की / इल्तिजा की",
+      "ur": "اس نے پکارا / دعا کی / التجا کی"
+    },
+    "root": "د ع و",
+    "frequency": 37
+  },
+  "دَعَا": {
+    "lesson": 37,
+    "arabic": "دَعَا",
+    "transliteration": "Da'ā",
+    "meaning": {
+      "en": "He called / He prayed / He invoked",
+      "hi": "उसने پکارا / दुआ की / इल्तिजा की",
+      "ur": "اس نے پکارا / دعا کی / التجا کی"
+    },
+    "root": "د ع و",
+    "frequency": 37
+  },
+  "علم": {
+    "lesson": 71,
+    "arabic": "عِلْم",
+    "transliteration": "Ilm",
+    "meaning": {
+      "en": "Knowledge / Ilm",
+      "hi": "इल्म / जानना",
+      "ur": "علم / جاننا"
+    },
+    "root": "ع ل م",
+    "frequency": 71
+  },
+  "عَلِمَ": {
+    "lesson": 38,
+    "arabic": "عَلِمَ",
+    "transliteration": "'Alima",
+    "meaning": {
+      "en": "He knew / He came to know",
+      "hi": "वह जानता था / उसे मालूम हुआ",
+      "ur": "وہ جانتا تھا / اسے معلوم ہوا"
+    },
+    "root": "ع ل م",
+    "frequency": 38
+  },
+  "رزق": {
+    "lesson": 39,
+    "arabic": "رَزَقَ",
+    "transliteration": "Razaqa",
+    "meaning": {
+      "en": "He provided / He gave sustenance",
+      "hi": "उसने रिज़्क़ दिया / रोज़ी दी",
+      "ur": "اس نے رزق دیا / روزی دی"
+    },
+    "root": "ر ز ق",
+    "frequency": 39
+  },
+  "رَزَقَ": {
+    "lesson": 39,
+    "arabic": "رَزَقَ",
+    "transliteration": "Razaqa",
+    "meaning": {
+      "en": "He provided / He gave sustenance",
+      "hi": "उसने रिज़्क़ दिया / रोज़ी दी",
+      "ur": "اس نے رزق دیا / روزی دی"
+    },
+    "root": "ر ز ق",
+    "frequency": 39
+  },
+  "شكر": {
+    "lesson": 40,
+    "arabic": "شَكَرَ",
+    "transliteration": "Shakara",
+    "meaning": {
+      "en": "He was grateful / He gave thanks",
+      "hi": "उसने शुक्र किया / शुक्रगुज़ार हुआ",
+      "ur": "اس نے شکر کیا / شکرگزار ہوا"
+    },
+    "root": "ش ك ر",
+    "frequency": 40
+  },
+  "شَكَرَ": {
+    "lesson": 40,
+    "arabic": "شَكَرَ",
+    "transliteration": "Shakara",
+    "meaning": {
+      "en": "He was grateful / He gave thanks",
+      "hi": "उसने शुक्र किया / शुक्रगुज़ार हुआ",
+      "ur": "اس نے شکر کیا / شکرگزار ہوا"
+    },
+    "root": "ش ك ر",
+    "frequency": 40
+  },
+  "حق": {
+    "lesson": 41,
+    "arabic": "حَقّ",
+    "transliteration": "Ḥaqq",
+    "meaning": {
+      "en": "Truth / Right / Due",
+      "hi": "हक़ / सच / वाजिब",
+      "ur": "حق / سچ / جائز"
+    },
+    "root": "ح ق ق",
+    "frequency": 41
+  },
+  "حَقّ": {
+    "lesson": 41,
+    "arabic": "حَقّ",
+    "transliteration": "Ḥaqq",
+    "meaning": {
+      "en": "Truth / Right / Due",
+      "hi": "हक़ / सच / वाजिब",
+      "ur": "حق / سچ / جائز"
+    },
+    "root": "ح ق ق",
+    "frequency": 41
+  },
+  "كتاب": {
+    "lesson": 42,
+    "arabic": "كِتَاب",
+    "transliteration": "Kitāb",
+    "meaning": {
+      "en": "Book / Scripture / Written decree",
+      "hi": "किताब / सहीफ़ा / लिखा हुआ फ़ैसला",
+      "ur": "کتاب / صحیفہ / لکھا ہوا فیصلہ"
+    },
+    "root": "ك ت ب",
+    "frequency": 42
+  },
+  "كِتَاب": {
+    "lesson": 42,
+    "arabic": "كِتَاب",
+    "transliteration": "Kitāb",
+    "meaning": {
+      "en": "Book / Scripture / Written decree",
+      "hi": "किताब / सहीफ़ा / लिखा हुआ फ़ैसला",
+      "ur": "کتاب / صحیفہ / لکھا ہوا فیصلہ"
+    },
+    "root": "ك ت ب",
+    "frequency": 42
+  },
+  "أمر": {
+    "lesson": 43,
+    "arabic": "أَمْر",
+    "transliteration": "Amr",
+    "meaning": {
+      "en": "Command / Affair / Matter",
+      "hi": "हुक्म / मामला / अम्र",
+      "ur": "حکم / معاملہ / امر"
+    },
+    "root": "أ م ر",
+    "frequency": 43
+  },
+  "أَمْر": {
+    "lesson": 43,
+    "arabic": "أَمْر",
+    "transliteration": "Amr",
+    "meaning": {
+      "en": "Command / Affair / Matter",
+      "hi": "हुक्म / मामला / अम्र",
+      "ur": "حکم / معاملہ / امر"
+    },
+    "root": "أ م ر",
+    "frequency": 43
+  },
+  "قوم": {
+    "lesson": 44,
+    "arabic": "قَوْم",
+    "transliteration": "Qawm",
+    "meaning": {
+      "en": "People / Nation / Community",
+      "hi": "क़ौम / लोग / बिरादरी",
+      "ur": "قوم / لوگ / برادری"
+    },
+    "root": "ق و م",
+    "frequency": 44
+  },
+  "قَوْم": {
+    "lesson": 44,
+    "arabic": "قَوْم",
+    "transliteration": "Qawm",
+    "meaning": {
+      "en": "People / Nation / Community",
+      "hi": "क़ौम / लोग / बिरादरी",
+      "ur": "قوم / لوگ / برادری"
+    },
+    "root": "ق و م",
+    "frequency": 44
+  },
+  "سبيل": {
+    "lesson": 45,
+    "arabic": "سَبِيل",
+    "transliteration": "Sabīl",
+    "meaning": {
+      "en": "Path / Way / Road",
+      "hi": "रास्ता / राह / सबील",
+      "ur": "راستہ / راہ / سبیل"
+    },
+    "root": "س ب ل",
+    "frequency": 45
+  },
+  "سَبِيل": {
+    "lesson": 45,
+    "arabic": "سَبِيل",
+    "transliteration": "Sabīl",
+    "meaning": {
+      "en": "Path / Way / Road",
+      "hi": "रास्ता / राह / सबील",
+      "ur": "راستہ / راہ / سبیل"
+    },
+    "root": "س ب ل",
+    "frequency": 45
+  },
+  "آية": {
+    "lesson": 46,
+    "arabic": "آيَة",
+    "transliteration": "Āya",
+    "meaning": {
+      "en": "Sign / Verse / Miracle",
+      "hi": "निशानी / आयत / मोजज़ा",
+      "ur": "نشانی / آیت / معجزہ"
+    },
+    "root": "أ ي ي",
+    "frequency": 46
+  },
+  "آيَة": {
+    "lesson": 46,
+    "arabic": "آيَة",
+    "transliteration": "Āya",
+    "meaning": {
+      "en": "Sign / Verse / Miracle",
+      "hi": "निशानी / आयत / मोजज़ा",
+      "ur": "نشانی / آیت / معجزہ"
+    },
+    "root": "أ ي ي",
+    "frequency": 46
+  },
+  "ذكر": {
+    "lesson": 47,
+    "arabic": "ذِكْر",
+    "transliteration": "Dhikr",
+    "meaning": {
+      "en": "Remembrance / Mention / Reminder",
+      "hi": "ज़िक्र / याद / यादहानी",
+      "ur": "ذکر / یاد / یاددہانی"
+    },
+    "root": "ذ ك ر",
+    "frequency": 47
+  },
+  "ذِكْر": {
+    "lesson": 47,
+    "arabic": "ذِكْر",
+    "transliteration": "Dhikr",
+    "meaning": {
+      "en": "Remembrance / Mention / Reminder",
+      "hi": "ज़िक्र / याद / यादहानी",
+      "ur": "ذکر / یاد / یاددہانی"
+    },
+    "root": "ذ ك ر",
+    "frequency": 47
+  },
+  "حمد": {
+    "lesson": 48,
+    "arabic": "حَمْد",
+    "transliteration": "Ḥamd",
+    "meaning": {
+      "en": "Praise / Gratitude / Lauding",
+      "hi": "हम्द / तारीफ़ / शुक्र",
+      "ur": "حمد / تعریف / شکر"
+    },
+    "root": "ح م د",
+    "frequency": 48
+  },
+  "حَمْد": {
+    "lesson": 48,
+    "arabic": "حَمْد",
+    "transliteration": "Ḥamd",
+    "meaning": {
+      "en": "Praise / Gratitude / Lauding",
+      "hi": "हम्द / तारीफ़ / शुक्र",
+      "ur": "حمد / تعریف / شکر"
+    },
+    "root": "ح م د",
+    "frequency": 48
+  },
+  "دنيا": {
+    "lesson": 49,
+    "arabic": "دُنْيَا",
+    "transliteration": "Dunyā",
+    "meaning": {
+      "en": "This world / The lower world / The near world",
+      "hi": "दुनिया / यह जहान / क़रीबी दुनिया",
+      "ur": "دنیا / یہ جہان / قریبی دنیا"
+    },
+    "root": "د ن و",
+    "frequency": 49
+  },
+  "دُنْيَا": {
+    "lesson": 49,
+    "arabic": "دُنْيَا",
+    "transliteration": "Dunyā",
+    "meaning": {
+      "en": "This world / The lower world / The near world",
+      "hi": "दुनिया / यह जहान / क़रीबी दुनिया",
+      "ur": "دنیا / یہ جہان / قریبی دنیا"
+    },
+    "root": "د ن و",
+    "frequency": 49
+  },
+  "آخرة": {
+    "lesson": 50,
+    "arabic": "آخِرَة",
+    "transliteration": "Ākhira",
+    "meaning": {
+      "en": "The Hereafter / The Last / The Next world",
+      "hi": "आख़िरत / आने वाली दुनिया / अबदी ज़िंदगी",
+      "ur": "آخرت / آنے والی دنیا / ابدی زندگی"
+    },
+    "root": "أ خ ر",
+    "frequency": 50
+  },
+  "آخِرَة": {
+    "lesson": 50,
+    "arabic": "آخِرَة",
+    "transliteration": "Ākhira",
+    "meaning": {
+      "en": "The Hereafter / The Last / The Next world",
+      "hi": "आख़िरत / आने वाली दुनिया / अबदी ज़िंदगी",
+      "ur": "آخرت / آنے والی دنیا / ابدی زندگی"
+    },
+    "root": "أ خ ر",
+    "frequency": 50
+  },
+  "رسول": {
+    "lesson": 51,
+    "arabic": "رَسُول",
+    "transliteration": "Rasool",
+    "meaning": {
+      "en": "Messenger / Envoy",
+      "hi": "रसूल / दूत",
+      "ur": "رسول / پیغمبر"
+    },
+    "root": "ر س ل",
+    "frequency": 51
+  },
+  "رَسُول": {
+    "lesson": 51,
+    "arabic": "رَسُول",
+    "transliteration": "Rasool",
+    "meaning": {
+      "en": "Messenger / Envoy",
+      "hi": "रसूल / दूत",
+      "ur": "رسول / پیغمبر"
+    },
+    "root": "ر س ل",
+    "frequency": 51
+  },
+  "رَسُولٌ": {
+    "lesson": 51,
+    "arabic": "رَسُول",
+    "transliteration": "Rasool",
+    "meaning": {
+      "en": "Messenger / Envoy",
+      "hi": "रसूल / दूत",
+      "ur": "رسول / پیغمبر"
+    },
+    "root": "ر س ل",
+    "frequency": 51
+  },
+  "عذاب": {
+    "lesson": 52,
+    "arabic": "عَذَاب",
+    "transliteration": "Adhaab",
+    "meaning": {
+      "en": "Punishment / Torment / Suffering",
+      "hi": "अज़ाब / सज़ा / तकलीफ़",
+      "ur": "عذاب / سزا / تکلیف"
+    },
+    "root": "ع ذ ب",
+    "frequency": 52
+  },
+  "عَذَاب": {
+    "lesson": 52,
+    "arabic": "عَذَاب",
+    "transliteration": "Adhaab",
+    "meaning": {
+      "en": "Punishment / Torment / Suffering",
+      "hi": "अज़ाब / सज़ा / तकलीफ़",
+      "ur": "عذاب / سزا / تکلیف"
+    },
+    "root": "ع ذ ب",
+    "frequency": 52
+  },
+  "عَذَابٌ": {
+    "lesson": 52,
+    "arabic": "عَذَاب",
+    "transliteration": "Adhaab",
+    "meaning": {
+      "en": "Punishment / Torment / Suffering",
+      "hi": "अज़ाब / सज़ा / तकलीफ़",
+      "ur": "عذاب / سزا / تکلیف"
+    },
+    "root": "ع ذ ب",
+    "frequency": 52
+  },
+  "رحمة": {
+    "lesson": 53,
+    "arabic": "رَحْمَة",
+    "transliteration": "Rahma",
+    "meaning": {
+      "en": "Mercy / Compassion / Grace",
+      "hi": "रहमत / मेहरबानी / करम",
+      "ur": "رحمت / مہربانی / کرم"
+    },
+    "root": "ر ح م",
+    "frequency": 53
+  },
+  "رَحْمَة": {
+    "lesson": 53,
+    "arabic": "رَحْمَة",
+    "transliteration": "Rahma",
+    "meaning": {
+      "en": "Mercy / Compassion / Grace",
+      "hi": "रहमत / मेहरबानी / करम",
+      "ur": "رحمت / مہربانی / کرم"
+    },
+    "root": "ر ح م",
+    "frequency": 53
+  },
+  "رَحْمَةٌ": {
+    "lesson": 53,
+    "arabic": "رَحْمَة",
+    "transliteration": "Rahma",
+    "meaning": {
+      "en": "Mercy / Compassion / Grace",
+      "hi": "रहमत / मेहरबानी / करम",
+      "ur": "رحمت / مہربانی / کرم"
+    },
+    "root": "ر ح م",
+    "frequency": 53
+  },
+  "جنة": {
+    "lesson": 54,
+    "arabic": "جَنَّة",
+    "transliteration": "Janna",
+    "meaning": {
+      "en": "Garden / Paradise",
+      "hi": "जन्नत / बाग़",
+      "ur": "جنت / باغ"
+    },
+    "root": "ج ن ن",
+    "frequency": 54
+  },
+  "جَنَّة": {
+    "lesson": 54,
+    "arabic": "جَنَّة",
+    "transliteration": "Janna",
+    "meaning": {
+      "en": "Garden / Paradise",
+      "hi": "जन्नत / बाग़",
+      "ur": "جنت / باغ"
+    },
+    "root": "ج ن ن",
+    "frequency": 54
+  },
+  "جَنَّةٌ": {
+    "lesson": 54,
+    "arabic": "جَنَّة",
+    "transliteration": "Janna",
+    "meaning": {
+      "en": "Garden / Paradise",
+      "hi": "जन्नत / बाग़",
+      "ur": "جنت / باغ"
+    },
+    "root": "ج ن ن",
+    "frequency": 54
+  },
+  "نار": {
+    "lesson": 55,
+    "arabic": "نَار",
+    "transliteration": "Naar",
+    "meaning": {
+      "en": "Fire / Hellfire",
+      "hi": "आग / दोज़ख़",
+      "ur": "آگ / دوزخ"
+    },
+    "root": "ن و ر",
+    "frequency": 55
+  },
+  "نَار": {
+    "lesson": 55,
+    "arabic": "نَار",
+    "transliteration": "Naar",
+    "meaning": {
+      "en": "Fire / Hellfire",
+      "hi": "आग / दोज़ख़",
+      "ur": "آگ / دوزخ"
+    },
+    "root": "ن و ر",
+    "frequency": 55
+  },
+  "نَارٌ": {
+    "lesson": 55,
+    "arabic": "نَار",
+    "transliteration": "Naar",
+    "meaning": {
+      "en": "Fire / Hellfire",
+      "hi": "आग / दोज़ख़",
+      "ur": "آگ / دوزخ"
+    },
+    "root": "ن و ر",
+    "frequency": 55
+  },
+  "صلاة": {
+    "lesson": 56,
+    "arabic": "صَلَاة",
+    "transliteration": "Salah",
+    "meaning": {
+      "en": "Prayer / Salah / Connection",
+      "hi": "नमाज़ / सलाह / तअल्लुक़",
+      "ur": "نماز / صلاة / تعلق"
+    },
+    "root": "ص ل و",
+    "frequency": 56
+  },
+  "صَلَاة": {
+    "lesson": 56,
+    "arabic": "صَلَاة",
+    "transliteration": "Salah",
+    "meaning": {
+      "en": "Prayer / Salah / Connection",
+      "hi": "नमाज़ / सलाह / तअल्लुक़",
+      "ur": "نماز / صلاة / تعلق"
+    },
+    "root": "ص ل و",
+    "frequency": 56
+  },
+  "صَلَاةٌ": {
+    "lesson": 56,
+    "arabic": "صَلَاة",
+    "transliteration": "Salah",
+    "meaning": {
+      "en": "Prayer / Salah / Connection",
+      "hi": "नमाज़ / सलाह / तअल्लुक़",
+      "ur": "نماز / صلاة / تعلق"
+    },
+    "root": "ص ل و",
+    "frequency": 56
+  },
+  "دين": {
+    "lesson": 57,
+    "arabic": "دِين",
+    "transliteration": "Deen",
+    "meaning": {
+      "en": "Religion / Way of life / Judgement",
+      "hi": "दीन / तर्ज़-ए-ज़िंदगी / जज़ा",
+      "ur": "دین / طرزِ زندگی / جزا"
+    },
+    "root": "د ي ن",
+    "frequency": 57
+  },
+  "دِين": {
+    "lesson": 57,
+    "arabic": "دِين",
+    "transliteration": "Deen",
+    "meaning": {
+      "en": "Religion / Way of life / Judgement",
+      "hi": "दीन / तर्ज़-ए-ज़िंदगी / जज़ा",
+      "ur": "دین / طرزِ زندگی / جزا"
+    },
+    "root": "د ي ن",
+    "frequency": 57
+  },
+  "دِينٌ": {
+    "lesson": 57,
+    "arabic": "دِين",
+    "transliteration": "Deen",
+    "meaning": {
+      "en": "Religion / Way of life / Judgement",
+      "hi": "दीन / तर्ज़-ए-ज़िंदगी / जज़ा",
+      "ur": "دین / طرزِ زندگی / جزا"
+    },
+    "root": "د ي ن",
+    "frequency": 57
+  },
+  "ملك": {
+    "lesson": 58,
+    "arabic": "مَلَك",
+    "transliteration": "Malak",
+    "meaning": {
+      "en": "Angel",
+      "hi": "फ़रिश्ता",
+      "ur": "فرشتہ"
+    },
+    "root": "م ل ك",
+    "frequency": 58
+  },
+  "مَلَك": {
+    "lesson": 58,
+    "arabic": "مَلَك",
+    "transliteration": "Malak",
+    "meaning": {
+      "en": "Angel",
+      "hi": "फ़रिश्ता",
+      "ur": "فرشتہ"
+    },
+    "root": "م ل ك",
+    "frequency": 58
+  },
+  "مَلَكٌ": {
+    "lesson": 58,
+    "arabic": "مَلَك",
+    "transliteration": "Malak",
+    "meaning": {
+      "en": "Angel",
+      "hi": "फ़रिश्ता",
+      "ur": "فرشتہ"
+    },
+    "root": "م ل ك",
+    "frequency": 58
+  },
+  "خير": {
+    "lesson": 59,
+    "arabic": "خَيْر",
+    "transliteration": "Khayr",
+    "meaning": {
+      "en": "Good / Better / Goodness",
+      "hi": "ख़ैर / भलाई / बेहतर",
+      "ur": "خیر / بھلائی / بہتر"
+    },
+    "root": "خ ي ر",
+    "frequency": 59
+  },
+  "خَيْر": {
+    "lesson": 59,
+    "arabic": "خَيْر",
+    "transliteration": "Khayr",
+    "meaning": {
+      "en": "Good / Better / Goodness",
+      "hi": "ख़ैर / भलाई / बेहतर",
+      "ur": "خیر / بھلائی / بہتر"
+    },
+    "root": "خ ي ر",
+    "frequency": 59
+  },
+  "خَيْرٌ": {
+    "lesson": 59,
+    "arabic": "خَيْر",
+    "transliteration": "Khayr",
+    "meaning": {
+      "en": "Good / Better / Goodness",
+      "hi": "ख़ैर / भलाई / बेहतर",
+      "ur": "خیر / بھلائی / بہتر"
+    },
+    "root": "خ ي ر",
+    "frequency": 59
+  },
+  "شيء": {
+    "lesson": 60,
+    "arabic": "شَيْء",
+    "transliteration": "Shay'",
+    "meaning": {
+      "en": "Thing / Something / Anything",
+      "hi": "चीज़ / कुछ / कोई चीज़",
+      "ur": "چیز / کچھ / کوئی چیز"
+    },
+    "root": "ش ي أ",
+    "frequency": 60
+  },
+  "شَيْء": {
+    "lesson": 60,
+    "arabic": "شَيْء",
+    "transliteration": "Shay'",
+    "meaning": {
+      "en": "Thing / Something / Anything",
+      "hi": "चीज़ / कुछ / कोई चीज़",
+      "ur": "چیز / کچھ / کوئی چیز"
+    },
+    "root": "ش ي أ",
+    "frequency": 60
+  },
+  "شَيْءٌ": {
+    "lesson": 60,
+    "arabic": "شَيْء",
+    "transliteration": "Shay'",
+    "meaning": {
+      "en": "Thing / Something / Anything",
+      "hi": "चीज़ / कुछ / कोई चीज़",
+      "ur": "چیز / کچھ / کوئی چیز"
+    },
+    "root": "ش ي أ",
+    "frequency": 60
+  },
+  "نبي": {
+    "lesson": 61,
+    "arabic": "نَبِيّ",
+    "transliteration": "Nabi",
+    "meaning": {
+      "en": "Prophet",
+      "hi": "नबी",
+      "ur": "نبی"
+    },
+    "root": "ن ب أ",
+    "frequency": 61
+  },
+  "نَبِيّ": {
+    "lesson": 61,
+    "arabic": "نَبِيّ",
+    "transliteration": "Nabi",
+    "meaning": {
+      "en": "Prophet",
+      "hi": "नबी",
+      "ur": "نبی"
+    },
+    "root": "ن ب أ",
+    "frequency": 61
+  },
+  "نَبِيٌّ": {
+    "lesson": 61,
+    "arabic": "نَبِيّ",
+    "transliteration": "Nabi",
+    "meaning": {
+      "en": "Prophet",
+      "hi": "नबी",
+      "ur": "نبی"
+    },
+    "root": "ن ب أ",
+    "frequency": 61
+  },
+  "قرآن": {
+    "lesson": 62,
+    "arabic": "قُرْآن",
+    "transliteration": "Qur'an",
+    "meaning": {
+      "en": "The Qur'an / Recitation / Reading",
+      "hi": "क़ुरआन / तिलावत / पढ़ना",
+      "ur": "قرآن / تلاوت / پڑھنا"
+    },
+    "root": "ق ر أ",
+    "frequency": 62
+  },
+  "قُرْآن": {
+    "lesson": 62,
+    "arabic": "قُرْآن",
+    "transliteration": "Qur'an",
+    "meaning": {
+      "en": "The Qur'an / Recitation / Reading",
+      "hi": "क़ुरआन / तिलावत / पढ़ना",
+      "ur": "قرآن / تلاوت / پڑھنا"
+    },
+    "root": "ق ر أ",
+    "frequency": 62
+  },
+  "قُرْآنٌ": {
+    "lesson": 62,
+    "arabic": "قُرْآن",
+    "transliteration": "Qur'an",
+    "meaning": {
+      "en": "The Qur'an / Recitation / Reading",
+      "hi": "क़ुरआन / तिलावत / पढ़ना",
+      "ur": "قرآن / تلاوت / پڑھنا"
+    },
+    "root": "ق ر أ",
+    "frequency": 62
+  },
+  "حياة": {
+    "lesson": 63,
+    "arabic": "حَيَاة",
+    "transliteration": "Hayah",
+    "meaning": {
+      "en": "Life",
+      "hi": "ज़िंदगी",
+      "ur": "زندگی"
+    },
+    "root": "ح ي و",
+    "frequency": 63
+  },
+  "حَيَاة": {
+    "lesson": 63,
+    "arabic": "حَيَاة",
+    "transliteration": "Hayah",
+    "meaning": {
+      "en": "Life",
+      "hi": "ज़िंदगी",
+      "ur": "زندگی"
+    },
+    "root": "ح ي و",
+    "frequency": 63
+  },
+  "حَيَاةٌ": {
+    "lesson": 63,
+    "arabic": "حَيَاة",
+    "transliteration": "Hayah",
+    "meaning": {
+      "en": "Life",
+      "hi": "ज़िंदगी",
+      "ur": "زندگی"
+    },
+    "root": "ح ي و",
+    "frequency": 63
+  },
+  "موت": {
+    "lesson": 64,
+    "arabic": "مَوْت",
+    "transliteration": "Mawt",
+    "meaning": {
+      "en": "Death",
+      "hi": "मौत",
+      "ur": "موت"
+    },
+    "root": "م و ت",
+    "frequency": 64
+  },
+  "مَوْت": {
+    "lesson": 64,
+    "arabic": "مَوْت",
+    "transliteration": "Mawt",
+    "meaning": {
+      "en": "Death",
+      "hi": "मौत",
+      "ur": "موت"
+    },
+    "root": "م و ت",
+    "frequency": 64
+  },
+  "مَوْتٌ": {
+    "lesson": 64,
+    "arabic": "مَوْت",
+    "transliteration": "Mawt",
+    "meaning": {
+      "en": "Death",
+      "hi": "मौत",
+      "ur": "موت"
+    },
+    "root": "م و ت",
+    "frequency": 64
+  },
+  "وجه": {
+    "lesson": 65,
+    "arabic": "وَجْه",
+    "transliteration": "Wajh",
+    "meaning": {
+      "en": "Face / Countenance / Direction",
+      "hi": "चेहरा / रुख़ / सिम्त",
+      "ur": "چہرہ / رخ / سمت"
+    },
+    "root": "و ج ه",
+    "frequency": 65
+  },
+  "وَجْه": {
+    "lesson": 65,
+    "arabic": "وَجْه",
+    "transliteration": "Wajh",
+    "meaning": {
+      "en": "Face / Countenance / Direction",
+      "hi": "चेहरा / रुख़ / सिम्त",
+      "ur": "چہرہ / رخ / سمت"
+    },
+    "root": "و ج ه",
+    "frequency": 65
+  },
+  "وَجْهٌ": {
+    "lesson": 65,
+    "arabic": "وَجْه",
+    "transliteration": "Wajh",
+    "meaning": {
+      "en": "Face / Countenance / Direction",
+      "hi": "चेहरा / रुख़ / सिम्त",
+      "ur": "چہرہ / رخ / سمت"
+    },
+    "root": "و ج ه",
+    "frequency": 65
+  },
+  "يد": {
+    "lesson": 66,
+    "arabic": "يَد",
+    "transliteration": "Yad",
+    "meaning": {
+      "en": "Hand / Power / Control",
+      "hi": "हाथ / क़ुदरत / इख़्तियार",
+      "ur": "ہاتھ / قدرت / اختیار"
+    },
+    "root": "ي د ي",
+    "frequency": 66
+  },
+  "يَد": {
+    "lesson": 66,
+    "arabic": "يَد",
+    "transliteration": "Yad",
+    "meaning": {
+      "en": "Hand / Power / Control",
+      "hi": "हाथ / क़ुदरत / इख़्तियार",
+      "ur": "ہاتھ / قدرت / اختیار"
+    },
+    "root": "ي د ي",
+    "frequency": 66
+  },
+  "يَدٌ": {
+    "lesson": 66,
+    "arabic": "يَد",
+    "transliteration": "Yad",
+    "meaning": {
+      "en": "Hand / Power / Control",
+      "hi": "हाथ / क़ुदरत / इख़्तियार",
+      "ur": "ہاتھ / قدرت / اختیار"
+    },
+    "root": "ي د ي",
+    "frequency": 66
+  },
+  "ماء": {
+    "lesson": 67,
+    "arabic": "مَاء",
+    "transliteration": "Maa'",
+    "meaning": {
+      "en": "Water",
+      "hi": "پانی / आब",
+      "ur": "پانی"
+    },
+    "root": "م و ه",
+    "frequency": 67
+  },
+  "مَاء": {
+    "lesson": 67,
+    "arabic": "مَاء",
+    "transliteration": "Maa'",
+    "meaning": {
+      "en": "Water",
+      "hi": "پانی / आब",
+      "ur": "پانی"
+    },
+    "root": "م و ه",
+    "frequency": 67
+  },
+  "مَاءٌ": {
+    "lesson": 67,
+    "arabic": "مَاء",
+    "transliteration": "Maa'",
+    "meaning": {
+      "en": "Water",
+      "hi": "پانی / आब",
+      "ur": "پانی"
+    },
+    "root": "م و ه",
+    "frequency": 67
+  },
+  "أمة": {
+    "lesson": 68,
+    "arabic": "أُمَّة",
+    "transliteration": "Ummah",
+    "meaning": {
+      "en": "Community / Nation / People",
+      "hi": "उम्मत / क़ौम / बिरादरी",
+      "ur": "امت / قوم / برادری"
+    },
+    "root": "أ م م",
+    "frequency": 68
+  },
+  "أُمَّة": {
+    "lesson": 68,
+    "arabic": "أُمَّة",
+    "transliteration": "Ummah",
+    "meaning": {
+      "en": "Community / Nation / People",
+      "hi": "उम्मत / क़ौम / बिरादरी",
+      "ur": "امت / قوم / برادری"
+    },
+    "root": "أ م م",
+    "frequency": 68
+  },
+  "أُمَّةٌ": {
+    "lesson": 68,
+    "arabic": "أُمَّة",
+    "transliteration": "Ummah",
+    "meaning": {
+      "en": "Community / Nation / People",
+      "hi": "उम्मत / क़ौम / बिरादरी",
+      "ur": "امت / قوم / برادری"
+    },
+    "root": "أ م م",
+    "frequency": 68
+  },
+  "أب": {
+    "lesson": 69,
+    "arabic": "أَب",
+    "transliteration": "Ab",
+    "meaning": {
+      "en": "Father",
+      "hi": "बाप / والिद",
+      "ur": "باپ / والد"
+    },
+    "root": "أ ب و",
+    "frequency": 69
+  },
+  "أَب": {
+    "lesson": 69,
+    "arabic": "أَب",
+    "transliteration": "Ab",
+    "meaning": {
+      "en": "Father",
+      "hi": "बाप / والिद",
+      "ur": "باپ / والد"
+    },
+    "root": "أ ب و",
+    "frequency": 69
+  },
+  "أَبٌ": {
+    "lesson": 69,
+    "arabic": "أَب",
+    "transliteration": "Ab",
+    "meaning": {
+      "en": "Father",
+      "hi": "बाप / والिद",
+      "ur": "باپ / والد"
+    },
+    "root": "أ ب و",
+    "frequency": 69
+  },
+  "روح": {
+    "lesson": 70,
+    "arabic": "رُوح",
+    "transliteration": "Ruh",
+    "meaning": {
+      "en": "Soul / Spirit / Divine Breath",
+      "hi": "रूह / جان / إلٰہی پھونک",
+      "ur": "روح / جان / الٰہی پھونک"
+    },
+    "root": "ر و ح",
+    "frequency": 70
+  },
+  "رُوح": {
+    "lesson": 70,
+    "arabic": "رُوح",
+    "transliteration": "Ruh",
+    "meaning": {
+      "en": "Soul / Spirit / Divine Breath",
+      "hi": "रूह / جان / إلٰہی پھونک",
+      "ur": "روح / جان / الٰہی پھونک"
+    },
+    "root": "ر و ح",
+    "frequency": 70
+  },
+  "رُوحٌ": {
+    "lesson": 70,
+    "arabic": "رُوح",
+    "transliteration": "Ruh",
+    "meaning": {
+      "en": "Soul / Spirit / Divine Breath",
+      "hi": "रूह / جان / إلٰہی پھونک",
+      "ur": "روح / جان / الٰہی پھونک"
+    },
+    "root": "ر و ح",
+    "frequency": 70
+  },
+  "عِلْم": {
+    "lesson": 71,
+    "arabic": "عِلْم",
+    "transliteration": "Ilm",
+    "meaning": {
+      "en": "Knowledge / Ilm",
+      "hi": "इल्म / जानना",
+      "ur": "علم / جاننا"
+    },
+    "root": "ع ل م",
+    "frequency": 71
+  },
+  "عِلْمٌ": {
+    "lesson": 71,
+    "arabic": "عِلْم",
+    "transliteration": "Ilm",
+    "meaning": {
+      "en": "Knowledge / Ilm",
+      "hi": "इल्म / जानना",
+      "ur": "علم / جاننا"
+    },
+    "root": "ع ل م",
+    "frequency": 71
+  },
+  "نعمة": {
+    "lesson": 72,
+    "arabic": "نِعْمَة",
+    "transliteration": "Ni'mah",
+    "meaning": {
+      "en": "Blessing / Favour / Grace",
+      "hi": "नेअमत / एहसान / अता",
+      "ur": "نعمت / احسان / عطا"
+    },
+    "root": "ن ع م",
+    "frequency": 72
+  },
+  "نِعْمَة": {
+    "lesson": 72,
+    "arabic": "نِعْمَة",
+    "transliteration": "Ni'mah",
+    "meaning": {
+      "en": "Blessing / Favour / Grace",
+      "hi": "नेअमत / एहसान / अता",
+      "ur": "نعمت / احسان / عطا"
+    },
+    "root": "ن ع م",
+    "frequency": 72
+  },
+  "نِعْمَةٌ": {
+    "lesson": 72,
+    "arabic": "نِعْمَة",
+    "transliteration": "Ni'mah",
+    "meaning": {
+      "en": "Blessing / Favour / Grace",
+      "hi": "नेअमत / एहसान / अता",
+      "ur": "نعمت / احسان / عطا"
+    },
+    "root": "ن ع م",
+    "frequency": 72
+  },
+  "أم": {
+    "lesson": 73,
+    "arabic": "أُمّ",
+    "transliteration": "Umm",
+    "meaning": {
+      "en": "Mother / Source / Origin",
+      "hi": "माँ / असल / बुनियाद",
+      "ur": "ماں / اصل / بنیاد"
+    },
+    "root": "أ م م",
+    "frequency": 73
+  },
+  "أُمّ": {
+    "lesson": 73,
+    "arabic": "أُمّ",
+    "transliteration": "Umm",
+    "meaning": {
+      "en": "Mother / Source / Origin",
+      "hi": "माँ / असल / बुनियाद",
+      "ur": "ماں / اصل / بنیاد"
+    },
+    "root": "أ م م",
+    "frequency": 73
+  },
+  "أُمٌّ": {
+    "lesson": 73,
+    "arabic": "أُمّ",
+    "transliteration": "Umm",
+    "meaning": {
+      "en": "Mother / Source / Origin",
+      "hi": "माँ / असल / बुनियाद",
+      "ur": "ماں / اصل / بنیاد"
+    },
+    "root": "أ م م",
+    "frequency": 73
+  },
+  "أخ": {
+    "lesson": 74,
+    "arabic": "أَخ",
+    "transliteration": "Akh",
+    "meaning": {
+      "en": "Brother",
+      "hi": "भाई",
+      "ur": "بھائی"
+    },
+    "root": "أ خ و",
+    "frequency": 74
+  },
+  "أَخ": {
+    "lesson": 74,
+    "arabic": "أَخ",
+    "transliteration": "Akh",
+    "meaning": {
+      "en": "Brother",
+      "hi": "भाई",
+      "ur": "بھائی"
+    },
+    "root": "أ خ و",
+    "frequency": 74
+  },
+  "أَخٌ": {
+    "lesson": 74,
+    "arabic": "أَخ",
+    "transliteration": "Akh",
+    "meaning": {
+      "en": "Brother",
+      "hi": "भाई",
+      "ur": "بھائی"
+    },
+    "root": "أ خ و",
+    "frequency": 74
+  },
+  "عين": {
+    "lesson": 75,
+    "arabic": "عَيْن",
+    "transliteration": "Ayn",
+    "meaning": {
+      "en": "Eye / Spring / Source",
+      "hi": "आँख / चश्मा / सोता",
+      "ur": "آنکھ / چشمہ / سرچشمہ"
+    },
+    "root": "ع ي ن",
+    "frequency": 75
+  },
+  "عَيْن": {
+    "lesson": 75,
+    "arabic": "عَيْن",
+    "transliteration": "Ayn",
+    "meaning": {
+      "en": "Eye / Spring / Source",
+      "hi": "आँख / चश्मा / सोता",
+      "ur": "آنکھ / چشمہ / سرچشمہ"
+    },
+    "root": "ع ي ن",
+    "frequency": 75
+  },
+  "عَيْنٌ": {
+    "lesson": 75,
+    "arabic": "عَيْن",
+    "transliteration": "Ayn",
+    "meaning": {
+      "en": "Eye / Spring / Source",
+      "hi": "आँख / चश्मा / सोता",
+      "ur": "آنکھ / چشمہ / سرچشمہ"
+    },
+    "root": "ع ي ن",
+    "frequency": 75
+  },
+  "لسان": {
+    "lesson": 76,
+    "arabic": "لِسَان",
+    "transliteration": "Lisaan",
+    "meaning": {
+      "en": "Tongue / Language",
+      "hi": "ज़बान / लिसान",
+      "ur": "زبان / لسان"
+    },
+    "root": "ل س ن",
+    "frequency": 76
+  },
+  "لِسَان": {
+    "lesson": 76,
+    "arabic": "لِسَان",
+    "transliteration": "Lisaan",
+    "meaning": {
+      "en": "Tongue / Language",
+      "hi": "ज़बान / लिसान",
+      "ur": "زبان / لسان"
+    },
+    "root": "ل س ن",
+    "frequency": 76
+  },
+  "لِسَانٌ": {
+    "lesson": 76,
+    "arabic": "لِسَان",
+    "transliteration": "Lisaan",
+    "meaning": {
+      "en": "Tongue / Language",
+      "hi": "ज़बान / लिसान",
+      "ur": "زبان / لسان"
+    },
+    "root": "ل س ن",
+    "frequency": 76
+  },
+  "سماء": {
+    "lesson": 77,
+    "arabic": "سَمَاء",
+    "transliteration": "Samaa'",
+    "meaning": {
+      "en": "Sky / Heaven",
+      "hi": "آسمان / फ़ज़ा",
+      "ur": "آسمان / فضا"
+    },
+    "root": "س م و",
+    "frequency": 77
+  },
+  "سَمَاء": {
+    "lesson": 77,
+    "arabic": "سَمَاء",
+    "transliteration": "Samaa'",
+    "meaning": {
+      "en": "Sky / Heaven",
+      "hi": "آسمان / फ़ज़ा",
+      "ur": "آسمان / فضا"
+    },
+    "root": "س م و",
+    "frequency": 77
+  },
+  "سَمَاءٌ": {
+    "lesson": 77,
+    "arabic": "سَمَاء",
+    "transliteration": "Samaa'",
+    "meaning": {
+      "en": "Sky / Heaven",
+      "hi": "آسمان / फ़ज़ा",
+      "ur": "آسمان / فضا"
+    },
+    "root": "س م و",
+    "frequency": 77
+  },
+  "شمس": {
+    "lesson": 78,
+    "arabic": "شَمْس",
+    "transliteration": "Shams",
+    "meaning": {
+      "en": "Sun",
+      "hi": "सूरज",
+      "ur": "سورج"
+    },
+    "root": "ش م س",
+    "frequency": 78
+  },
+  "شَمْس": {
+    "lesson": 78,
+    "arabic": "شَمْس",
+    "transliteration": "Shams",
+    "meaning": {
+      "en": "Sun",
+      "hi": "सूरज",
+      "ur": "سورج"
+    },
+    "root": "ش م س",
+    "frequency": 78
+  },
+  "شَمْسٌ": {
+    "lesson": 78,
+    "arabic": "شَمْس",
+    "transliteration": "Shams",
+    "meaning": {
+      "en": "Sun",
+      "hi": "सूरज",
+      "ur": "سورج"
+    },
+    "root": "ش م س",
+    "frequency": 78
+  },
+  "قمر": {
+    "lesson": 79,
+    "arabic": "قَمَر",
+    "transliteration": "Qamar",
+    "meaning": {
+      "en": "Moon",
+      "hi": "चाँद",
+      "ur": "چاند"
+    },
+    "root": "ق م ر",
+    "frequency": 79
+  },
+  "قَمَر": {
+    "lesson": 79,
+    "arabic": "قَمَر",
+    "transliteration": "Qamar",
+    "meaning": {
+      "en": "Moon",
+      "hi": "चाँद",
+      "ur": "چاند"
+    },
+    "root": "ق م ر",
+    "frequency": 79
+  },
+  "قَمَرٌ": {
+    "lesson": 79,
+    "arabic": "قَمَر",
+    "transliteration": "Qamar",
+    "meaning": {
+      "en": "Moon",
+      "hi": "चाँद",
+      "ur": "چاند"
+    },
+    "root": "ق م ر",
+    "frequency": 79
+  },
+  "ليل": {
+    "lesson": 80,
+    "arabic": "لَيْل",
+    "transliteration": "Layl",
+    "meaning": {
+      "en": "Night",
+      "hi": "रात",
+      "ur": "رات"
+    },
+    "root": "ل ي ل",
+    "frequency": 80
+  },
+  "لَيْل": {
+    "lesson": 80,
+    "arabic": "لَيْل",
+    "transliteration": "Layl",
+    "meaning": {
+      "en": "Night",
+      "hi": "रात",
+      "ur": "رات"
+    },
+    "root": "ل ي ل",
+    "frequency": 80
+  },
+  "لَيْلٌ": {
+    "lesson": 80,
+    "arabic": "لَيْل",
+    "transliteration": "Layl",
+    "meaning": {
+      "en": "Night",
+      "hi": "रात",
+      "ur": "رات"
+    },
+    "root": "ل ي ل",
+    "frequency": 80
+  }
+}
