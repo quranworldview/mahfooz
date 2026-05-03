@@ -164,6 +164,11 @@
 
 </div>
 
+<!-- Firebase v8 compat SDK — load in this exact order, before app.js -->
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+
 <script type="module" src="js/app.js"></script>
 
 <script>
@@ -214,11 +219,11 @@
     if (xe) xe.textContent = xp;
   };
   window.updateSidebarNav = function(screen) {
+    const lang = localStorage.getItem('qwv_lang') || 'hi';
     ['home','memorize','review','progress'].forEach(s => {
       const b = document.getElementById('snav-'+s);
       if (b) b.classList.toggle('active', s === screen);
     });
-    const lang = localStorage.getItem('qwv_lang') || 'hi';
     ['en','hi','ur'].forEach(l => {
       const b = document.getElementById('snav-lang-'+l);
       if (b) b.classList.toggle('active', l === lang);
@@ -227,6 +232,14 @@
     updateScriptBtns();
     updateSidebarStats();
   };
+  // Set correct lang pill active state immediately on load
+  (function initLangPills() {
+    const lang = localStorage.getItem('qwv_lang') || 'hi';
+    ['en','hi','ur'].forEach(l => {
+      const b = document.getElementById('snav-lang-'+l);
+      if (b) b.classList.toggle('active', l === lang);
+    });
+  })();
 </script>
 </body>
 </html>

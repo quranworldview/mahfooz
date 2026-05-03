@@ -1,33 +1,44 @@
 // ============================================================
-// MAHFOOZ — ProgressService.js
-// All progress tracking in localStorage for prototype phase.
-// Firestore wiring = drop-in replacement later.
+// MAHFOOZ — ProgressService.js  v2.0
+// Dual-write: localStorage (primary, offline) + Firestore (sync)
+//
+// Strategy:
+//   - All reads come from localStorage — fast, offline-first
+//   - All writes go to localStorage immediately (sync)
+//   - Firestore writes happen async in background — fire & forget
+//   - If uid is null (not logged in / offline), Firestore writes
+//     are silently skipped — app works fully offline
+//   - On session seal, also syncs key stats to users/{uid} so
+//     the QWV Dashboard Stage 3 card reflects current progress
 //
 // Spaced repetition schedule:
-//   Strength 1 (fresh)    → review next day
-//   Strength 2            → review in 3 days
-//   Strength 3            → review in 7 days
-//   Strength 4            → review in 21 days
-//   Strength 5 (locked)   → review in 60 days
-//
-// Any failed review resets strength to 1.
+//   Strength 1 (fresh)  → review next day
+//   Strength 2          → review in 3 days
+//   Strength 3          → review in 7 days
+//   Strength 4          → review in 21 days
+//   Strength 5 (locked) → review in 60 days
+//   Any failed review   → resets strength to 1
 // ============================================================
 
+import { db, COLLECTIONS, SUB_COLLECTIONS } from '../core/firebase.js';
+import { getCurrentUid }                     from '../core/auth.js';
+
+// ── localStorage key builders ─────────────────────────────────
 const KEY = {
   AYAH:    (s, a) => `mahfooz_ayah_${s}_${a}`,
   STREAK:  'mahfooz_streak',
   LAST:    'mahfooz_last_session',
   XP:      'mahfooz_xp',
   COUNT:   'mahfooz_ayat_count',
-  PATHWAY:  'mahfooz_pathway',
-  MISTAKE:  (s, a, w) => `mahfooz_mistake_${s}_${a}_${w}`,
+  PATHWAY: 'mahfooz_pathway',
+  MISTAKE: (s, a, w) => `mahfooz_mistake_${s}_${a}_${w}`,
 };
 
 const REVIEW_DAYS = { 1: 1, 2: 3, 3: 7, 4: 21, 5: 60 };
 
-// ── Helpers ───────────────────────────────────────────────────
+// ── Date helpers ──────────────────────────────────────────────
 function today() {
-  return new Date().toISOString().split('T')[0]; // 'YYYY-MM-DD'
+  return new Date().toISOString().split('T')[0];
 }
 
 function addDays(days) {
@@ -42,6 +53,49 @@ function daysBetween(dateStr) {
   return Math.floor((now - then) / 86400000);
 }
 
+// ── Firestore helpers (fire & forget) ────────────────────────
+function _fsProgressDoc() {
+  const uid = getCurrentUid();
+  if (!uid || uid === 'dev_user') return null;
+  return db.collection(COLLECTIONS.MAHFOOZ_PROGRESS).doc(uid);
+}
+
+function _fsAyahDoc(surahNum, ayahNum) {
+  const uid = getCurrentUid();
+  if (!uid || uid === 'dev_user') return null;
+  return db
+    .collection(COLLECTIONS.MAHFOOZ_PROGRESS)
+    .doc(uid)
+    .collection(SUB_COLLECTIONS.AYAH_PROGRESS)
+    .doc(`${surahNum}_${ayahNum}`);
+}
+
+function _syncProgressDoc(data) {
+  const ref = _fsProgressDoc();
+  if (!ref) return;
+  ref.set({
+    ...data,
+    updated_at: firebase.firestore.FieldValue.serverTimestamp(),
+  }, { merge: true }).catch(() => {});
+}
+
+function _syncAyahDoc(surahNum, ayahNum, data) {
+  const ref = _fsAyahDoc(surahNum, ayahNum);
+  if (!ref) return;
+  ref.set(data, { merge: true }).catch(() => {});
+}
+
+// Syncs key stats to users/{uid} — feeds the Dashboard Stage 3 card
+function _syncUserDoc(totalAyat, streak) {
+  const uid = getCurrentUid();
+  if (!uid || uid === 'dev_user') return;
+  db.collection(COLLECTIONS.USERS).doc(uid).set({
+    mahfooz_ayat_memorized: totalAyat,
+    mahfooz_streak:         streak,
+    last_active:            firebase.firestore.FieldValue.serverTimestamp(),
+  }, { merge: true }).catch(() => {});
+}
+
 // ── Ayah progress ─────────────────────────────────────────────
 export function getAyahProgress(surahNum, ayahNum) {
   const raw = localStorage.getItem(KEY.AYAH(surahNum, ayahNum));
@@ -51,12 +105,14 @@ export function getAyahProgress(surahNum, ayahNum) {
 
 export function saveAyahProgress(surahNum, ayahNum, data) {
   localStorage.setItem(KEY.AYAH(surahNum, ayahNum), JSON.stringify(data));
+  _syncAyahDoc(surahNum, ayahNum, data);
 }
 
-// Called when student seals an ayah for the first time
+// Called when student seals an ayah
 export function sealAyah(surahNum, ayahNum, pathway) {
   const existing = getAyahProgress(surahNum, ayahNum);
   const strength = existing ? Math.min(existing.strength + 1, 5) : 1;
+
   const progress = {
     surah_number:  surahNum,
     ayah_number:   ayahNum,
@@ -69,13 +125,29 @@ export function sealAyah(surahNum, ayahNum, pathway) {
     review_count:  existing ? existing.review_count + 1 : 0,
     session_count: existing ? existing.session_count + 1 : 1,
   };
+
   saveAyahProgress(surahNum, ayahNum, progress);
 
-  // If this is new, increment count
+  let totalAyat = parseInt(localStorage.getItem(KEY.COUNT) || '0');
   if (!existing) {
-    const count = parseInt(localStorage.getItem(KEY.COUNT) || '0') + 1;
-    localStorage.setItem(KEY.COUNT, String(count));
+    totalAyat += 1;
+    localStorage.setItem(KEY.COUNT, String(totalAyat));
   }
+
+  const streak = updateStreak();
+
+  _syncProgressDoc({
+    total_ayat_memorized: totalAyat,
+    total_ayat_locked:    _countLocked(),
+    current_surah:        surahNum,
+    current_ayah:         ayahNum,
+    pathway:              pathway || localStorage.getItem(KEY.PATHWAY) || 'surah',
+    streak,
+    last_session_date:    today(),
+    total_xp:             getXP(),
+  });
+
+  _syncUserDoc(totalAyat, streak);
 
   return progress;
 }
@@ -85,9 +157,7 @@ export function reviewAyah(surahNum, ayahNum, passed) {
   const existing = getAyahProgress(surahNum, ayahNum);
   if (!existing) return;
 
-  const newStrength = passed
-    ? Math.min(existing.strength + 1, 5)
-    : 1; // failed → reset
+  const newStrength = passed ? Math.min(existing.strength + 1, 5) : 1;
 
   const updated = {
     ...existing,
@@ -97,17 +167,17 @@ export function reviewAyah(surahNum, ayahNum, passed) {
     next_review:   addDays(REVIEW_DAYS[newStrength] || 1),
     review_count:  existing.review_count + 1,
   };
+
   saveAyahProgress(surahNum, ayahNum, updated);
   return updated;
 }
 
-// ── Strength label + class ────────────────────────────────────
+// ── Strength helpers ──────────────────────────────────────────
 export function getStrengthClass(progress) {
   if (!progress) return '';
   if (progress.strength >= 5) return 'strength-locked';
   if (progress.strength >= 3) return 'strength-strong';
-  // Check if overdue
-  const daysUntil = daysBetween(progress.next_review) * -1; // negative = future
+  const daysUntil = daysBetween(progress.next_review) * -1;
   if (daysUntil < -3) return 'strength-fading';
   if (daysUntil < 0)  return 'strength-review';
   return 'strength-fresh';
@@ -132,9 +202,7 @@ export function getDueAyat() {
     if (!key?.startsWith('mahfooz_ayah_')) continue;
     try {
       const p = JSON.parse(localStorage.getItem(key));
-      if (p && p.next_review && p.next_review <= todayStr) {
-        due.push(p);
-      }
+      if (p && p.next_review && p.next_review <= todayStr) due.push(p);
     } catch { /* skip */ }
   }
   return due.sort((a, b) => a.next_review.localeCompare(b.next_review));
@@ -171,16 +239,16 @@ export function getXP() {
 
 // ── Streak ────────────────────────────────────────────────────
 export function updateStreak() {
-  const last    = localStorage.getItem(KEY.LAST) || '';
+  const last     = localStorage.getItem(KEY.LAST) || '';
   const todayStr = today();
-  if (last === todayStr) return getStreak(); // already counted today
+  if (last === todayStr) return getStreak();
 
-  const streak = getStreak();
+  const streak    = getStreak();
   const yesterday = addDays(-1);
   const newStreak = (last === yesterday) ? streak + 1 : 1;
 
   localStorage.setItem(KEY.STREAK, String(newStreak));
-  localStorage.setItem(KEY.LAST, todayStr);
+  localStorage.setItem(KEY.LAST,   todayStr);
   return newStreak;
 }
 
@@ -198,34 +266,26 @@ export function getStats() {
   };
 }
 
-// ── XP table ─────────────────────────────────────────────────
 // ── Next ayah to learn for a surah ───────────────────────────
-// Scans sealed ayah keys for this surah and returns the first
-// ayah that has no progress record — i.e. the next one to learn.
-// Returns 1 if nothing sealed yet, totalAyat if all sealed.
 export function getNextAyahForSurah(surahNum, totalAyat) {
   for (let a = 1; a <= totalAyat; a++) {
     const progress = getAyahProgress(surahNum, a);
-    if (!progress) return a; // first unsealed ayah
+    if (!progress) return a;
   }
-  return null; // all sealed — surah complete
+  return null;
 }
 
-// ── Mistake tracking (for heatmap) ───────────────────────────
-// Called from checkBlank in SessionScreen when a fill-blank answer is wrong.
-// Key: mahfooz_mistake_{surah}_{ayah}_{wordIdx}  →  count (integer)
+// ── Mistake tracking (heatmap) ────────────────────────────────
 export function recordMistake(surahNum, ayahNum, wordIdx) {
   const k   = KEY.MISTAKE(surahNum, ayahNum, wordIdx);
   const cur = parseInt(localStorage.getItem(k) || '0');
   localStorage.setItem(k, String(cur + 1));
 }
 
-// Returns { wordIdx (0-based): mistakeCount } for all words in an ayah.
-// Words with no mistakes are omitted.
 export function getMistakes(surahNum, ayahNum) {
   const result = {};
   for (let i = 0; i < localStorage.length; i++) {
-    const key = localStorage.key(i);
+    const key    = localStorage.key(i);
     const prefix = `mahfooz_mistake_${surahNum}_${ayahNum}_`;
     if (key && key.startsWith(prefix)) {
       const wordIdx = parseInt(key.slice(prefix.length));
@@ -236,13 +296,28 @@ export function getMistakes(surahNum, ayahNum) {
   return result;
 }
 
+// ── Internal helpers ──────────────────────────────────────────
+function _countLocked() {
+  let locked = 0;
+  for (let i = 0; i < localStorage.length; i++) {
+    const key = localStorage.key(i);
+    if (!key?.startsWith('mahfooz_ayah_')) continue;
+    try {
+      const p = JSON.parse(localStorage.getItem(key));
+      if (p?.strength >= 5) locked++;
+    } catch { /* skip */ }
+  }
+  return locked;
+}
+
+// ── XP table ─────────────────────────────────────────────────
 export const XP = {
-  SEAL_AYAH:         40,
-  REVIEW_AYAH:       10,
-  DISCOVER_TAJWEED:  25,
-  LOCK_AYAH:         50,   // strength 5
-  COMPLETE_SURAH:   200,
-  COMPLETE_JUZ:     500,
-  STREAK_7:          75,
-  CHAIN_BONUS:         5,   // bonus XP for completing Chunk & Chain
+  SEAL_AYAH:        40,
+  REVIEW_AYAH:      10,
+  DISCOVER_TAJWEED: 25,
+  LOCK_AYAH:        50,
+  COMPLETE_SURAH:  200,
+  COMPLETE_JUZ:    500,
+  STREAK_7:         75,
+  CHAIN_BONUS:       5,
 };

@@ -1,4 +1,4 @@
-const CACHE = 'mahfooz-v16';
+const CACHE = 'mahfooz-v31';
 const PRECACHE = [
   './', './index.html', './manifest.json',
   './css/design.css', './css/components.css',
@@ -15,6 +15,7 @@ const PRECACHE = [
   './js/data/surahs.json', './js/data/alif-index.json',
   './js/data/daily-gems.json', './js/data/tajweed-rules.json',
   './js/data/tajweed-map.json',
+  './js/data/wbw-hi.json', './js/data/wbw-ur.json',
   './fonts/IndoPakNastaleeq.woff2', './fonts/KFGQPCUthmanicScriptHAFS.woff2',
 ];
 

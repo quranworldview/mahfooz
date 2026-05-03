@@ -172,14 +172,47 @@ export function prefetch(surahNum) {
   }
 }
 
+// ── WBW Hindi/Urdu static data (from legacy.quranwbw.com) ──────
+// Loaded once, cached globally. Keys: "surah:ayah:position" (1-based)
+// Built by running: node build-wbw.js  (in the QWV tools repo)
+let _wbwHi = null;
+let _wbwUr = null;
+
+async function _loadWbwData() {
+  if (_wbwHi && _wbwUr) return;
+  try {
+    const [hi, ur] = await Promise.all([
+      fetch('js/data/wbw-hi.json').then(r => r.ok ? r.json() : {}),
+      fetch('js/data/wbw-ur.json').then(r => r.ok ? r.json() : {}),
+    ]);
+    _wbwHi = hi;
+    _wbwUr = ur;
+  } catch (_) {
+    _wbwHi = {};
+    _wbwUr = {};
+  }
+}
+
+export function getWbwMeaning(surahNum, ayahNum, position, lang) {
+  // position is 1-based (matches quran.com word position)
+  const key = `${surahNum}:${ayahNum}:${position}`;
+  if (lang === 'hi') return _wbwHi?.[key] || '';
+  if (lang === 'ur') return _wbwUr?.[key] || '';
+  return '';
+}
+
 // ── Word-level data (translation + transliteration + audio_url) ─
 // Fetches from quran.com API v4. Returns array of word objects:
 // { position, text_uthmani, translation, transliteration, audio_url, char_type_name }
+// Also pre-loads WBW hi/ur data in parallel.
 // Only 'word' type entries (not 'end' markers) are meaningful for display.
 // Cached per ayah key "surahNum:ayahNum".
 export async function fetchWordData(surahNum, ayahNum) {
   const key = `${surahNum}:${ayahNum}`;
   if (_wordCache[key]) return _wordCache[key];
+
+  // Pre-load WBW hi/ur data in parallel (no-op if already loaded)
+  _loadWbwData();
 
   try {
     const url = `https://api.quran.com/api/v4/verses/by_key/${surahNum}:${ayahNum}` +
@@ -188,19 +221,25 @@ export async function fetchWordData(surahNum, ayahNum) {
     if (!res.ok) throw new Error('word fetch failed');
     const data = await res.json();
 
-    // Filter to actual words only (exclude 'end' markers like ١)
-    const words = (data?.verse?.words || [])
+    // Build a position-keyed map (1-based) of word-type entries only.
+    // Using a map (not array) means we look up by quran.com position number
+    // directly — immune to index/count mismatches with splitWords().
+    // End markers (١ ٢ etc.) are excluded — they get no WBW meaning.
+    const wordMap = {};
+    (data?.verse?.words || [])
       .filter(w => w.char_type_name === 'word')
-      .map(w => ({
-        position:        w.position,          // 1-based
-        text_uthmani:    w.text_uthmani || '',
-        translation:     w.translation?.text || '',
-        transliteration: w.transliteration?.text || '',
-        audio_url:       w.audio_url || null,  // e.g. "wbw/078_001_001.mp3"
-      }));
+      .forEach(w => {
+        wordMap[w.position] = {
+          position:        w.position,
+          text_uthmani:    w.text_uthmani || '',
+          translation:     w.translation?.text || '',
+          transliteration: w.transliteration?.text || '',
+          audio_url:       w.audio_url || null,
+        };
+      });
 
-    _wordCache[key] = words;
-    return words;
+    _wordCache[key] = wordMap;
+    return wordMap;
   } catch (_) {
     return [];
   }

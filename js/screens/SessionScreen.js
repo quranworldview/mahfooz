@@ -9,7 +9,7 @@
 // Stage 5 — SEAL     : XP, review scheduled, reflection prompt
 // ============================================================
 import { t }                              from '../core/i18n.js';
-import { fetchSurah, getAudioUrl, getReciter, fetchWordData } from '../services/QuranAPI.js';
+import { fetchSurah, getAudioUrl, getReciter, fetchWordData, getWbwMeaning } from '../services/QuranAPI.js';
 import { sealAyah, addXP, updateStreak, XP, getAyahProgress, recordMistake, getMistakes } from '../services/ProgressService.js';
 import { lookupWord }                     from '../core/ArabicText.js';
 import { playWord, playWordFromUrl, playAyah, stopAudio, preloadAyah } from '../services/WordAudio.js';
@@ -29,7 +29,7 @@ let S = {
   xpEarned:   0,
   _revealIdx:  undefined,
   _blankIdx:   undefined,
-  _wordData:   null,    // per-word API data: [{position, translation, transliteration, audio_url}]
+  _wordData:   null,    // per-word API data: {position: {translation, transliteration, audio_url}} — position-keyed map
   _repTarget:  7,       // chosen rep count — default 7
   _repDone:    0,       // completed reps this session
   _repPhase:   'pick',  // 'pick' | 'reciting'
@@ -125,6 +125,7 @@ export async function renderSessionScreen(lang) {
       preloadAyah(S.surahNum, S.ayahNum);
 
       _renderStage();
+      _initSwipe();
     } catch (err) {
       const body = document.getElementById('sess-body');
       if (body) body.innerHTML = `
@@ -376,15 +377,30 @@ function _renderLearn() {
 }
 
 function _renderWordCard(word, idx, lang) {
-  // Word position is 1-based; API data indexed by (position - 1)
-  const apiWord  = S._wordData?.[idx] || null;
+  // S._wordData is a position-keyed map {position: wordObj} from fetchWordData.
+  // idx is 0-based (word index in S.words[] from splitWords).
+  // WBW and quran.com both use 1-based position matching the Uthmani word order.
+  // We look up by (idx + 1) as the canonical position — this matches both WBW
+  // keys and quran.com position numbers for the vast majority of ayat.
+  const pos      = idx + 1;                            // 1-based position
+  const apiWord  = S._wordData?.[pos] || null;         // position-keyed lookup
   const alifData = _alifLookup(word);
 
-  // Meaning: prefer Alif (trilingual) → fall back to API English
-  const meaning = alifData?.meaning?.[lang]
-    || alifData?.meaning?.en
-    || apiWord?.translation
-    || '';
+  // Meaning priority:
+  // 1. Alif-index (trilingual, curated) — best, 211 key words
+  // 2. WBW JSON (Dr. Farhat Hashmi hi/ur) — full Quran, 77,429 entries
+  // 3. quran.com API word translation — English only, last resort
+  let meaning = alifData?.meaning?.[lang] || alifData?.meaning?.en || '';
+  if (!meaning) {
+    if (lang === 'en') {
+      meaning = apiWord?.translation || '';
+    } else {
+      // WBW key uses same 1-based position as splitWords index
+      meaning = getWbwMeaning(S.surahNum, S.ayahNum, pos, lang) || '';
+      // Final fallback: English from API
+      if (!meaning) meaning = apiWord?.translation || '';
+    }
+  }
 
   // Transliteration: Alif first, then API
   const translit = alifData?.transliteration || apiWord?.transliteration || '';
@@ -1307,6 +1323,109 @@ function _renderSeal() {
   `;
 }
 
+// ── Swipe Navigation ─────────────────────────────────────────
+// Left swipe  → advance (sessNext / sessWordNext depending on stage)
+// Right swipe → exit prompt (on stage 0) or go back (Learn word-back)
+// Rules:
+//   • Min 50px horizontal delta, must be more horizontal than vertical
+//   • Ignored if touch started on a .q-word (long-press handler owns those)
+//   • Ignored if user is scrolling vertically (dy > dx after 10px)
+//   • Exit swipe shows a 2s toast confirm — second right-swipe within 2s exits
+
+let _exitPrimed = false;
+let _exitPrimedTimer = null;
+
+function _initSwipe() {
+  const body = document.getElementById('sess-body');
+  if (!body) return;
+
+  let x0 = 0, y0 = 0, onWord = false, cancelled = false;
+
+  body.addEventListener('touchstart', e => {
+    const t = e.touches[0];
+    x0 = t.clientX;
+    y0 = t.clientY;
+    cancelled = false;
+    // Don't hijack touches that start on Arabic words (long-press owns them)
+    onWord = !!e.target.closest('.q-word');
+  }, { passive: true });
+
+  body.addEventListener('touchmove', e => {
+    if (cancelled || onWord) return;
+    const dx = Math.abs(e.touches[0].clientX - x0);
+    const dy = Math.abs(e.touches[0].clientY - y0);
+    // If clearly scrolling vertically, cancel swipe detection
+    if (dy > dx && dy > 10) cancelled = true;
+  }, { passive: true });
+
+  body.addEventListener('touchend', e => {
+    if (cancelled || onWord) return;
+    const dx = e.changedTouches[0].clientX - x0;
+    const dy = e.changedTouches[0].clientY - y0;
+    const adx = Math.abs(dx), ady = Math.abs(dy);
+
+    // Must be primarily horizontal and at least 50px
+    if (adx < 50 || ady > adx) return;
+
+    if (dx < 0) {
+      // ── Left swipe → advance ──────────────────────────────
+      if (S.stage === 1) {
+        // Learn stage: swipe through words
+        window.sessWordNext();
+      } else if (S.stage === 2) {
+        // Practice: advance technique
+        window.sessPracticeNext();
+      } else if (S.stage < 4) {
+        // Listen (0), Seal (3) — go to next stage
+        window.sessNext();
+      }
+      // Stage 4 (Reflect) — no swipe action, user fills the form
+    } else {
+      // ── Right swipe → back / exit ─────────────────────────
+      if (S.stage === 1 && S.wordIdx > 0) {
+        // Learn stage: go back a word
+        window.sessWordBack();
+      } else if (S.stage === 0 || S.stage >= 3) {
+        // On Listen or Seal+ — prime exit, second swipe exits
+        if (_exitPrimed) {
+          clearTimeout(_exitPrimedTimer);
+          _exitPrimed = false;
+          window.exitSession();
+        } else {
+          _exitPrimed = true;
+          _showSwipeToast(S.lang);
+          _exitPrimedTimer = setTimeout(() => { _exitPrimed = false; }, 2000);
+        }
+      }
+    }
+  }, { passive: true });
+}
+
+function _showSwipeToast(lang) {
+  const msg = lang === 'ur' ? 'باہر جانے کے لیے دوبارہ سوائپ کریں ←'
+             : lang === 'hi' ? 'बाहर जाने के लिए दोबारा स्वाइप करें ←'
+             : 'Swipe right again to exit ←';
+  let toast = document.getElementById('sess-swipe-toast');
+  if (!toast) {
+    toast = document.createElement('div');
+    toast.id = 'sess-swipe-toast';
+    toast.style.cssText = `
+      position:fixed;bottom:90px;left:50%;transform:translateX(-50%);
+      background:var(--bg-overlay);border:1px solid var(--border);
+      border-radius:var(--r-pill);padding:10px 20px;
+      font-size:0.8125rem;color:var(--ink-2);
+      z-index:999;pointer-events:none;
+      animation:fadeInUp 0.2s ease;
+      white-space:nowrap;
+      backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+    `;
+    document.body.appendChild(toast);
+  }
+  toast.textContent = msg;
+  toast.style.display = 'block';
+  setTimeout(() => { if (toast) toast.style.display = 'none'; }, 2000);
+}
+
 // ── Surah Completion ──────────────────────────────────────────
 
 // Called when the last ayah of a surah is sealed and the user taps the
@@ -1486,7 +1605,7 @@ async function _hydrateTajweedWords() {
       const flashContainer = document.getElementById('tj-discovery-flash');
       if (flashContainer) {
         flashContainer.innerHTML = discoveries
-          .map(d => renderDiscoveryFlash(d.ruleId, d.ruleName, S.lang))
+          .map(d => renderDiscoveryFlash({ ruleId: d.ruleId, ruleName: d.ruleName }))
           .join('');
         // Auto-dismiss after 4 seconds
         setTimeout(() => {
@@ -1531,14 +1650,15 @@ function _normalizeArabic(s) {
 }
 
 // Alif-index lookup with progressive fallback:
-// 1. raw word  2. strip diacritics  3. full normalize  4. normalize + strip ال prefix
+// 1. raw word  2. strip diacritics  3. full normalize
+// NOTE: ال-strip fallback removed — causes false matches
+// e.g. الملك (sovereignty) wrongly matching ملك → مَلَك (angel)
 function _alifLookup(word) {
   if (!window._alifIndex) return null;
   const idx = window._alifIndex;
   return idx[word]
     || idx[_stripDiacritics(word)]
     || idx[_normalizeArabic(word)]
-    || idx[_normalizeArabic(word).replace(/^\u0627\u0644/, '')] // strip ال
     || null;
 }
 
@@ -1833,6 +1953,614 @@ function _getContextGem(surahNum, ayahNum, lang) {
         ur: "الناس — برائی کے وسوسوں سے اللہ کی پناہ مانگنا — ہر لمحے کی دعا۔",
       }
     },
+    25: {
+      type: lang==='ur'?'معیار':lang==='hi'?'मेयार':'Standard',
+      text: {
+        en: "Al-Furqan means 'the Criterion' — the ability to tell truth from falsehood. It describes the 'Ibad ar-Rahman, the servants of the Most Merciful: they walk humbly, respond to ignorance with peace, and spend the night in prayer. A portrait of the ideal Muslim.",
+        hi: "अल-फ़ुरक़ान का मतलब है 'कसौटी' — हक़ और बातिल में फ़र्क़ करने की सलाहियत। इसमें 'इबाद-उर-रहमान की तस्वीर है: आहिस्ता चलते हैं, जहालत पर सलामती से जवाब देते हैं, रात इबादत में गुज़ारते हैं। एक मुकम्मल मोमिन की तस्वीर।",
+        ur: "الفرقان کا مطلب ہے 'کسوٹی' — حق اور باطل میں فرق کرنے کی صلاحیت۔ اس میں عبادالرحمٰن کی تصویر ہے: آہستہ چلتے ہیں، جہالت پر سلامتی سے جواب دیتے ہیں، رات عبادت میں گزارتے ہیں۔ ایک مکمل مومن کی تصویر۔",
+      }
+    },
+    26: {
+      type: lang==='ur'?'دعوت':lang==='hi'?'दावत':'Invitation',
+      text: {
+        en: "Ash-Shu'ara repeats the phrase 'And your Lord — He is the Mighty, the Merciful' eight times after each prophet's story. Power and mercy, together, again and again — as if Allah is saying: every rejection of His messengers was met not with destruction alone, but with continued mercy.",
+        hi: "अश-शुअरा में हर नबी की कहानी के बाद 'और तुम्हारा रब — वही ज़बरदस्त, मेहरबान है' आठ बार दोहराया गया है। क़ुव्वत और रहमत, साथ-साथ, बार-बार — जैसे अल्लाह कह रहे हों: उनके पैग़म्बरों की हर नाफ़रमानी के बाद भी रहमत जारी रही।",
+        ur: "الشعراء میں ہر نبی کی کہانی کے بعد 'اور تمہارا رب — وہی زبردست، مہربان ہے' آٹھ بار دہرایا گیا ہے۔ قوت اور رحمت، ساتھ ساتھ، بار بار — جیسے اللہ کہہ رہے ہوں: ان کے پیغمبروں کی ہر نافرمانی کے بعد بھی رحمت جاری رہی۔",
+      }
+    },
+    27: {
+      type: lang==='ur'?'حکمت':lang==='hi'?'हिकमत':'Wisdom',
+      text: {
+        en: "An-Naml contains the story of Sulayman ﷺ and the Queen of Saba — and the ant that warned her colony before his army arrived. The ant's words made Sulayman ﷺ smile and thank Allah. In this surah, a tiny insect teaches a prophet gratitude.",
+        hi: "अन-नम्ल में सुलैमान ﷺ और मलिका-ए-सबा की कहानी है — और वो चींटी जिसने अपनी बस्ती को उनकी फ़ौज से पहले ख़बरदार किया। चींटी के बोल सुनकर सुलैमान ﷺ मुस्कुराए और अल्लाह का शुक्र किया। इस सूरह में एक छोटे से कीड़े ने एक नबी को शुक्र सिखाया।",
+        ur: "النمل میں سلیمان ﷺ اور ملکہ سبا کی کہانی ہے — اور وہ چیونٹی جس نے اپنی بستی کو ان کی فوج سے پہلے خبردار کیا۔ چیونٹی کی باتیں سن کر سلیمان ﷺ مسکرائے اور اللہ کا شکر کیا۔ اس سورہ میں ایک چھوٹے سے کیڑے نے ایک نبی کو شکر سکھایا۔",
+      }
+    },
+    28: {
+      type: lang==='ur'?'توکل':lang==='hi'?'तवक्कुल':'Trust',
+      text: {
+        en: "Al-Qasas tells the full story of Musa ﷺ — from the basket on the Nile to the parting of the sea. His mother was told to cast her infant into the river and was promised he would return. The most terrifying act of trust became the greatest act of deliverance.",
+        hi: "अल-क़सस में मूसा ﷺ की पूरी दास्तान है — नील में टोकरी से लेकर समंदर के चिरने तक। उनकी माँ को हुक्म हुआ बच्चे को नदी में डाल दो और वादा हुआ कि वो वापस आएगा। तवक्कुल का सबसे डरावना लम्हा सबसे बड़ी नजात बन गया।",
+        ur: "القصص میں موسیٰ ﷺ کی پوری داستان ہے — نیل میں ٹوکری سے لے کر سمندر کے چرنے تک۔ ان کی ماں کو حکم ہوا بچے کو دریا میں ڈال دو اور وعدہ ہوا کہ وہ واپس آئے گا۔ توکل کا سب سے ڈراؤنا لمحہ سب سے بڑی نجات بن گیا۔",
+      }
+    },
+    29: {
+      type: lang==='ur'?'آزمائش':lang==='hi'?'आज़माइश':'Trial',
+      text: {
+        en: "Al-Ankabut opens with a stunning declaration: 'Do people think they will be left alone because they say we believe, and will not be tested?' Faith without trial is just a claim. The spider's web — seemingly strong, actually the weakest of homes — is the surah's central metaphor for false security.",
+        hi: "अल-अनकबूत एक ज़बरदस्त ऐलान से खुलती है: 'क्या लोग समझते हैं कि बस 'हम ईमान लाए' कहने से उन्हें छोड़ दिया जाएगा और आज़माया नहीं जाएगा?' बिना आज़माइश का ईमान सिर्फ़ दावा है। मकड़ी का जाला — जो देखने में मज़बूत पर असल में सबसे कमज़ोर घर है — इस सूरह की मरकज़ी तस्वीर है।",
+        ur: "العنکبوت ایک زبردست اعلان سے کھلتی ہے: 'کیا لوگ سمجھتے ہیں کہ بس ہم ایمان لائے کہنے سے انہیں چھوڑ دیا جائے گا اور آزمایا نہیں جائے گا؟' بغیر آزمائش کا ایمان صرف دعویٰ ہے۔ مکڑی کا جالا — جو دیکھنے میں مضبوط پر اصل میں سب سے کمزور گھر ہے — اس سورہ کی مرکزی تصویر ہے۔",
+      }
+    },
+    30: {
+      type: lang==='ur'?'پیشگوئی':lang==='hi'?'पेशगोई':'Prophecy',
+      text: {
+        en: "Ar-Rum opens with a historical prophecy: the Romans have been defeated, but within 3–9 years they will be victorious again. The Muslims in Makkah were mocked for believing this impossible prediction — and it came true exactly on the day of Badr. The Qur'an predicted news before it happened.",
+        hi: "अर-रूम एक तारीख़ी पेशीनगोई से खुलती है: रोम हार गए हैं, लेकिन 3-9 साल में फिर जीतेंगे। मक्के में मुसलमानों का मज़ाक़ उड़ाया गया — और यह ठीक बद्र के दिन सच हो गया। क़ुरआन ने ख़बर होने से पहले ख़बर दी।",
+        ur: "الروم ایک تاریخی پیشین گوئی سے کھلتی ہے: روم ہار گئے ہیں، لیکن 3-9 سال میں پھر جیتیں گے۔ مکے میں مسلمانوں کا مذاق اڑایا گیا — اور یہ ٹھیک بدر کے دن سچ ہو گیا۔ قرآن نے خبر ہونے سے پہلے خبر دی۔",
+      }
+    },
+    31: {
+      type: lang==='ur'?'حکمت':lang==='hi'?'हिकमत':'Wisdom',
+      text: {
+        en: "Luqman is a man mentioned in the Qur'an who was not a prophet — just a wise man given hikma by Allah. His advice to his son spans three ayat: don't associate partners with Allah, be good to your parents, establish prayer, and don't walk arrogantly on the earth. Timeless parenting in ten lines.",
+        hi: "लुक़मान क़ुरआन में ज़िक्र होने वाले एक ऐसे इंसान हैं जो नबी नहीं थे — बस अल्लाह का दिया हुआ हिकमत वाले एक बुज़ुर्ग। उनकी बेटे को नसीहत तीन आयतों में है: शिर्क मत करो, माँ-बाप के साथ अच्छे रहो, नमाज़ पढ़ो, ज़मीन पर अकड़ कर मत चलो। दस सतरों में लाज़वाल तर्बियत।",
+        ur: "لقمان قرآن میں ذکر ہونے والے ایک ایسے انسان ہیں جو نبی نہیں تھے — بس اللہ کی دی ہوئی حکمت والے ایک بزرگ۔ ان کی بیٹے کو نصیحت تین آیات میں ہے: شرک مت کرو، ماں باپ کے ساتھ اچھے رہو، نماز پڑھو، زمین پر اکڑ کر مت چلو۔ دس سطروں میں لازوال تربیت۔",
+      }
+    },
+    32: {
+      type: lang==='ur'?'تدبر':lang==='hi'?'तदब्बुर':'Reflection',
+      text: {
+        en: "As-Sajdah contains one of the most beautiful descriptions of creation in the Qur'an: how Allah fashioned the human being from clay, breathed His spirit into him, and gave him hearing, sight, and hearts. It is a surah of prostration — the natural response when you truly grasp who made you.",
+        hi: "अस-सज्दा में क़ुरआन की सबसे ख़ूबसूरत तख़्लीक़ की तस्वीरों में से एक है: कैसे अल्लाह ने इंसान को मिट्टी से बनाया, उसमें अपनी रूह फूँकी, और उसे सुनना, देखना और दिल दिए। यह सजदे की सूरह है — वो फ़ितरी जवाब जब सच में समझ आए कि किसने बनाया।",
+        ur: "السجدہ میں قرآن کی سب سے خوبصورت تخلیق کی تصویروں میں سے ایک ہے: کیسے اللہ نے انسان کو مٹی سے بنایا، اس میں اپنی روح پھونکی، اور اسے سننا، دیکھنا اور دل دیے۔ یہ سجدے کی سورہ ہے — وہ فطری جواب جب سچ میں سمجھ آئے کہ کس نے بنایا۔",
+      }
+    },
+    33: {
+      type: lang==='ur'?'امانت':lang==='hi'?'अमानत':'Trust',
+      text: {
+        en: "Al-Ahzab contains the famous ayah of the Amanah — the trust that the heavens, the earth, and the mountains refused to carry, and mankind accepted. It also contains the command of salawat upon the Prophet ﷺ: 'Indeed, Allah and His angels send blessings upon the Prophet.'",
+        hi: "अल-अहज़ाब में अमानत की मशहूर आयत है — वो अमानत जिसे आसमानों, ज़मीन और पहाड़ों ने उठाने से इनकार किया, और इंसान ने क़ुबूल किया। इसमें नबी ﷺ पर दरूद का हुक्म भी है: 'बेशक अल्लाह और उसके फ़रिश्ते नबी पर दरूद भेजते हैं।'",
+        ur: "الاحزاب میں امانت کی مشہور آیت ہے — وہ امانت جسے آسمانوں، زمین اور پہاڑوں نے اٹھانے سے انکار کیا، اور انسان نے قبول کیا۔ اس میں نبی ﷺ پر درود کا حکم بھی ہے: 'بے شک اللہ اور اس کے فرشتے نبی پر درود بھیجتے ہیں۔'",
+      }
+    },
+    34: {
+      type: lang==='ur'?'شکر':lang==='hi'?'शुक्र':'Gratitude',
+      text: {
+        en: "Saba tells the story of two grateful kingdoms — Saba and the family of Dawud ﷺ — and what happened when gratitude turned to arrogance. The people of Saba were destroyed by a flood after abandoning Allah's blessings. Their lush gardens became bitter thorns. Ingratitude is never just personal — it reshapes the world around you.",
+        hi: "सबा दो शुक्रगुज़ार सल्तनतों की कहानी कहती है — सबा और दाऊद ﷺ का ख़ानदान — और जब शुक्र घमंड में बदल गया तो क्या हुआ। सबा के लोग अल्लाह की नेमतें छोड़ने के बाद सैलाब से तबाह हो गए। उनके हरे-भरे बाग़ कड़वे काँटों में बदल गए।",
+        ur: "سبا دو شکرگزار سلطنتوں کی کہانی کہتی ہے — سبا اور داؤد ﷺ کا خاندان — اور جب شکر غرور میں بدل گیا تو کیا ہوا۔ سبا کے لوگ اللہ کی نعمتیں چھوڑنے کے بعد سیلاب سے تباہ ہو گئے۔ ان کے سرسبز باغ کڑوے کانٹوں میں بدل گئے۔",
+      }
+    },
+    35: {
+      type: lang==='ur'?'تخلیق':lang==='hi'?'तख़्लीक़':'Creation',
+      text: {
+        en: "Fatir opens with Allah describing Himself as the Creator of angels with two, three, or four wings — and then says He adds to creation whatever He wills. The universe is not static; Allah is continuously creating, expanding, and willing new things into existence. We live inside an ongoing act of creation.",
+        hi: "फ़ातिर में अल्लाह ख़ुद को दो, तीन या चार पंखों वाले फ़रिश्ते बनाने वाले के तौर पर बयान करते हैं — फिर फ़रमाते हैं जो चाहे तख़्लीक़ में बढ़ाता है। कायनात जड़ नहीं है — अल्लाह लगातार बना रहे हैं। हम एक जारी तख़्लीक़ के अंदर जी रहे हैं।",
+        ur: "فاطر میں اللہ خود کو دو، تین یا چار پروں والے فرشتے بنانے والے کے طور پر بیان کرتے ہیں — پھر فرماتے ہیں جو چاہے تخلیق میں بڑھاتا ہے۔ کائنات جامد نہیں ہے — اللہ مسلسل بنا رہے ہیں۔ ہم ایک جاری تخلیق کے اندر جی رہے ہیں۔",
+      }
+    },
+    36: {
+      type: lang==='ur'?'قلب':lang==='hi'?'क़ल्ब':'Heart',
+      text: {
+        en: "Ya-Sin is called 'the heart of the Qur'an' by the Prophet ﷺ. He said: 'Everything has a heart, and the heart of the Qur'an is Ya-Sin.' Recited for the dying, for barakah, for the dead. It ends with the most powerful argument for resurrection: the One who created you from nothing can certainly bring you back.",
+        hi: "या-सीन को नबी ﷺ ने 'क़ुरआन का दिल' कहा। आपने फ़रमाया: 'हर चीज़ का एक दिल होता है, और क़ुरआन का दिल या-सीन है।' मरने वालों के पास, बरकत के लिए, मुर्दों के लिए पढ़ी जाती है। और क़यामत की सबसे ज़बरदस्त दलील पर ख़त्म होती है: जिसने तुम्हें अदम से बनाया, वो ज़रूर वापस ला सकता है।",
+        ur: "یٰسین کو نبی ﷺ نے 'قرآن کا دل' کہا۔ آپ نے فرمایا: 'ہر چیز کا ایک دل ہوتا ہے، اور قرآن کا دل یٰسین ہے۔' مرنے والوں کے پاس، برکت کے لیے، مردوں کے لیے پڑھی جاتی ہے۔ اور قیامت کی سب سے زبردست دلیل پر ختم ہوتی ہے: جس نے تمہیں عدم سے بنایا، وہ ضرور واپس لا سکتا ہے۔",
+      }
+    },
+    37: {
+      type: lang==='ur'?'قربانی':lang==='hi'?'क़ुर्बानी':'Sacrifice',
+      text: {
+        en: "As-Saffat contains the full story of Ibrahim ﷺ's willingness to sacrifice his son — and the moment Allah called out 'O Ibrahim, you have fulfilled the vision.' The knife did not cut. Obedience was complete before the act was complete. Allah tests the intention, not just the action.",
+        hi: "अस-साफ़्फ़ात में इब्राहीम ﷺ के बेटे की क़ुर्बानी का पूरा वाक़िया है — और वो लम्हा जब अल्लाह ने आवाज़ दी: 'ऐ इब्राहीम, तुमने ख़्वाब सच कर दिखाया।' छुरी नहीं चली। अमल पूरा होने से पहले फ़रमाँबरदारी मुकम्मल हो गई। अल्लाह नीयत को परखता है, सिर्फ़ अमल को नहीं।",
+        ur: "الصافات میں ابراہیم ﷺ کے بیٹے کی قربانی کا پورا واقعہ ہے — اور وہ لمحہ جب اللہ نے آواز دی: 'اے ابراہیم، تم نے خواب سچ کر دکھایا۔' چھری نہیں چلی۔ عمل پورا ہونے سے پہلے فرمانبرداری مکمل ہو گئی۔ اللہ نیت کو پرکھتا ہے، صرف عمل کو نہیں۔",
+      }
+    },
+    38: {
+      type: lang==='ur'?'توبہ':lang==='hi'?'तौबा':'Repentance',
+      text: {
+        en: "Sad contains Dawud ﷺ's story of judgment and immediate tawbah — he wept so much in prostration that it became a sunnah to prostrate at that ayah. It also contains Iblis's declaration: 'I will mislead them all — except Your sincere servants.' The exception is the entire point.",
+        hi: "साद में दाऊद ﷺ के फ़ैसले और फ़ौरी तौबा की कहानी है — वो इतना रोए कि उस आयत पर सजदा करना सुन्नत बन गया। इसमें इबलीस का ऐलान भी है: 'मैं इन सबको बहकाऊँगा — सिवाए तेरे मुख़लिस बंदों के।' यह इस्तिस्ना ही असल बात है।",
+        ur: "صٓ میں داؤد ﷺ کے فیصلے اور فوری توبہ کی کہانی ہے — وہ اتنا روئے کہ اس آیت پر سجدہ کرنا سنت بن گیا۔ اس میں ابلیس کا اعلان بھی ہے: 'میں ان سب کو بہکاؤں گا — سوائے تیرے مخلص بندوں کے۔' یہ استثناء ہی اصل بات ہے۔",
+      }
+    },
+    39: {
+      type: lang==='ur'?'اخلاص':lang==='hi'?'इख़लास':'Sincerity',
+      text: {
+        en: "Az-Zumar means 'the Groups' — referring to how people will be driven to Hell or Paradise in groups on the Day of Judgment. But its most powerful ayah is a call to sincerity: 'Say: O My servants who have transgressed against themselves — do not despair of the mercy of Allah. Indeed, Allah forgives all sins.'",
+        hi: "अज़-ज़ुमर का मतलब है 'गिरोह' — क़यामत के दिन लोगों के जहन्नम या जन्नत की तरफ़ झुंड-झुंड हाँके जाने का ज़िक्र है। लेकिन इसकी सबसे ज़बरदस्त आयत है: 'कहो: ऐ मेरे वो बंदो जिन्होंने अपनी जानों पर ज़ुल्म किया — अल्लाह की रहमत से ना-उम्मीद मत हो। बेशक अल्लाह सारे गुनाह माफ़ करता है।'",
+        ur: "الزمر کا مطلب ہے 'گروہ' — قیامت کے دن لوگوں کے جہنم یا جنت کی طرف گروہ گروہ ہانکے جانے کا ذکر ہے۔ لیکن اس کی سب سے زبردست آیت ہے: 'کہو: اے میرے وہ بندو جنہوں نے اپنی جانوں پر ظلم کیا — اللہ کی رحمت سے ناامید مت ہو۔ بے شک اللہ سارے گناہ معاف کرتا ہے۔'",
+      }
+    },
+    40: {
+      type: lang==='ur'?'دعا':lang==='hi'?'दुआ':'Supplication',
+      text: {
+        en: "Ghafir — the Forgiver — opens with two of Allah's most beautiful names: Al-Ghafir and Al-Qabbal — the One who forgives sins and accepts repentance. The surah introduces the Believer of Pharaoh's court, an anonymous man who risked his life to speak truth to power and defend Musa ﷺ.",
+        hi: "ग़ाफ़िर — माफ़ करने वाला — अल्लाह के दो ख़ूबसूरत नामों से खुलती है: अल-ग़ाफ़िर और अल-क़ब्बाल — गुनाह माफ़ करने वाला और तौबा क़ुबूल करने वाला। इसमें फ़िरऔन के दरबार के मोमिन का ज़िक्र है — एक गुमनाम शख़्स जिसने जान की बाज़ी लगाकर मूसा ﷺ की हिमायत में हक़ बोला।",
+        ur: "غافر — معاف کرنے والا — اللہ کے دو خوبصورت ناموں سے کھلتی ہے: الغافر اور القبال — گناہ معاف کرنے والا اور توبہ قبول کرنے والا۔ اس میں فرعون کے دربار کے مومن کا ذکر ہے — ایک گمنام شخص جس نے جان کی بازی لگا کر موسیٰ ﷺ کی حمایت میں حق بولا۔",
+      }
+    },
+    41: {
+      type: lang==='ur'?'معجزہ':lang==='hi'?'मोजिज़ा':'Miracle',
+      text: {
+        en: "Fussilat contains a prophecy that stuns scientists to this day: 'We will show them Our signs in the horizons and within themselves until it becomes clear to them that it is the truth.' The expansion of the universe, the structure of DNA, the patterns of the cosmos — all discovered centuries after this ayah.",
+        hi: "फ़ुस्सिलत में एक पेशीनगोई है जो आज भी साइंसदानों को हैरान करती है: 'हम उन्हें आफ़ाक़ में और ख़ुद उनमें अपनी निशानियाँ दिखाएंगे जब तक यह साफ़ न हो जाए कि यही हक़ है।' कायनात का फैलना, DNA की बनावट, कॉसमॉस के नक़्श — सब इस आयत के सदियों बाद दरयाफ़्त हुए।",
+        ur: "فصلت میں ایک پیشین گوئی ہے جو آج بھی سائنسدانوں کو حیران کرتی ہے: 'ہم انہیں آفاق میں اور خود ان میں اپنی نشانیاں دکھائیں گے یہاں تک کہ واضح ہو جائے کہ یہی حق ہے۔' کائنات کا پھیلنا، DNA کی بناوٹ، کاسموس کے نقش — سب اس آیت کے صدیوں بعد دریافت ہوئے۔",
+      }
+    },
+    42: {
+      type: lang==='ur'?'وحی':lang==='hi'?'वह्य':'Revelation',
+      text: {
+        en: "Ash-Shura contains a profound ayah about how Allah communicates: 'It is not for a human being that Allah should speak to him except through revelation, or from behind a veil, or by sending a messenger.' Even the greatest prophets never heard Allah directly — such is His transcendence.",
+        hi: "अश-शूरा में वह्य के बारे में एक गहरी आयत है: 'किसी इंसान के लिए यह नहीं कि अल्लाह उससे सीधे बात करे — मगर वह्य के ज़रिए, या पर्दे के पीछे से, या कोई रसूल भेजकर।' बड़े से बड़े नबी ने भी अल्लाह की आवाज़ सीधे नहीं सुनी — यही उसकी शान है।",
+        ur: "الشوریٰ میں وحی کے بارے میں ایک گہری آیت ہے: 'کسی انسان کے لیے یہ نہیں کہ اللہ اس سے سیدھے بات کرے — مگر وحی کے ذریعے، یا پردے کے پیچھے سے، یا کوئی رسول بھیج کر۔' بڑے سے بڑے نبی نے بھی اللہ کی آواز سیدھی نہیں سنی — یہی اس کی شان ہے۔",
+      }
+    },
+    43: {
+      type: lang==='ur'?'قدر':lang==='hi'?'क़द्र':'Value',
+      text: {
+        en: "Az-Zukhruf means 'ornaments of gold' — and the surah argues that material wealth is the lowest form of honour. It tells us that if it were not for the risk of all mankind turning to disbelief, Allah would have given every disbeliever silver roofs and golden staircases. Dunya is too cheap for that to mean anything.",
+        hi: "अज़-ज़ुख़्रुफ़ का मतलब है 'सोने के ज़ेवरात' — और यह सूरह दलील देती है कि माली दौलत सम्मान की सबसे कमतर क़िस्म है। बताती है कि अगर सारी इंसानियत के कुफ़्र में पड़ने का ख़तरा न होता तो अल्लाह हर काफ़िर को चाँदी की छतें और सोने की सीढ़ियाँ देता। दुनिया इसके लिए बहुत सस्ती है।",
+        ur: "الزخرف کا مطلب ہے 'سونے کے زیورات' — اور یہ سورہ دلیل دیتی ہے کہ مالی دولت عزت کی سب سے کمتر قسم ہے۔ بتاتی ہے کہ اگر ساری انسانیت کے کفر میں پڑنے کا خطرہ نہ ہوتا تو اللہ ہر کافر کو چاندی کی چھتیں اور سونے کی سیڑھیاں دیتا۔ دنیا اس کے لیے بہت سستی ہے۔",
+      }
+    },
+    44: {
+      type: lang==='ur'?'لیلۃ المبارکۃ':lang==='hi'?'मुबारक रात':'Blessed Night',
+      text: {
+        en: "Ad-Dukhan contains a reference to 'the blessed night' in which every wise matter is decreed — widely understood to be Laylat al-Qadr. The surah warns the people of Pharaoh as a mirror: a people who were shown sign after sign, then drowned. The smoke (dukhan) of the Day of Judgment is its central image.",
+        hi: "अद-दुख़ान में 'मुबारक रात' का ज़िक्र है जिसमें हर हिकमत भरा मामला तय किया जाता है — जिसे आमतौर पर लैलत-उल-क़द्र माना जाता है। सूरह फ़िरऔन की क़ौम को आईना दिखाती है: वो लोग जिन्हें एक के बाद एक निशानी दिखाई गई, फिर डुबो दिए गए।",
+        ur: "الدخان میں 'مبارک رات' کا ذکر ہے جس میں ہر حکمت بھرا معاملہ طے کیا جاتا ہے — جسے عموماً لیلۃ القدر سمجھا جاتا ہے۔ سورہ فرعون کی قوم کو آئینہ دکھاتی ہے: وہ لوگ جنہیں ایک کے بعد ایک نشانی دکھائی گئی، پھر ڈبو دیے گئے۔",
+      }
+    },
+    45: {
+      type: lang==='ur'?'نشانی':lang==='hi'?'निशानी':'Sign',
+      text: {
+        en: "Al-Jathiyah means 'kneeling' — every nation will be called to kneel before Allah on the Day of Judgment, and their book of deeds will be presented to them. The surah challenges those who deny the signs in creation: the ships on the sea, the cattle, the rain, the rotation of night and day — all are proofs, if you reflect.",
+        hi: "अल-जासियह का मतलब है 'घुटने टेकना' — क़यामत के दिन हर उम्मत को अल्लाह के सामने घुटने टेकने के लिए बुलाया जाएगा और उन्हें उनका आमालनामा दिखाया जाएगा। सूरह उनसे सवाल करती है जो तख़्लीक़ की निशानियाँ नकारते हैं: समंदर की कश्तियाँ, मवेशी, बारिश, रात-दिन का बदलाव।",
+        ur: "الجاثیہ کا مطلب ہے 'گھٹنے ٹیکنا' — قیامت کے دن ہر امت کو اللہ کے سامنے گھٹنے ٹیکنے کے لیے بلایا جائے گا اور انہیں ان کا اعمالنامہ دکھایا جائے گا۔ سورہ ان سے سوال کرتی ہے جو تخلیق کی نشانیوں سے انکار کرتے ہیں: سمندر کی کشتیاں، مویشی، بارش، رات دن کا بدلاؤ۔",
+      }
+    },
+    46: {
+      type: lang==='ur'?'دعوت':lang==='hi'?'दावत':'Calling',
+      text: {
+        en: "Al-Ahqaf tells the story of a group of jinn who heard the Qur'an being recited in the desert and immediately believed — saying 'we have heard a wondrous recitation that guides to the right path.' Before many humans accepted Islam, the jinn were moved to faith by simply listening.",
+        hi: "अल-अहक़ाफ़ में जिन्नों के उस गिरोह की कहानी है जिन्होंने रेगिस्तान में क़ुरआन की तिलावत सुनी और फ़ौरन ईमान ले आए — कहा: 'हमने एक हैरतअंगेज़ तिलावत सुनी जो सीधे रास्ते की तरफ़ रहनुमाई करती है।' कई इंसानों के इस्लाम लाने से पहले जिन्न सिर्फ़ सुनने से ईमान ले आए।",
+        ur: "الاحقاف میں جنوں کے اس گروہ کی کہانی ہے جنہوں نے صحرا میں قرآن کی تلاوت سنی اور فوراً ایمان لے آئے — کہا: 'ہم نے ایک حیرت انگیز تلاوت سنی جو سیدھے راستے کی طرف رہنمائی کرتی ہے۔' کئی انسانوں کے اسلام لانے سے پہلے جن صرف سننے سے ایمان لے آئے۔",
+      }
+    },
+    47: {
+      type: lang==='ur'?'جہاد':lang==='hi'?'जिहाद':'Striving',
+      text: {
+        en: "Muhammad ﷺ — the only surah named directly after the Prophet ﷺ — was revealed during the most intense period of conflict in Madinah. It asks: 'Will you not fight in the cause of Allah and for the oppressed?' It defines true loss not as death in battle, but as wasted deeds on the Day of Judgment.",
+        hi: "मुहम्मद ﷺ — एकमात्र सूरह जो सीधे नबी ﷺ के नाम पर है — मदीने में सबसे तनाव भरे दौर में नाज़िल हुई। पूछती है: 'क्या तुम अल्लाह की राह में और मज़लूमों के लिए नहीं लड़ोगे?' असली नुक़सान को मैदान में मौत नहीं, बल्कि क़यामत के दिन बर्बाद अमल बताती है।",
+        ur: "محمد ﷺ — واحد سورہ جو سیدھے نبی ﷺ کے نام پر ہے — مدینے میں سب سے تناؤ بھرے دور میں نازل ہوئی۔ پوچھتی ہے: 'کیا تم اللہ کی راہ میں اور مظلوموں کے لیے نہیں لڑو گے؟' اصلی نقصان کو میدان میں موت نہیں، بلکہ قیامت کے دن برباد اعمال بتاتی ہے۔",
+      }
+    },
+    48: {
+      type: lang==='ur'?'فتح':lang==='hi'?'फ़तह':'Victory',
+      text: {
+        en: "Al-Fath was revealed after Hudaybiyyah — a treaty the companions saw as a defeat. The Prophet ﷺ called it 'the greatest of victories.' Two years later it led directly to the conquest of Makkah. What looks like a loss in Allah's plan is often the setup for the greatest opening.",
+        hi: "अल-फ़त्ह हुदैबिया के बाद नाज़िल हुई — एक समझौता जिसे सहाबा ने शिकस्त समझा। नबी ﷺ ने इसे 'सबसे बड़ी फ़तह' कहा। दो साल बाद यह सीधे मक्के की फ़तह का सबब बना। अल्लाह के मंसूबे में जो हार जैसा लगता है वो अक्सर सबसे बड़े दरवाज़े का मुक़द्दमा होता है।",
+        ur: "الفتح حدیبیہ کے بعد نازل ہوئی — ایک معاہدہ جسے صحابہ نے شکست سمجھا۔ نبی ﷺ نے اسے 'سب سے بڑی فتح' کہا۔ دو سال بعد یہ سیدھے مکے کی فتح کا سبب بنا۔ اللہ کے منصوبے میں جو شکست جیسا لگتا ہے وہ اکثر سب سے بڑے دروازے کا مقدمہ ہوتا ہے۔",
+      }
+    },
+    49: {
+      type: lang==='ur'?'ادب':lang==='hi'?'अदब':'Etiquette',
+      text: {
+        en: "Al-Hujurat is the surah of social manners — don't raise your voice above the Prophet's ﷺ, verify news before acting on it, don't mock each other, don't spy, don't backbite. It ends with the most precise definition of true faith: Islam is what you say, Iman is what enters your heart.",
+        hi: "अल-हुजुरात सामाजिक अदब की सूरह है — नबी ﷺ की आवाज़ से ऊँचे मत बोलो, ख़बर को जाँचे बिना मत मानो, एक दूसरे का मज़ाक़ मत उड़ाओ, जासूसी मत करो, ग़ीबत मत करो। और ख़त्म होती है ईमान की सबसे सटीक तारीफ़ पर: इस्लाम वो है जो ज़ुबान पर है, ईमान वो है जो दिल में उतरे।",
+        ur: "الحجرات سماجی ادب کی سورہ ہے — نبی ﷺ کی آواز سے اونچا مت بولو، خبر کو جانچے بغیر مت مانو، ایک دوسرے کا مذاق مت اڑاؤ، جاسوسی مت کرو، غیبت مت کرو۔ اور ختم ہوتی ہے ایمان کی سب سے درست تعریف پر: اسلام وہ ہے جو زبان پر ہے، ایمان وہ ہے جو دل میں اترے۔",
+      }
+    },
+    50: {
+      type: lang==='ur'?'قربت':lang==='hi'?'क़ुर्बत':'Nearness',
+      text: {
+        en: "Qaf opens with Allah swearing by the Qur'an itself — and then reminds us: 'We are closer to him than his jugular vein.' Not distant, not absent — Allah is nearer to you than your own pulse. The Prophet ﷺ would recite this surah every Friday in the khutbah.",
+        hi: "क़ाफ़ में अल्लाह ख़ुद क़ुरआन की क़सम खाकर याद दिलाता है: 'हम उसकी शह-रग से भी ज़्यादा क़रीब हैं।' दूर नहीं, ग़ायब नहीं — अल्लाह तुम्हारी अपनी नब्ज़ से भी क़रीब है। नबी ﷺ हर जुमे के ख़ुतबे में यही सूरह पढ़ते थे।",
+        ur: "قٓ میں اللہ خود قرآن کی قسم کھا کر یاد دلاتا ہے: 'ہم اس کی شہ رگ سے بھی زیادہ قریب ہیں۔' دور نہیں، غائب نہیں — اللہ تمہاری اپنی نبض سے بھی قریب ہے۔ نبی ﷺ ہر جمعے کے خطبے میں یہی سورہ پڑھتے تھے۔",
+      }
+    },
+    51: {
+      type: lang==='ur'?'یقین':lang==='hi'?'यक़ीन':'Certainty',
+      text: {
+        en: "Adh-Dhariyat contains the most direct statement of purpose in the Qur'an: 'I did not create the jinn and mankind except to worship Me.' Not to succeed, not to accumulate, not to be remembered — just to know and worship Allah. Everything else is detail.",
+        hi: "अज़-ज़ारियात में क़ुरआन का सबसे सीधा बयान-ए-मक़सद है: 'मैंने जिन्न और इंसान को सिर्फ़ इसलिए बनाया कि वो मेरी इबादत करें।' कामयाबी के लिए नहीं, जमा करने के लिए नहीं, याद रहने के लिए नहीं — बस अल्लाह को जानो और उसकी इबादत करो। बाक़ी सब तफ़सील है।",
+        ur: "الذاریات میں قرآن کا سب سے سیدھا بیانِ مقصد ہے: 'میں نے جن اور انسان کو صرف اس لیے بنایا کہ وہ میری عبادت کریں۔' کامیابی کے لیے نہیں، جمع کرنے کے لیے نہیں، یاد رہنے کے لیے نہیں — بس اللہ کو جانو اور اس کی عبادت کرو۔ باقی سب تفصیل ہے۔",
+      }
+    },
+    52: {
+      type: lang==='ur'?'وعدہ':lang==='hi'?'वादा':'Promise',
+      text: {
+        en: "At-Tur contains an ayah that broke the polytheists of Makkah: 'Were they created by nothing, or are they themselves the creators?' The argument is airtight — something cannot come from nothing, and nothing creates itself. This logic alone stopped Jubayr ibn Mut'im in his tracks and planted the seed of his Islam.",
+        hi: "अत-तूर में एक ऐसी आयत है जिसने मक्के के मुश्रिकों को तोड़ दिया: 'क्या उन्हें बिना किसी के बनाया गया, या वो ख़ुद अपने ख़ालिक़ हैं?' दलील पुख़्ता है — कुछ बिना किसी के नहीं बन सकता, और कोई ख़ुद को नहीं बनाता। इसी मंतिक़ ने जुबैर इब्न मुतइम को रोक दिया और उनके इस्लाम का बीज बोया।",
+        ur: "الطور میں ایک ایسی آیت ہے جس نے مکے کے مشرکوں کو توڑ دیا: 'کیا انہیں بغیر کسی کے بنایا گیا، یا وہ خود اپنے خالق ہیں؟' دلیل پختہ ہے — کچھ بغیر کسی کے نہیں بن سکتا، اور کوئی خود کو نہیں بناتا۔ اسی منطق نے جبیر بن مطعم کو روک دیا اور ان کے اسلام کا بیج بویا۔",
+      }
+    },
+    53: {
+      type: lang==='ur'?'مشاہدہ':lang==='hi'?'मुशाहदा':'Witnessing',
+      text: {
+        en: "An-Najm describes the Prophet's ﷺ direct encounter with Jibreel ﷺ at Sidrat al-Muntaha — the lote tree at the boundary of creation, beyond which no creature passes. It is the closest any human being has ever been to the divine threshold. When this surah was first recited, every person present — Muslim and disbeliever alike — fell into sajdah.",
+        hi: "अन-नज्म में नबी ﷺ की जिब्रील ﷺ से सिद्रत-उल-मुन्तहा पर सीधी मुलाक़ात का बयान है — तख़्लीक़ की सरहद पर वो बेरी का दरख़्त जिसके आगे कोई मख़्लूक़ नहीं जाती। किसी इंसान का अल्लाह की दहलीज़ के इतने क़रीब कभी नहीं हुआ। जब यह सूरह पहली बार पढ़ी गई तो हर शख़्स — मुसलमान और काफ़िर — सजदे में गिर गया।",
+        ur: "النجم میں نبی ﷺ کی جبریل ﷺ سے سدرۃ المنتہیٰ پر سیدھی ملاقات کا بیان ہے — تخلیق کی سرحد پر وہ بیری کا درخت جس کے آگے کوئی مخلوق نہیں جاتی۔ کسی انسان کا اللہ کی دہلیز کے اتنا قریب کبھی نہیں ہوا۔ جب یہ سورہ پہلی بار پڑھی گئی تو ہر شخص — مسلمان اور کافر — سجدے میں گر گیا۔",
+      }
+    },
+    54: {
+      type: lang==='ur'?'تنبیہ':lang==='hi'?'तंबीह':'Warning',
+      text: {
+        en: "Al-Qamar repeats four times: 'And We have certainly made the Qur'an easy for remembrance — so is there any who will remember?' Four times, as if Allah is knocking on the door of human hearts again and again. You are memorizing the book that was designed to be memorized.",
+        hi: "अल-क़मर में चार बार दोहराया गया है: 'और हमने क़ुरआन को याद करने के लिए आसान बना दिया — तो क्या कोई है जो याद करे?' चार बार — जैसे अल्लाह बार-बार इंसानी दिलों का दरवाज़ा खटखटा रहे हों। तुम उस किताब को याद कर रहे हो जिसे याद करने के लिए बनाया गया था।",
+        ur: "القمر میں چار بار دہرایا گیا ہے: 'اور ہم نے قرآن کو یاد کرنے کے لیے آسان بنا دیا — تو کیا کوئی ہے جو یاد کرے؟' چار بار — جیسے اللہ بار بار انسانی دلوں کا دروازہ کھٹکھٹا رہے ہوں۔ تم اس کتاب کو یاد کر رہے ہو جسے یاد کرنے کے لیے بنایا گیا تھا۔",
+      }
+    },
+    55: {
+      type: lang==='ur'?'نعمت':lang==='hi'?'नेमत':'Blessing',
+      text: {
+        en: "Ar-Rahman asks 'Which of the favours of your Lord will you deny?' — 31 times. Each repetition lands on a different blessing: creation, the Qur'an, the balance of the cosmos, fruits, seas, the two Easts and two Wests. It is the most rhythmic surah in the Qur'an — meant to be felt, not just read.",
+        hi: "अर-रहमान में 'तो तुम दोनों अपने रब की किन-किन नेमतों को झुठलाओगे?' — 31 बार पूछा गया है। हर बार एक अलग नेमत पर: तख़्लीक़, क़ुरआन, कायनात का तुलान, फल, समंदर, दो पूरब और दो पश्चिम। यह क़ुरआन की सबसे संगीतात्मक सूरह है — सिर्फ़ पढ़ने के लिए नहीं, महसूस करने के लिए।",
+        ur: "الرحمٰن میں 'تو تم دونوں اپنے رب کی کن کن نعمتوں کو جھٹلاؤ گے؟' — 31 بار پوچھا گیا ہے۔ ہر بار ایک الگ نعمت پر: تخلیق، قرآن، کائنات کا توازن، پھل، سمندر، دو مشرق اور دو مغرب۔ یہ قرآن کی سب سے موسیقی والی سورہ ہے — صرف پڑھنے کے لیے نہیں، محسوس کرنے کے لیے۔",
+      }
+    },
+    56: {
+      type: lang==='ur'?'آخرت':lang==='hi'?'आख़िरत':'Hereafter',
+      text: {
+        en: "Al-Waqi'ah divides all of humanity into three groups on the Day of Judgment: the Foremost (As-Sabiqun), the People of the Right, and the People of the Left. The Prophet ﷺ said: 'Whoever recites Al-Waqi'ah every night will never be afflicted by poverty.' A surah about the next life — that protects this one.",
+        hi: "अल-वाक़िआ क़यामत के दिन तमाम इंसानों को तीन गिरोहों में बाँटती है: सबक़त लेने वाले, दाएँ वाले, और बाएँ वाले। नबी ﷺ ने फ़रमाया: 'जो हर रात अल-वाक़िआ पढ़े, उसे कभी फ़ाक़ा नहीं आएगा।' आख़िरत की सूरह — जो दुनिया की हिफ़ाज़त करती है।",
+        ur: "الواقعہ قیامت کے دن تمام انسانوں کو تین گروہوں میں بانٹتی ہے: سبقت لینے والے، دائیں والے، اور بائیں والے۔ نبی ﷺ نے فرمایا: 'جو ہر رات الواقعہ پڑھے، اسے کبھی فاقہ نہیں آئے گا۔' آخرت کی سورہ — جو دنیا کی حفاظت کرتی ہے۔",
+      }
+    },
+    57: {
+      type: lang==='ur'?'دنیا':lang==='hi'?'दुनिया':'World',
+      text: {
+        en: "Al-Hadid contains the most vivid description of dunya in the Qur'an: 'Know that the life of this world is but amusement, play, adornment, boasting among yourselves, and competition in wealth and children — like rain whose resulting plant growth pleases the tillers, then it dries and you see it turn yellow, then it becomes debris.' Five stages — and then nothing.",
+        hi: "अल-हदीद में दुनिया की सबसे ज़िंदा तस्वीर है: 'जान लो कि दुनिया की ज़िंदगी बस खेल, तमाशा, ज़ीनत, आपस में फ़ख़्र, और माल व औलाद में एक दूसरे से आगे बढ़ने की कोशिश है — जैसे बारिश जिसकी उगाई फ़सल किसानों को ख़ुश करती है, फिर सूखती है, पीली पड़ती है, फिर चूरा बन जाती है।' पाँच मंज़िलें — फिर कुछ नहीं।",
+        ur: "الحدید میں دنیا کی سب سے زندہ تصویر ہے: 'جان لو کہ دنیا کی زندگی بس کھیل، تماشا، زینت، آپس میں فخر، اور مال و اولاد میں ایک دوسرے سے آگے بڑھنے کی کوشش ہے — جیسے بارش جس کی اگائی فصل کسانوں کو خوش کرتی ہے، پھر سوکھتی ہے، پیلی پڑتی ہے، پھر چورا بن جاتی ہے۔' پانچ منزلیں — پھر کچھ نہیں۔",
+      }
+    },
+    58: {
+      type: lang==='ur'?'انصاف':lang==='hi'?'इंसाफ़':'Justice',
+      text: {
+        en: "Al-Mujadila — 'the Woman Who Argues' — was revealed because of Khawlah bint Tha'labah, who came to the Prophet ﷺ crying about an unjust divorce custom. Allah heard her and revealed an entire surah to address her complaint. No one who brings their pain to Allah is too small to be heard.",
+        hi: "अल-मुजादिला — 'बहस करने वाली औरत' — ख़ौला बिन्त सअलबा की वजह से नाज़िल हुई जो नबी ﷺ के पास रोते हुए आई थीं, एक ज़ालिम तलाक़ की रस्म की शिकायत लेकर। अल्लाह ने उन्हें सुना और उनकी फ़रियाद के जवाब में पूरी एक सूरह नाज़िल की। जो भी अपना दर्द अल्लाह के पास लाए, वो सुना जाता है।",
+        ur: "المجادلہ — 'بحث کرنے والی عورت' — خولہ بنت ثعلبہ کی وجہ سے نازل ہوئی جو نبی ﷺ کے پاس روتے ہوئے آئی تھیں، ایک ظالم طلاق کی رسم کی شکایت لے کر۔ اللہ نے انہیں سنا اور ان کی فریاد کے جواب میں پوری ایک سورہ نازل کی۔ جو بھی اپنا درد اللہ کے پاس لائے، وہ سنا جاتا ہے۔",
+      }
+    },
+    59: {
+      type: lang==='ur'?'تدبر':lang==='hi'?'तदब्बुर':'Reflection',
+      text: {
+        en: "Al-Hashr ends with the most concentrated list of Allah's beautiful names in the Qur'an — seven in three ayat: Al-Malik, Al-Quddus, As-Salam, Al-Mu'min, Al-Muhaymin, Al-Aziz, Al-Jabbar, Al-Mutakabbir. The Prophet ﷺ said whoever recites its last three ayat in the morning, 70,000 angels pray for them until evening.",
+        hi: "अल-हश्र के आख़िर में क़ुरआन में अल्लाह के ख़ूबसूरत नामों की सबसे मुरक्कज़ फ़ेहरिस्त है — तीन आयतों में सात नाम। नबी ﷺ ने फ़रमाया जो सुबह इसकी आख़िरी तीन आयतें पढ़े, 70,000 फ़रिश्ते शाम तक उसके लिए दुआ करते हैं।",
+        ur: "الحشر کے آخر میں قرآن میں اللہ کے خوبصورت ناموں کی سب سے مرکوز فہرست ہے — تین آیات میں سات نام۔ نبی ﷺ نے فرمایا جو صبح اس کی آخری تین آیات پڑھے، 70,000 فرشتے شام تک اس کے لیے دعا کرتے ہیں۔",
+      }
+    },
+    60: {
+      type: lang==='ur'?'وفاداری':lang==='hi'?'वफ़ादारी':'Loyalty',
+      text: {
+        en: "Al-Mumtahanah was revealed about the test of loyalty — specifically when Hatib ibn Abi Balta'ah leaked military plans to the Quraysh. Yet the Prophet ﷺ forgave him because of Badr. The surah establishes that ties of faith run deeper than ties of blood — but also that sincere regret can restore what was broken.",
+        hi: "अल-मुम्तहना वफ़ादारी के इम्तिहान के बारे में नाज़िल हुई — ख़ास तौर पर जब हातिब इब्न अबी बलताआ ने क़ुरैश को फ़ौजी राज़ बताए। लेकिन नबी ﷺ ने बद्र की वजह से उन्हें माफ़ कर दिया। यह सूरह बताती है कि ईमान का रिश्ता ख़ून से गहरा है — लेकिन सच्ची तौबा टूटे को जोड़ सकती है।",
+        ur: "الممتحنہ وفاداری کے امتحان کے بارے میں نازل ہوئی — خاص طور پر جب حاطب بن ابی بلتعہ نے قریش کو فوجی راز بتائے۔ لیکن نبی ﷺ نے بدر کی وجہ سے انہیں معاف کر دیا۔ یہ سورہ بتاتی ہے کہ ایمان کا رشتہ خون سے گہرا ہے — لیکن سچی توبہ ٹوٹے کو جوڑ سکتی ہے۔",
+      }
+    },
+    61: {
+      type: lang==='ur'?'بشارت':lang==='hi'?'बुशारत':'Glad Tidings',
+      text: {
+        en: "As-Saf contains the prophecy of Isa ﷺ: 'And giving good tidings of a messenger to come after me whose name is Ahmad.' The name Ahmad is a form of Muhammad ﷺ — a prophecy inside the Qur'an, from one prophet about another, across centuries. Truth confirms itself.",
+        hi: "अस-साफ़ में ईसा ﷺ की पेशीनगोई है: 'और मेरे बाद आने वाले एक रसूल की बुशारत दे रहा हूँ जिनका नाम अहमद है।' अहमद, मुहम्मद ﷺ का एक रूप है — एक नबी से दूसरे के बारे में, सदियों के फ़ासले पर। हक़ ख़ुद अपनी तसदीक़ करता है।",
+        ur: "الصف میں عیسیٰ ﷺ کی پیشین گوئی ہے: 'اور میرے بعد آنے والے ایک رسول کی بشارت دے رہا ہوں جن کا نام احمد ہے۔' احمد، محمد ﷺ کی ایک شکل ہے — ایک نبی سے دوسرے کے بارے میں، صدیوں کے فاصلے پر۔ حق خود اپنی تصدیق کرتا ہے۔",
+      }
+    },
+    62: {
+      type: lang==='ur'?'جمعہ':lang==='hi'?'जुमा':'Friday',
+      text: {
+        en: "Al-Jumu'ah contains the only direct Qur'anic command to drop everything for Friday prayer: 'O you who believe, when the call to prayer is made on Friday — hasten to the remembrance of Allah and leave trade.' The best hour of the best day of the week belongs to Allah.",
+        hi: "अल-जुमुआ में जुमे की नमाज़ के लिए सब कुछ छोड़ने का क़ुरआन का एकमात्र सीधा हुक्म है: 'ऐ ईमान वालो, जब जुमे के दिन नमाज़ की अज़ान हो — अल्लाह की याद की तरफ़ दौड़ो और ख़रीद-फ़रोख़्त छोड़ दो।' हफ़्ते के बेहतरीन दिन का बेहतरीन वक़्त अल्लाह के लिए है।",
+        ur: "الجمعہ میں جمعے کی نماز کے لیے سب کچھ چھوڑنے کا قرآن کا واحد سیدھا حکم ہے: 'اے ایمان والو، جب جمعے کے دن نماز کی اذان ہو — اللہ کی یاد کی طرف دوڑو اور خرید و فروخت چھوڑ دو۔' ہفتے کے بہترین دن کا بہترین وقت اللہ کے لیے ہے۔",
+      }
+    },
+    63: {
+      type: lang==='ur'?'نفاق':lang==='hi'?'निफ़ाक़':'Hypocrisy',
+      text: {
+        en: "Al-Munafiqun exposes the hypocrites of Madinah with surgical precision — their smooth tongues, hollow hearts, and fear of losing status. The most haunting ayah: 'When you see them, their appearance pleases you; when they speak, you listen — but they are like propped-up planks of wood.' Beautiful outside, empty within.",
+        hi: "अल-मुनाफ़िक़ून मदीने के मुनाफ़िक़ों को बिल्कुल साफ़ तरीक़े से बेनक़ाब करती है — चिकनी ज़ुबान, खोखले दिल, मक़ाम खोने का डर। सबसे हौलनाक आयत: 'जब तुम उन्हें देखो तो उनका जिस्म पसंद आए, जब बोलें तो सुनो — लेकिन वो खड़े किए हुए लकड़ी के शहतीरों जैसे हैं।' बाहर से ख़ूबसूरत, अंदर से खोखले।",
+        ur: "المنافقون مدینے کے منافقوں کو بالکل واضح طریقے سے بے نقاب کرتی ہے — چکنی زبان، کھوکھلے دل، مقام کھونے کا ڈر۔ سب سے ہولناک آیت: 'جب تم انہیں دیکھو تو ان کا جسم پسند آئے، جب بولیں تو سنو — لیکن وہ کھڑے کیے ہوئے لکڑی کے شہتیروں جیسے ہیں۔' باہر سے خوبصورت، اندر سے کھوکھلے۔",
+      }
+    },
+    64: {
+      type: lang==='ur'?'امتحان':lang==='hi'?'इम्तिहान':'Test',
+      text: {
+        en: "At-Taghabun means 'mutual loss and gain' — the Day when it becomes clear who truly won and who truly lost in this life. It contains a profound reminder: 'No calamity strikes except by the permission of Allah. And whoever believes in Allah — He will guide his heart.' The test and the compass come from the same source.",
+        hi: "अत-तग़ाबुन का मतलब है 'आपसी नफ़े-नुक़सान' — वो दिन जब साफ़ हो जाएगा कि दुनिया में किसने सच में जीता और किसने हारा। इसमें एक गहरी याददेहानी है: 'कोई मुसीबत अल्लाह की इजाज़त के बिना नहीं आती। और जो अल्लाह पर ईमान रखे — वो उसके दिल की रहनुमाई करता है।' इम्तिहान और कम्पास एक ही ज़रिए से आते हैं।",
+        ur: "التغابن کا مطلب ہے 'آپسی نفع نقصان' — وہ دن جب واضح ہو جائے گا کہ دنیا میں کس نے سچ میں جیتا اور کس نے ہارا۔ اس میں ایک گہری یاددہانی ہے: 'کوئی مصیبت اللہ کی اجازت کے بغیر نہیں آتی۔ اور جو اللہ پر ایمان رکھے — وہ اس کے دل کی رہنمائی کرتا ہے۔' امتحان اور کمپاس ایک ہی ذریعے سے آتے ہیں۔",
+      }
+    },
+    65: {
+      type: lang==='ur'?'آسانی':lang==='hi'?'आसानी':'Ease',
+      text: {
+        en: "At-Talaq contains one of the most repeated promises of relief in the Qur'an: 'And whoever fears Allah — He will make for him a way out, and will provide for him from where he does not expect.' Twice in two consecutive ayat. As if Allah knew we would need to hear it more than once.",
+        hi: "अत-तलाक़ में राहत का एक वादा है जो क़ुरआन में सबसे ज़्यादा दोहराया गया: 'और जो अल्लाह से डरे — वो उसके लिए निकलने का रास्ता बना देता है, और उसे वहाँ से रोज़ी देता है जहाँ से उसे गुमान भी नहीं।' दो लगातार आयतों में दो बार। जैसे अल्लाह जानता था कि हमें एक से ज़्यादा बार सुनने की ज़रूरत होगी।",
+        ur: "الطلاق میں راحت کا ایک وعدہ ہے جو قرآن میں سب سے زیادہ دہرایا گیا: 'اور جو اللہ سے ڈرے — وہ اس کے لیے نکلنے کا راستہ بنا دیتا ہے، اور اسے وہاں سے رزق دیتا ہے جہاں سے اسے گمان بھی نہیں۔' دو لگاتار آیات میں دو بار۔ جیسے اللہ جانتا تھا کہ ہمیں ایک سے زیادہ بار سننے کی ضرورت ہوگی۔",
+      }
+    },
+    66: {
+      type: lang==='ur'?'توبہ':lang==='hi'?'तौबा':'Repentance',
+      text: {
+        en: "At-Tahrim addresses even the wives of the Prophet ﷺ with accountability — no one is exempt from Allah's standard. But it also contains the most beautiful du'a for believers: 'Our Lord, perfect for us our light and forgive us. Indeed, You are over all things competent.' Ask for nur — and the completion of it.",
+        hi: "अत-तहरीम नबी ﷺ की बीवियों को भी जवाबदेही की याद दिलाती है — अल्लाह के मेयार से कोई मुस्तसना नहीं। लेकिन इसमें मोमिनों के लिए सबसे ख़ूबसूरत दुआ भी है: 'ऐ हमारे रब, हमारा नूर मुकम्मल कर और हमें माफ़ कर। बेशक तू हर चीज़ पर क़ादिर है।' नूर माँगो — और उसकी तकमील।",
+        ur: "التحریم نبی ﷺ کی بیویوں کو بھی جوابدہی کی یاد دلاتی ہے — اللہ کے معیار سے کوئی مستثنیٰ نہیں۔ لیکن اس میں مومنوں کے لیے سب سے خوبصورت دعا بھی ہے: 'اے ہمارے رب، ہمارا نور مکمل کر اور ہمیں معاف کر۔ بے شک تو ہر چیز پر قادر ہے۔' نور مانگو — اور اس کی تکمیل۔",
+      }
+    },
+    67: {
+      type: lang==='ur'?'ملکوت':lang==='hi'?'मुल्क':'Dominion',
+      text: {
+        en: "Al-Mulk — Tabarakallah — is the surah the Prophet ﷺ called 'the preventer': it will intercede for its companion in the grave and protect them from punishment. Thirty ayat. The scholars called it 'Al-Mani'ah' — the shield. Recite it every night and let it walk with you into your grave.",
+        hi: "अल-मुल्क — तबारकल्लाह — वो सूरह है जिसे नबी ﷺ ने 'रोकने वाली' कहा: यह क़ब्र में अपने साथी की सिफ़ारिश करेगी और उसे अज़ाब से बचाएगी। तीस आयतें। उलमा ने इसे 'अल-मानिआ' — ढाल — कहा। हर रात पढ़ो और इसे अपने साथ क़ब्र में ले जाओ।",
+        ur: "الملک — تبارک اللہ — وہ سورہ ہے جسے نبی ﷺ نے 'روکنے والی' کہا: یہ قبر میں اپنے ساتھی کی سفارش کرے گی اور اسے عذاب سے بچائے گی۔ تیس آیات۔ علماء نے اسے 'المانعہ' — ڈھال — کہا۔ ہر رات پڑھو اور اسے اپنے ساتھ قبر میں لے جاؤ۔",
+      }
+    },
+    68: {
+      type: lang==='ur'?'اخلاق':lang==='hi'?'अख़लाक़':'Character',
+      text: {
+        en: "Al-Qalam opens with one of the greatest honours given to the Prophet ﷺ in the Qur'an: 'And indeed, you are of a great moral character.' Allah Himself is testifying to his character. The surah was revealed early in Makkah, when the Prophet ﷺ was being mocked and called mad — Allah's response was: your character is the proof.",
+        hi: "अल-क़लम में नबी ﷺ को क़ुरआन की सबसे बड़ी इज़्ज़तों में से एक दी गई है: 'और बेशक तुम बहुत बड़े अख़लाक़ पर हो।' अल्लाह ख़ुद उनके किरदार की गवाही दे रहा है। यह सूरह मक्के के शुरुआती दौर में नाज़िल हुई जब नबी ﷺ को पागल कहा जा रहा था — अल्लाह का जवाब था: तुम्हारा अख़लाक़ ही दलील है।",
+        ur: "القلم میں نبی ﷺ کو قرآن کی سب سے بڑی عزتوں میں سے ایک دی گئی ہے: 'اور بے شک تم بہت بڑے اخلاق پر ہو۔' اللہ خود ان کے کردار کی گواہی دے رہا ہے۔ یہ سورہ مکے کے ابتدائی دور میں نازل ہوئی جب نبی ﷺ کو پاگل کہا جا رہا تھا — اللہ کا جواب تھا: تمہارا اخلاق ہی دلیل ہے۔",
+      }
+    },
+    69: {
+      type: lang==='ur'?'حقیقت':lang==='hi'?'हक़ीक़त':'Reality',
+      text: {
+        en: "Al-Haqqah — the Inevitable Reality — opens by asking three times: 'What is the Inevitable Reality? And what will make you realise what it is?' Then it shows: Ad, Thamud, Pharaoh — nations that thought their power was permanent. On that Day, even the sky will split and the mountains will vanish like dust.",
+        hi: "अल-हाक़्क़ा — अटल हक़ीक़त — तीन बार पूछकर खुलती है: 'अल-हाक़्क़ा क्या है? और तुम्हें क्या बताएगा कि यह क्या है?' फिर दिखाती है: आद, समूद, फ़िरऔन — वो क़ौमें जिन्होंने सोचा उनकी ताक़त हमेशा रहेगी। उस दिन आसमान भी फट जाएगा और पहाड़ धूल हो जाएंगे।",
+        ur: "الحاقہ — اٹل حقیقت — تین بار پوچھ کر کھلتی ہے: 'الحاقہ کیا ہے؟ اور تمہیں کیا بتائے گا کہ یہ کیا ہے؟' پھر دکھاتی ہے: عاد، ثمود، فرعون — وہ قومیں جنہوں نے سوچا ان کی طاقت ہمیشہ رہے گی۔ اس دن آسمان بھی پھٹ جائے گا اور پہاڑ دھول ہو جائیں گے۔",
+      }
+    },
+    70: {
+      type: lang==='ur'?'صبر':lang==='hi'?'सब्र':'Patience',
+      text: {
+        en: "Al-Ma'arij — the Ascending Stairways — describes the angels ascending to Allah in a day of fifty thousand years. Yet for the believer who is patient, the Day of Judgment will pass like the afternoon prayer. Patience does not shorten time — it transforms your experience of it.",
+        hi: "अल-मआरिज — ऊपर जाने वाली सीढ़ियाँ — फ़रिश्तों के पचास हज़ार साल के एक दिन में अल्लाह की तरफ़ चढ़ाई का बयान करती है। लेकिन सब्र करने वाले मोमिन के लिए क़यामत का दिन अस्र की नमाज़ जैसा गुज़र जाएगा। सब्र वक़्त को छोटा नहीं करता — वो तुम्हारा तजुर्बा बदल देता है।",
+        ur: "المعارج — اوپر جانے والی سیڑھیاں — فرشتوں کے پچاس ہزار سال کے ایک دن میں اللہ کی طرف چڑھائی کا بیان کرتی ہے۔ لیکن صبر کرنے والے مومن کے لیے قیامت کا دن عصر کی نماز جیسا گزر جائے گا۔ صبر وقت کو چھوٹا نہیں کرتا — وہ تمہارا تجربہ بدل دیتا ہے۔",
+      }
+    },
+    71: {
+      type: lang==='ur'?'استغفار':lang==='hi'?'इस्तिग़फ़ार':'Forgiveness',
+      text: {
+        en: "Nuh is the story of 950 years of da'wah — public and private, night and day — and fewer than 80 accepted. But Nuh ﷺ never stopped. He taught his people: 'Seek forgiveness from your Lord — He will send rain upon you abundantly, and give you increase in wealth and children.' Istighfar unlocks provision.",
+        hi: "नूह 950 साल की दावत की कहानी है — खुली और ख़ानगी, रात और दिन — और 80 से कम ने क़ुबूल किया। लेकिन नूह ﷺ रुके नहीं। उन्होंने लोगों को सिखाया: 'अपने रब से बख़्शिश माँगो — वो तुम पर खुल कर बारिश भेजेगा, और माल व औलाद में इज़ाफ़ा करेगा।' इस्तिग़फ़ार रोज़ी का दरवाज़ा खोलता है।",
+        ur: "نوح 950 سال کی دعوت کی کہانی ہے — کھلی اور خانگی، رات اور دن — اور 80 سے کم نے قبول کیا۔ لیکن نوح ﷺ رکے نہیں۔ انہوں نے لوگوں کو سکھایا: 'اپنے رب سے بخشش مانگو — وہ تم پر کھل کر بارش بھیجے گا، اور مال و اولاد میں اضافہ کرے گا۔' استغفار رزق کا دروازہ کھولتا ہے۔",
+      }
+    },
+    72: {
+      type: lang==='ur'?'ایمان':lang==='hi'?'ईमान':'Faith',
+      text: {
+        en: "Al-Jinn tells us that a group of jinn listened to the Qur'an in secret and returned to their people as believers and callers to Islam. They said: 'It guides to the right course, and we have believed in it.' The Qur'an is so powerful that even beings we cannot see have accepted its truth.",
+        hi: "अल-जिन्न बताती है कि जिन्नों के एक गिरोह ने चुपके से क़ुरआन सुना और अपनी क़ौम के पास मोमिन और दाई बनकर वापस गए। उन्होंने कहा: 'यह सीधे रास्ते की रहनुमाई करता है, और हम इस पर ईमान ले आए।' क़ुरआन इतना ताक़तवर है कि जिन्हें हम देख नहीं सकते उन्होंने भी इसकी सच्चाई मान ली।",
+        ur: "الجن بتاتی ہے کہ جنوں کے ایک گروہ نے چپکے سے قرآن سنا اور اپنی قوم کے پاس مومن اور داعی بن کر واپس گئے۔ انہوں نے کہا: 'یہ سیدھے راستے کی رہنمائی کرتا ہے، اور ہم اس پر ایمان لے آئے۔' قرآن اتنا طاقتور ہے کہ جنہیں ہم دیکھ نہیں سکتے انہوں نے بھی اس کی سچائی مان لی۔",
+      }
+    },
+    73: {
+      type: lang==='ur'?'تیاری':lang==='hi'?'तैयारी':'Preparation',
+      text: {
+        en: "Al-Muzzammil — the Enshrouded One — was revealed when the Prophet ﷺ was wrapped in his cloak. Allah's first command was not to go preach, but to stand in the night: 'Rise for prayer in the night.' Before the mission comes the formation. The one who would carry the Qur'an to the world first had to fill himself with it in the dark.",
+        hi: "अल-मुज़म्मिल — चादर में लिपटा हुआ — तब नाज़िल हुई जब नबी ﷺ अपनी चादर में लिपटे हुए थे। अल्लाह का पहला हुक्म तब्लीग़ का नहीं था, बल्कि रात में खड़े रहने का था: 'रात में नमाज़ के लिए उठो।' मिशन से पहले तर्बियत आती है। जो क़ुरआन को दुनिया तक पहुँचाने वाले थे, उन्हें पहले अंधेरे में ख़ुद को उससे भरना था।",
+        ur: "المزمل — چادر میں لپٹا ہوا — تب نازل ہوئی جب نبی ﷺ اپنی چادر میں لپٹے ہوئے تھے۔ اللہ کا پہلا حکم تبلیغ کا نہیں تھا، بلکہ رات میں کھڑے رہنے کا تھا: 'رات میں نماز کے لیے اٹھو۔' مشن سے پہلے تربیت آتی ہے۔ جو قرآن کو دنیا تک پہنچانے والے تھے، انہیں پہلے اندھیرے میں خود کو اس سے بھرنا تھا۔",
+      }
+    },
+    74: {
+      type: lang==='ur'?'آغاز':lang==='hi'?'आग़ाज़':'Beginning',
+      text: {
+        en: "Al-Muddaththir — the Covered One — contains the first open command of da'wah: 'Arise and warn!' The private phase of Islam had ended. The Prophet ﷺ was now told to stand up publicly. It also describes Saqar — Hell — in stark terms. The warning is real. The caller must feel its weight.",
+        hi: "अल-मुद्दस्सिर — ओढ़ने वाले — में दावत का पहला खुला हुक्म है: 'उठो और ख़बरदार करो!' इस्लाम का ख़ानगी दौर ख़त्म हो गया था। नबी ﷺ को अब खुल कर खड़े होने का हुक्म हुआ। इसमें सक़र — जहन्नम — का भी बेलाग बयान है। चेतावनी सच्ची है। दावत देने वाले को इसका बोझ महसूस होना चाहिए।",
+        ur: "المدثر — اوڑھنے والے — میں دعوت کا پہلا کھلا حکم ہے: 'اٹھو اور خبردار کرو!' اسلام کا خانگی دور ختم ہو گیا تھا۔ نبی ﷺ کو اب کھل کر کھڑے ہونے کا حکم ہوا۔ اس میں سقر — جہنم — کا بھی بے لاگ بیان ہے۔ تنبیہ سچی ہے۔ داعی کو اس کا بوجھ محسوس ہونا چاہیے۔",
+      }
+    },
+    75: {
+      type: lang==='ur'?'حساب':lang==='hi'?'हिसाब':'Reckoning',
+      text: {
+        en: "Al-Qiyamah tells us that on the Day of Resurrection, man will be a witness against himself — even if he presents his excuses. And it asks: 'Does man think that We will not assemble his bones?' Then: 'Yes — We are able to proportion even his fingertips.' Even your fingerprints are a proof of Allah's power of restoration.",
+        hi: "अल-क़ियामह बताती है कि क़यामत के दिन इंसान ख़ुद अपने ख़िलाफ़ गवाह होगा — चाहे वो कितने भी उज़्र पेश करे। और पूछती है: 'क्या इंसान समझता है कि हम उसकी हड्डियाँ जमा नहीं कर सकते?' फिर: 'हाँ — हम उसकी उँगलियों के पोर तक दुरुस्त करने में माहिर हैं।' यहाँ तक कि तुम्हारे फ़िंगरप्रिंट अल्लाह की क़ुदरत की दलील हैं।",
+        ur: "القیامہ بتاتی ہے کہ قیامت کے دن انسان خود اپنے خلاف گواہ ہوگا — چاہے وہ کتنے بھی عذر پیش کرے۔ اور پوچھتی ہے: 'کیا انسان سمجھتا ہے کہ ہم اس کی ہڈیاں جمع نہیں کر سکتے؟' پھر: 'ہاں — ہم اس کی انگلیوں کے پور تک درست کرنے میں ماہر ہیں۔' یہاں تک کہ تمہارے فنگرپرنٹ اللہ کی قدرت کی دلیل ہیں۔",
+      }
+    },
+    76: {
+      type: lang==='ur'?'جنت':lang==='hi'?'जन्नत':'Paradise',
+      text: {
+        en: "Al-Insan paints the most vivid picture of Paradise in the Qur'an: green gardens, flowing rivers, silk and brocade, a ginger-spiced drink from the spring of Salsabil. And the most intimate reward of all: 'And their Lord will give them to drink a purifying drink.' Even the flavour of Jannah is described.",
+        hi: "अल-इंसान क़ुरआन में जन्नत की सबसे ज़िंदा तस्वीर खींचती है: हरे बाग़, बहते दरिया, रेशम और दीबाज, सलसबील के चश्मे की ज़ंजबील वाली मशरूब। और सबसे क़रीबी इनाम: 'और उनका रब उन्हें पाक मशरूब पिलाएगा।' जन्नत का ज़ायक़ा भी बयान है।",
+        ur: "الانسان قرآن میں جنت کی سب سے زندہ تصویر کھینچتی ہے: ہرے باغ، بہتے دریا، ریشم اور دیباج، سلسبیل کے چشمے کی زنجبیل والی مشروب۔ اور سب سے قریبی انعام: 'اور ان کا رب انہیں پاک مشروب پلائے گا۔' جنت کا ذائقہ بھی بیان ہے۔",
+      }
+    },
+    77: {
+      type: lang==='ur'?'تنبیہ':lang==='hi'?'तंबीह':'Warning',
+      text: {
+        en: "Al-Mursalat repeats 'Woe that Day to the deniers' ten times — like ten hammer blows, one after another. Each time it follows a different scene: the winds, the Day of Separation, the destruction of nations. Ten warnings. Ten chances to reflect. The Qur'an never gives up on the human heart.",
+        hi: "अल-मुर्सलात में 'उस दिन झुठलाने वालों के लिए तबाही है' दस बार दोहराया गया — दस हथौड़े की चोटें, एक के बाद एक। हर बार एक अलग मंज़र के बाद: हवाएँ, फ़ैसले का दिन, क़ौमों की हलाकत। दस चेतावनियाँ। दस मौक़े सोचने के। क़ुरआन इंसानी दिल से कभी नहीं थकता।",
+        ur: "المرسلات میں 'اس دن جھٹلانے والوں کے لیے تباہی ہے' دس بار دہرایا گیا — دس ہتھوڑے کی چوٹیں، ایک کے بعد ایک۔ ہر بار ایک الگ منظر کے بعد: ہوائیں، فیصلے کا دن، قوموں کی ہلاکت۔ دس تنبیہات۔ دس مواقع سوچنے کے۔ قرآن انسانی دل سے کبھی نہیں تھکتا۔",
+      }
+    },
+    10: {
+      type: lang==='ur'?'اطمینان':lang==='hi'?'इत्मीनान':'Reassurance',
+      text: {
+        en: "Yunus opens with a profound truth: the Prophet ﷺ himself was told to say 'I have no power to harm or benefit myself.' Even the greatest human being was completely dependent on Allah. That is not weakness — it is the highest station.",
+        hi: "यूनुस एक गहरी सच्चाई से खुलती है: नबी ﷺ से ख़ुद कहलवाया गया कि 'मुझे अपने नफ़े-नुक़सान का कोई इख़्तियार नहीं।' इंसानों में सबसे अज़ीम हस्ती भी पूरी तरह अल्लाह पर मुनहसर थी। यह कमज़ोरी नहीं — यही सबसे बड़ा मक़ाम है।",
+        ur: "یونس ایک گہری سچائی سے کھلتی ہے: نبی ﷺ سے خود کہلوایا گیا کہ 'مجھے اپنے نفع نقصان کا کوئی اختیار نہیں۔' انسانوں میں سب سے عظیم ہستی بھی پوری طرح اللہ پر منحصر تھی۔ یہ کمزوری نہیں — یہی سب سے بڑا مقام ہے۔",
+      }
+    },
+    11: {
+      type: lang==='ur'?'صبر':lang==='hi'?'सब्र':'Patience',
+      text: {
+        en: "Surah Hud shook the Prophet ﷺ so much that he said: 'Hud and its sisters have made my hair turn grey.' It contains the story of Nuh's 950 years of preaching — and only 80 believers. Steadfastness is not measured by results.",
+        hi: "सूरह हूद ने नबी ﷺ को इतना हिला दिया कि आपने फ़रमाया: 'हूद और उस जैसी सूरहों ने मेरे बाल सफ़ेद कर दिए।' इसमें नूह के 950 साल की दावत की कहानी है — और सिर्फ़ 80 ईमानवाले। इस्तिक़ामत का पैमाना नतीजे नहीं होते।",
+        ur: "سورہ ہود نے نبی ﷺ کو اتنا ہلا دیا کہ آپ نے فرمایا: 'ہود اور اس جیسی سورتوں نے میرے بال سفید کر دیے۔' اس میں نوح کے 950 سال کی دعوت کی کہانی ہے — اور صرف 80 ایماندار۔ استقامت کا پیمانہ نتائج نہیں ہوتے۔",
+      }
+    },
+    12: {
+      type: lang==='ur'?'بہترین قصہ':lang==='hi'?'बेहतरीन क़िस्सा':'Best of Stories',
+      text: {
+        en: "Allah calls the story of Yusuf 'the best of stories' — betrayal, slavery, prison, power, and forgiveness all in one surah. The Prophet ﷺ recited it to the Ansar on the night of Hijrah. It is a complete manual on how to carry pain with dignity.",
+        hi: "अल्लाह ने यूसुफ़ की कहानी को 'बेहतरीन क़िस्सा' कहा — धोखा, ग़ुलामी, क़ैद, हुकूमत, और माफ़ी — सब एक सूरह में। नबी ﷺ ने हिजरत की रात अनसार को यही सुनाई। यह तकलीफ़ को वक़ार से उठाने का मुकम्मल दस्तूर है।",
+        ur: "اللہ نے یوسف کی کہانی کو 'بہترین قصہ' کہا — دھوکہ، غلامی، قید، حکومت، اور معافی — سب ایک سورہ میں۔ نبی ﷺ نے ہجرت کی رات انصار کو یہی سنائی۔ یہ تکلیف کو وقار سے اٹھانے کا مکمل دستور ہے۔",
+      }
+    },
+    13: {
+      type: lang==='ur'?'تسبیح':lang==='hi'?'तस्बीह':'Glorification',
+      text: {
+        en: "Ar-Ra'd contains one of the most quoted ayat in the Qur'an: 'Verily, with the remembrance of Allah do hearts find rest.' It was revealed in a time of mockery and disbelief — a reminder that inner peace is not dependent on outer acceptance.",
+        hi: "अर-रअद में क़ुरआन की सबसे ज़्यादा उद्धृत आयतों में से एक है: 'बेशक अल्लाह की याद से ही दिलों को सुकून मिलता है।' यह मज़ाक़ और इनकार के दौर में नाज़िल हुई — याद दिलाती है कि अंदर का सुकून बाहर की क़ुबूलियत पर नहीं टिका।",
+        ur: "الرعد میں قرآن کی سب سے زیادہ حوالہ دی جانے والی آیات میں سے ایک ہے: 'بے شک اللہ کی یاد سے ہی دلوں کو سکون ملتا ہے۔' یہ مذاق اور انکار کے دور میں نازل ہوئی — یاد دلاتی ہے کہ اندر کا سکون باہر کی قبولیت پر نہیں ٹکا۔",
+      }
+    },
+    14: {
+      type: lang==='ur'?'شکر':lang==='hi'?'शुक्र':'Gratitude',
+      text: {
+        en: "Ibrahim contains a stunning ayah: 'If you are grateful, I will surely increase you.' Allah is promising more — not just in blessings, but in capacity to receive them. Gratitude is not just manners; it is a growth mechanism built into creation.",
+        hi: "इब्राहीम में एक हैरतअंगेज़ आयत है: 'अगर तुम शुक्र करोगे तो मैं तुम्हें और ज़्यादा दूँगा।' अल्लाह ज़्यादती का वादा कर रहे हैं — सिर्फ़ नेमतों में नहीं, बल्कि उन्हें समेटने की सलाहियत में भी। शुक्र सिर्फ़ अदब नहीं — यह कायनात में बनाया गया निज़ाम-ए-तरक़्क़ी है।",
+        ur: "ابراہیم میں ایک حیرت انگیز آیت ہے: 'اگر تم شکر کرو گے تو میں تمہیں اور زیادہ دوں گا۔' اللہ زیادتی کا وعدہ کر رہے ہیں — صرف نعمتوں میں نہیں، بلکہ انہیں سمیٹنے کی صلاحیت میں بھی۔ شکر صرف ادب نہیں — یہ کائنات میں بنایا گیا نظامِ ترقی ہے۔",
+      }
+    },
+    15: {
+      type: lang==='ur'?'حفاظت':lang==='hi'?'हिफ़ाज़त':'Preservation',
+      text: {
+        en: "Al-Hijr contains Allah's direct promise: 'Indeed, it is We who sent down the Reminder, and indeed, We will be its guardian.' No book in history has been preserved like the Qur'an — across 1,400 years, millions of memorizers, zero contradictions.",
+        hi: "अल-हिज्र में अल्लाह का सीधा वादा है: 'बेशक हमने ही ज़िक्र नाज़िल किया और हम ही इसके निगहबान हैं।' तारीख़ में कोई किताब क़ुरआन जैसी महफ़ूज़ नहीं — 1,400 साल, लाखों हाफ़िज़, कोई इख़्तिलाफ़ नहीं।",
+        ur: "الحجر میں اللہ کا براہ راست وعدہ ہے: 'بے شک ہم نے ہی ذکر نازل کیا اور ہم ہی اس کے نگہبان ہیں۔' تاریخ میں کوئی کتاب قرآن جیسی محفوظ نہیں — 1,400 سال، لاکھوں حافظ، کوئی اختلاف نہیں۔",
+      }
+    },
+    16: {
+      type: lang==='ur'?'نعمت':lang==='hi'?'नेमत':'Blessing',
+      text: {
+        en: "An-Nahl is called 'Surah of Blessings' — it lists honey, milk, ships, cattle, fruits, and rain as signs of Allah. The bee is singled out: it receives divine inspiration (wahy), builds with precision, and produces healing. Small creatures carry immense wisdom.",
+        hi: "अन-नह्ल को 'नेमतों की सूरह' कहते हैं — इसमें शहद, दूध, कश्तियाँ, मवेशी, फल और बारिश को अल्लाह की निशानियाँ बताया गया। मधुमक्खी को ख़ास तौर पर ज़िक्र किया: उसे अल्लाह की वह्य आती है, वो हिकमत से बनाती है, और शिफ़ा देती है।",
+        ur: "النحل کو 'نعمتوں کی سورہ' کہتے ہیں — اس میں شہد، دودھ، کشتیاں، مویشی، پھل اور بارش کو اللہ کی نشانیاں بتایا گیا۔ شہد کی مکھی کو خاص طور پر ذکر کیا: اسے اللہ کی وحی آتی ہے، وہ حکمت سے بناتی ہے، اور شفا دیتی ہے۔",
+      }
+    },
+    17: {
+      type: lang==='ur'?'معراج':lang==='hi'?'मेराज':'Ascension',
+      text: {
+        en: "Al-Isra opens with the night journey — from Makkah to Jerusalem in one night, then to the heavens. It also contains the 17 commandments of Islam: honor parents, don't be wasteful, don't be arrogant. The miracle and the morality come in the same surah.",
+        hi: "अल-इसरा इसराए-मेराज से खुलती है — एक रात में मक्के से बैत-उल-मक़दिस, फिर आसमानों तक। इसमें इस्लाम की 17 बुनियादी हिदायतें भी हैं: माँ-बाप की इज़्ज़त, फ़ुज़ूलख़र्ची से बचो, घमंड मत करो। मोजिज़ा और अख़लाक़ एक ही सूरह में।",
+        ur: "الاسراء اسراء و معراج سے کھلتی ہے — ایک رات میں مکے سے بیت المقدس، پھر آسمانوں تک۔ اس میں اسلام کی 17 بنیادی ہدایات بھی ہیں: ماں باپ کی عزت، فضول خرچی سے بچو، غرور مت کرو۔ معجزہ اور اخلاق ایک ہی سورہ میں۔",
+      }
+    },
+    18: {
+      type: lang==='ur'?'حفاظت':lang==='hi'?'हिफ़ाज़त':'Protection',
+      text: {
+        en: "Al-Kahf is the Friday surah — recited every week as a shield against Dajjal. Its four stories (the Sleepers, Khidr, Dhul-Qarnayn, the Two Gardens) all share one theme: true wealth is faith, not gold. The last ten ayat protect from the greatest trial of the end times.",
+        hi: "अल-कहफ़ जुमे की सूरह है — हर हफ़्ते दज्जाल से बचाव के लिए पढ़ी जाती है। इसके चार क़िस्से (अस्हाब-ए-कहफ़, ख़िज्र, ज़ुलक़रनैन, दो बाग़ों वाला) सब एक ही सबक़ पर हैं: असली दौलत ईमान है, सोना नहीं।",
+        ur: "الکہف جمعے کی سورہ ہے — ہر ہفتے دجال سے بچاؤ کے لیے پڑھی جاتی ہے۔ اس کے چار قصے (اصحابِ کہف، خضر، ذوالقرنین، دو باغوں والا) سب ایک ہی سبق پر ہیں: اصلی دولت ایمان ہے، سونا نہیں۔",
+      }
+    },
+    19: {
+      type: lang==='ur'?'رحمت':lang==='hi'?'रहमत':'Mercy',
+      text: {
+        en: "Maryam is the only surah named after a woman — and she is the only woman named by name in the Qur'an. When the Abyssinian king Negus heard its opening ayat about Yahya and Isa, he wept until his beard was wet and said: 'The difference between what you say and what we say is no more than this' — and drew a line on the ground.",
+        hi: "मरयम एकमात्र सूरह है जिसका नाम एक औरत पर है — और वो क़ुरआन में नाम से ज़िक्र होने वाली एकमात्र औरत हैं। जब हबशा के बादशाह नजाशी ने याह्या और ईसा के बारे में इसकी शुरुआती आयतें सुनीं तो वो इतना रोए कि दाढ़ी भीग गई।",
+        ur: "مریم واحد سورہ ہے جس کا نام ایک عورت پر ہے — اور وہ قرآن میں نام سے ذکر ہونے والی واحد عورت ہیں۔ جب حبشہ کے بادشاہ نجاشی نے یحییٰ اور عیسیٰ کے بارے میں اس کی ابتدائی آیات سنیں تو وہ اتنا روئے کہ داڑھی بھیگ گئی۔",
+      }
+    },
+    20: {
+      type: lang==='ur'?'تسلی':lang==='hi'?'तसल्ली':'Comfort',
+      text: {
+        en: "Ta-Ha was revealed when the Prophet ﷺ was exhausted from night worship. Allah opens with: 'We have not sent down the Qur'an to distress you.' Umar ibn al-Khattab heard this surah being recited and it broke his heart — leading directly to his Islam.",
+        hi: "ता-हा तब नाज़िल हुई जब नबी ﷺ रात की इबादत से थक गए थे। अल्लाह शुरू में फ़रमाते हैं: 'हमने क़ुरआन तुम पर इसलिए नहीं उतारा कि तुम तकलीफ़ में पड़ो।' उमर इब्न ख़त्ताब ने यही सूरह सुनी — और यही उनके इस्लाम का सबब बनी।",
+        ur: "طٰہٰ تب نازل ہوئی جب نبی ﷺ رات کی عبادت سے تھک گئے تھے۔ اللہ شروع میں فرماتے ہیں: 'ہم نے قرآن تم پر اس لیے نہیں اتارا کہ تم تکلیف میں پڑو۔' عمر بن خطاب نے یہی سورہ سنی — اور یہی ان کے اسلام کا سبب بنی۔",
+      }
+    },
+    21: {
+      type: lang==='ur'?'قربت':lang==='hi'?'क़ुर्बत':'Nearness',
+      text: {
+        en: "Al-Anbiya lists 16 prophets in one surah — from Ibrahim to Dhul-Kifl. All of them cried out to Allah in moments of desperation and were answered. The surah ends with a promise: 'The earth shall be inherited by My righteous servants.'",
+        hi: "अल-अंबिया एक सूरह में 16 नबियों का ज़िक्र करती है — इब्राहीम से लेकर ज़ुल-किफ़्ल तक। सबने मुसीबत के लम्हों में अल्लाह को पुकारा और जवाब पाया। सूरह इस वादे पर ख़त्म होती है: 'ज़मीन के वारिस मेरे नेक बंदे होंगे।'",
+        ur: "الانبیاء ایک سورہ میں 16 نبیوں کا ذکر کرتی ہے — ابراہیم سے لے کر ذوالکفل تک۔ سب نے مصیبت کے لمحوں میں اللہ کو پکارا اور جواب پایا۔ سورہ اس وعدے پر ختم ہوتی ہے: 'زمین کے وارث میرے نیک بندے ہوں گے۔'",
+      }
+    },
+    22: {
+      type: lang==='ur'?'عظمت':lang==='hi'?'अज़मत':'Greatness',
+      text: {
+        en: "Al-Hajj contains the only ayah in the Qur'an where Allah commands both the Prophet ﷺ and the believers to make sujood — making it one of the obligatory prostration verses. It also paints the scene of the Day of Judgment so vividly that 'every nursing mother will forget her infant.'",
+        hi: "अल-हज्ज में एकमात्र ऐसी आयत है जहाँ अल्लाह नबी ﷺ और मोमिनीन दोनों को सजदे का हुक्म देते हैं। इसमें क़यामत का मंज़र इतना साफ़ खींचा है कि 'हर दूध पिलाने वाली माँ अपने बच्चे को भूल जाएगी।'",
+        ur: "الحج میں واحد ایسی آیت ہے جہاں اللہ نبی ﷺ اور مومنین دونوں کو سجدے کا حکم دیتے ہیں۔ اس میں قیامت کا منظر اتنا واضح کھینچا ہے کہ 'ہر دودھ پلانے والی ماں اپنے بچے کو بھول جائے گی۔'",
+      }
+    },
+    23: {
+      type: lang==='ur'?'کامیابی':lang==='hi'?'कामयाबी':'Success',
+      text: {
+        en: "Al-Mu'minun opens with ten qualities of the successful believers — beginning with khushu' in salah and ending with guarding one's chastity. The Prophet ﷺ said these ayat were more beloved to him than everything the sun rises over. A complete blueprint for a life of falah.",
+        hi: "अल-मोमिनून कामयाब मोमिनों की दस सिफ़तों से खुलती है — नमाज़ में ख़ुशू से शुरू होकर पाकदामनी पर ख़त्म। नबी ﷺ ने फ़रमाया ये आयतें उन्हें सूरज की रोशनी में आने वाली हर चीज़ से ज़्यादा पसंद हैं। फ़लाह की पूरी नक़्शे-राह।",
+        ur: "المومنون کامیاب مومنوں کی دس صفات سے کھلتی ہے — نماز میں خشوع سے شروع ہو کر پاکدامنی پر ختم۔ نبی ﷺ نے فرمایا یہ آیات انہیں سورج کی روشنی میں آنے والی ہر چیز سے زیادہ پسند ہیں۔ فلاح کا مکمل نقشۂ راہ۔",
+      }
+    },
+    24: {
+      type: lang==='ur'?'نور':lang==='hi'?'नूर':'Light',
+      text: {
+        en: "An-Nur contains the famous Ayat an-Nur — 'Allah is the Light of the heavens and the earth.' It also legislated hijab, established protocols for accusations of adultery, and cleared A'isha ؓ of slander through direct revelation. Divine light and divine justice in one surah.",
+        hi: "अन-नूर में मशहूर आयत-उन-नूर है — 'अल्लाह आसमानों और ज़मीन का नूर है।' इसमें हिजाब का हुक्म, बदकारी के इल्ज़ाम के अहकाम, और वह्य के ज़रिए हज़रत आयशा ؓ की बेगुनाही भी है। एक ही सूरह में इलाही नूर और इलाही इंसाफ़।",
+        ur: "النور میں مشہور آیۃ النور ہے — 'اللہ آسمانوں اور زمین کا نور ہے۔' اس میں حجاب کا حکم، بدکاری کے الزام کے احکام، اور وحی کے ذریعے حضرت عائشہ ؓ کی بے گناہی بھی ہے۔ ایک ہی سورہ میں الٰہی نور اور الٰہی انصاف۔",
+      }
+    },
+    2: {
+      type: lang==='ur'?'عظمت':lang==='hi'?'अज़मत':'Greatness',
+      text: {
+        en: "Al-Baqarah is the longest surah in the Qur'an — 286 ayat. The Prophet ﷺ said it contains the greatest ayah ever revealed: Ayat al-Kursi. Reciting it in your home keeps Shaytan away for three days.",
+        hi: "अल-बक़रह क़ुरआन की सबसे लंबी सूरह है — 286 आयतें। नबी ﷺ ने फ़रमाया इसमें सबसे अज़ीम आयत है: आयत-उल-कुर्सी। घर में इसकी तिलावत तीन दिन तक शैतान को दूर रखती है।",
+        ur: "البقرہ قرآن کی سب سے لمبی سورہ ہے — 286 آیات۔ نبی ﷺ نے فرمایا اس میں سب سے عظیم آیت ہے: آیۃ الکرسی۔ گھر میں اس کی تلاوت تین دن تک شیطان کو دور رکھتی ہے۔",
+      }
+    },
+    3: {
+      type: lang==='ur'?'قیامت':lang==='hi'?'क़यामत':'Intercession',
+      text: {
+        en: "Al Imran and Al-Baqarah are called 'the two lights' (Az-Zahrawain) by the Prophet ﷺ — they will come on the Day of Judgment like two clouds or flocks of birds shading their companion.",
+        hi: "आल इमरान और अल-बक़रह को नबी ﷺ ने 'दो नूर' (अज़-ज़हरावैन) कहा — क़यामत के दिन वो दो बादलों या परिंदों के झुंड की तरह अपने साथी पर साया करेंगी।",
+        ur: "آل عمران اور البقرہ کو نبی ﷺ نے 'دو نور' (الزہراوین) کہا — قیامت کے دن وہ دو بادلوں یا پرندوں کے جھنڈ کی طرح اپنے ساتھی پر سایہ کریں گی۔",
+      }
+    },
+    4: {
+      type: lang==='ur'?'انصاف':lang==='hi'?'इंसाफ़':'Justice',
+      text: {
+        en: "An-Nisa was revealed in Madinah and transformed society — giving women inheritance rights, legal protections, and dignity at a time when the world buried daughters alive. Allah legislated justice 1,400 years before modern rights movements.",
+        hi: "अन-निसा मदीने में नाज़िल हुई और उसने समाज को बदल दिया — औरतों को विरासत का हक़, क़ानूनी हिफ़ाज़त और इज़्ज़त दी, उस वक़्त जब दुनिया बेटियों को ज़िंदा दफ़न करती थी।",
+        ur: "النساء مدینے میں نازل ہوئی اور اس نے معاشرے کو بدل دیا — عورتوں کو وراثت کا حق، قانونی تحفظ اور عزت دی، اس وقت جب دنیا بیٹیوں کو زندہ دفن کرتی تھی۔",
+      }
+    },
+    5: {
+      type: lang==='ur'?'عہد':lang==='hi'?'अहद':'Covenant',
+      text: {
+        en: "Al-Ma'idah was one of the last surahs revealed — containing the ayah: 'Today I have perfected your religion for you.' The final revelation came not with rules, but with completion and gratitude.",
+        hi: "अल-माइदा आख़िरी नाज़िल होने वाली सूरहों में से है — इसमें वो आयत है: 'आज मैंने तुम्हारे लिए तुम्हारा दीन मुकम्मल कर दिया।' आख़िरी वह्य अहकाम से नहीं, तकमील और शुक्र से आई।",
+        ur: "المائدہ آخری نازل ہونے والی سورتوں میں سے ہے — اس میں وہ آیت ہے: 'آج میں نے تمہارے لیے تمہارا دین مکمل کر دیا۔' آخری وحی احکام سے نہیں، تکمیل اور شکر سے آئی۔",
+      }
+    },
+    6: {
+      type: lang==='ur'?'توحید':lang==='hi'?'तौहीद':'Oneness',
+      text: {
+        en: "Al-An'am was revealed in one night in Makkah — all 165 ayat descended together, accompanied by 70,000 angels. It is a towering argument for the Oneness of Allah against the polytheism of Arabia.",
+        hi: "अल-अनआम मक्के में एक ही रात में नाज़िल हुई — तमाम 165 आयतें एक साथ, 70,000 फ़रिश्तों के साथ। ये अरब के शिर्क के ख़िलाफ़ अल्लाह की वहदानियत की ज़बरदस्त दलील है।",
+        ur: "الانعام مکے میں ایک ہی رات میں نازل ہوئی — تمام 165 آیات ایک ساتھ، 70,000 فرشتوں کے ساتھ۔ یہ عرب کے شرک کے خلاف اللہ کی وحدانیت کی زبردست دلیل ہے۔",
+      }
+    },
+    7: {
+      type: lang==='ur'?'تاریخ':lang==='hi'?'तारीख़':'History',
+      text: {
+        en: "Al-A'raf tells the full story of Adam, Iblis, Nuh, Hud, Salih, Lut, and Musa — nation after nation that was given a chance and refused. It is a warning written in the ink of history.",
+        hi: "अल-आराफ़ में आदम, इबलीस, नूह, हूद, सालेह, लूत और मूसा की पूरी कहानियाँ हैं — एक के बाद एक क़ौमें जिन्हें मौक़ा दिया गया और उन्होंने इनकार किया। यह तारीख़ की स्याही से लिखी गई चेतावनी है।",
+        ur: "الاعراف میں آدم، ابلیس، نوح، ہود، صالح، لوط اور موسیٰ کی پوری کہانیاں ہیں — ایک کے بعد ایک قومیں جنہیں موقع دیا گیا اور انہوں نے انکار کیا۔ یہ تاریخ کی سیاہی سے لکھی گئی تنبیہ ہے۔",
+      }
+    },
+    8: {
+      type: lang==='ur'?'غیبی مدد':lang==='hi'?'ग़ैबी मदद':'Divine Aid',
+      text: {
+        en: "Al-Anfal was revealed after Badr — the first great battle of Islam. 313 poorly-armed believers defeated 1,000 soldiers. Allah sent angels to fight alongside them. This surah documents the miracle.",
+        hi: "अल-अनफ़ाल बद्र के बाद नाज़िल हुई — इस्लाम की पहली बड़ी जंग। 313 कम-हथियारबंद मोमिन 1,000 सिपाहियों पर ग़ालिब आए। अल्लाह ने उनके साथ लड़ने के लिए फ़रिश्ते भेजे। यह सूरह उस मोजिज़े की दस्तावेज़ है।",
+        ur: "الانفال بدر کے بعد نازل ہوئی — اسلام کی پہلی بڑی جنگ۔ 313 کم ہتھیار بند مومن 1,000 سپاہیوں پر غالب آئے۔ اللہ نے ان کے ساتھ لڑنے کے لیے فرشتے بھیجے۔ یہ سورہ اس معجزے کی دستاویز ہے۔",
+      }
+    },
+    9: {
+      type: lang==='ur'?'براءت':lang==='hi'?'बेज़ारी':'Disavowal',
+      text: {
+        en: "At-Tawbah is the only surah without Bismillah at its start — scholars say it opens with a declaration of war against hypocrisy, so there was no room for mercy in its opening. It ends, however, with the most tender description of the Prophet ﷺ.",
+        hi: "अत-तौबह एकमात्र सूरह है जिसकी शुरुआत बिस्मिल्लाह से नहीं होती — उलमा कहते हैं ये मुनाफ़िक़त के ख़िलाफ़ जंग के ऐलान से खुलती है, इसलिए शुरुआत में रहमत की गुंजाइश नहीं थी। लेकिन ख़त्म होती है नबी ﷺ की सबसे मुहब्बत भरी तारीफ़ से।",
+        ur: "التوبہ واحد سورہ ہے جس کی شروعات بسم اللہ سے نہیں ہوتی — علماء کہتے ہیں یہ منافقت کے خلاف اعلانِ جنگ سے کھلتی ہے، اس لیے شروع میں رحمت کی گنجائش نہیں تھی۔ لیکن ختم ہوتی ہے نبی ﷺ کی سب سے محبت بھری تعریف سے۔",
+      }
+    },
     1: {
       type: lang==='ur'?'معجزہ':lang==='hi'?'मोजिज़ा':'Miracle',
       text: {
@@ -2121,7 +2849,9 @@ window.sessPlayAudio = function() {
 window.sessPlayWordAudio = function(wordIdx) {
   // Use audio_url from API if available (already correctly zero-padded)
   // e.g. "wbw/078_001_001.mp3" → prepend CDN base
-  const apiWord   = S._wordData?.[wordIdx];
+  // _wordData is now a position-keyed map — look up by 1-based position
+  const pos       = wordIdx + 1;
+  const apiWord   = S._wordData?.[pos];
   const apiAudioUrl = apiWord?.audio_url
     ? `https://audio.qurancdn.com/${apiWord.audio_url}`
     : null;

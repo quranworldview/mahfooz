@@ -37,11 +37,25 @@ export function toArabicNum(n) {
 // ── Split ayah text into words ────────────────────────────────
 // Returns array of word strings (RTL-aware split on whitespace).
 // Preserves harakaat (diacritics) with each word.
+// Quranic annotation marks that appear as standalone space-delimited tokens
+// in Indo-Pak Nastaleeq text (pause marks, sajdah signs, hizb markers etc).
+// These are NOT words — they must be excluded from word count and WBW lookup.
+// Unicode ranges:
+//   U+0600–U+0605  Arabic number signs
+//   U+0610–U+061A  Arabic extended (tatweel etc)
+//   U+06D6–U+06DC  Small high Quranic symbols (ۖ ۗ ۘ ۙ ۚ ۛ ۜ)
+//   U+06DE–U+06E4  Rub el hizb, Quranic marks
+//   U+06E7–U+06E8  Quranic marks
+//   U+06E9         Place of sajdah (۩)
+//   U+06EA–U+06ED  Quranic marks
+//   U+08D4–U+08FF  Extended Arabic supplement
+const _QURAN_MARK_ONLY = /^[\u0600-\u0605\u0610-\u061A\u06D6-\u06DC\u06DE-\u06E4\u06E7-\u06E9\u06EA-\u06ED\u08D4-\u08FF]+$/;
+
 export function splitWords(arabicText) {
   return arabicText
     .trim()
     .split(/\s+/)
-    .filter(w => w.length > 0);
+    .filter(w => w.length > 0 && !_QURAN_MARK_ONLY.test(w));
 }
 
 // ── Render ayah as word-by-word interactive HTML ──────────────

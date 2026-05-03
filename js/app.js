@@ -7,9 +7,10 @@ import { initTheme, applyTheme, getTheme,
          applyScript, applyQuranSize, applyTransSize, applyTextSize }
   from './core/theme.js';
 import { getLang, setLang, t }                   from './core/i18n.js';
+import { waitForAuth, getCurrentUid }             from './core/auth.js';
 import { renderWelcomeScreen }                   from './screens/WelcomeScreen.js';
 import { renderOnboardingScreen }                from './screens/OnboardingScreen.js';
-import { renderHomeScreen }                      from './screens/HomeScreen.js';
+import { renderHomeScreen, hydrateLivingAyah }  from './screens/HomeScreen.js';
 import { renderSurahListScreen }                 from './screens/SurahListScreen.js';
 import { renderSessionScreen, updateSessionLang } from './screens/SessionScreen.js';
 import { renderReviewScreen }                    from './screens/ReviewScreen.js';
@@ -95,6 +96,9 @@ window.showScreen = async function(name) {
   if (name === 'review') {
     setTimeout(() => window._loadReviewCard?.(window.APP.lang), 80);
   }
+  if (name === 'home') {
+    hydrateLivingAyah(window.APP.lang).catch(() => {});
+  }
 
   window.updateSidebarNav?.(name);
 
@@ -151,6 +155,8 @@ window.setLang = function(lang) {
   setLang(lang); window.APP.lang = lang;
   document.documentElement.setAttribute('data-lang', lang);
   document.documentElement.setAttribute('dir', lang === 'ur' ? 'rtl' : 'ltr');
+  // Always update lang pills regardless of which screen we're on
+  window.updateSidebarNav?.(document.querySelector('.screen.active')?.dataset?.screen || 'home');
   const cur = document.querySelector('.screen.active')?.dataset?.screen || 'home';
   // Session screen: update lang in-place — don't restart the stage
   if (cur === 'session' && document.getElementById('sess-body')) {
@@ -185,10 +191,44 @@ if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('sw.js').catch(() => {});
 }
 
-function boot() {
+// ── URL param handoff (same pattern as Iqra) ─────────────────
+// Dashboard passes ?theme=dark&lang=ur when opening Mahfooz.
+// We apply these before rendering so the first frame is correct.
+function _applyHandoffParams() {
+  const params = new URLSearchParams(window.location.search);
+
+  const theme = params.get('theme');
+  if (theme && ['dark', 'light', 'system'].includes(theme)) {
+    localStorage.setItem('qwv_theme', theme);
+  }
+
+  const lang = params.get('lang');
+  if (lang && ['en', 'hi', 'ur'].includes(lang)) {
+    localStorage.setItem('qwv_lang', lang);
+  }
+}
+
+async function boot() {
+  // 1. Apply URL handoff params before anything renders
+  _applyHandoffParams();
+
+  // 2. Init theme immediately (no flash)
   initTheme();
+
+  // 3. Wait for Firebase auth — redirects to /login if not signed in
+  //    The boot loader stays visible during this wait (typically < 500ms)
+  let uid;
+  try {
+    uid = await waitForAuth();
+  } catch (e) {
+    // waitForAuth handles redirect — this branch is a safety net only
+    return;
+  }
+
+  // 4. Auth confirmed — set up app state
   const lang = getLang();
   window.APP.lang = lang;
+  window.APP.uid  = uid;
   document.documentElement.setAttribute('data-lang', lang);
   document.documentElement.setAttribute('dir', lang === 'ur' ? 'rtl' : 'ltr');
 
@@ -197,36 +237,26 @@ function boot() {
   const usernameEl = document.getElementById('sidebar-username');
   if (usernameEl && name) usernameEl.textContent = name;
 
+  // 5. Navigate to the correct first screen
   window.showScreen(getStartScreen());
 }
 
 document.addEventListener('DOMContentLoaded', boot);
 
 // ── iOS Audio Unlock ──────────────────────────────────────────
-// iOS Safari blocks Web Audio and HTMLAudioElement.play() until
-// a user gesture has occurred in the tab. We silently unlock on
-// the first touch so all subsequent audio calls work instantly.
+// iOS Safari blocks HTMLAudioElement.play() until a user gesture.
+// We unlock on the first touch using only the HTMLAudioElement
+// path (no AudioContext) to avoid Chrome's autoplay warnings.
 (function iosAudioUnlock() {
   let unlocked = false;
   function unlock() {
     if (unlocked) return;
     unlocked = true;
-    // Create and immediately discard a silent audio buffer.
-    // This satisfies Safari's "user gesture" requirement.
-    try {
-      const ctx = new (window.AudioContext || window.webkitAudioContext)();
-      const buf = ctx.createBuffer(1, 1, 22050);
-      const src = ctx.createBufferSource();
-      src.buffer = buf;
-      src.connect(ctx.destination);
-      src.start(0);
-      ctx.close();
-    } catch (_) {}
-    // Also unlock HTMLAudioElement path
     try {
       const a = new Audio();
       a.src = 'data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQAAAAA=';
-      a.play().catch(() => {});
+      a.volume = 0;
+      a.play().then(() => a.pause()).catch(() => {});
     } catch (_) {}
     document.removeEventListener('touchstart', unlock, true);
     document.removeEventListener('touchend',   unlock, true);

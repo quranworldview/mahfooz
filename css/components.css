@@ -13,9 +13,9 @@
   align-items: center;
   justify-content: space-between;
   padding: 0 18px;
-  position: sticky;
-  top: 0;
+  position: relative;
   z-index: 100;
+  flex-shrink: 0;
   background: var(--bg-overlay);
   border-bottom: 1px solid var(--border);
   backdrop-filter: blur(8px);
@@ -79,17 +79,15 @@
    BOTTOM NAV — clean 4 tabs
    ══════════════════════════════════════════════════════════ */
 .bottom-nav {
-  height: var(--bottomnav-h);
   display: flex;
   align-items: stretch;
   background: var(--bg-overlay);
   border-top: 1px solid var(--border);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
-  position: sticky;
-  bottom: 0;
+  position: relative;
   z-index: 100;
-  padding-bottom: env(safe-area-inset-bottom);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
   flex-shrink: 0;
 }
 .nav-tab {
@@ -425,9 +423,9 @@
   align-items: center;
   gap: 12px;
   padding: 12px 16px;
-  position: sticky;
-  top: 0;
+  position: relative;
   z-index: 100;
+  flex-shrink: 0;
   background: var(--bg-overlay);
   border-bottom: 1px solid var(--border);
   backdrop-filter: blur(8px);

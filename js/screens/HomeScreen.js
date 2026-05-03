@@ -4,6 +4,7 @@
 // ============================================================
 import { t } from '../core/i18n.js';
 import { getStats, getDueCount, getNextAyahForSurah } from '../services/ProgressService.js';
+import { fetchSurah } from '../services/QuranAPI.js';
 
 // ── Load daily gem from JSON ──────────────────────────────────
 let _gems = null;
@@ -87,9 +88,10 @@ export async function renderHomeScreen(lang, userName) {
 
   // Cached ayah text (set when sessions complete)
   const cachedArabic = localStorage.getItem(`mahfooz_ayah_text_${pos.surahNum}_${pos.ayahNum}`)
-    || 'قُلْ هُوَ ٱللَّهُ أَحَدٌ';
+    || '\u0642\u064F\u0644\u0652 \u0647\u064F\u0648\u064E \u0671\u0644\u0644\u064E\u0651\u0647\u064F \u0623\u064E\u062D\u064E\u062F\u064C';
+  // Translation: use cache if available; hydrateLivingAyah() fetches & fills it post-render
   const cachedTrans = localStorage.getItem(`mahfooz_ayah_trans_${pos.surahNum}_${pos.ayahNum}_${lang}`)
-    || (lang==='ur'?'کہو: وہ اللہ ایک ہے۔':lang==='hi'?'कहो: वो अल्लाह एक है।':'Say: He is Allah, the One.');
+    || '<span style="opacity:0.35;font-size:0.8em;">…</span>';
 
   const surahLabel = pos.surahName[lang] || pos.surahName.en;
   const pathLabel  = pathway === 'juz'
@@ -183,7 +185,7 @@ export async function renderHomeScreen(lang, userName) {
             <div class="ayah-arabic" lang="ar" dir="rtl">
               ${buildLivingWords(cachedArabic, pos.surahNum, pos.ayahNum)}
             </div>
-            <div class="ayah-translation ${lang==='ur'?'translation-ur':lang==='hi'?'translation-hi':''}">
+            <div id="home-ayah-trans" class="ayah-translation ${lang==='ur'?'translation-ur':lang==='hi'?'translation-hi':''}">
               ${cachedTrans}
             </div>
             <div style="font-size:0.6875rem;color:var(--ink-3);font-style:italic;
@@ -304,3 +306,43 @@ window.playAyahAudio = function(ayahNum, surahNum) {
   _homeAudio.src = url;
   _homeAudio.play().catch(() => {});
 };
+
+// ── Post-render: fetch & inject correct translation ───────────
+// Called by app.js after HomeScreen HTML is injected into the DOM.
+// If cache hit → instant. If miss → fetch surah, write all 3 langs to cache, update DOM.
+export async function hydrateLivingAyah(lang) {
+  const surahNum = parseInt(localStorage.getItem('mahfooz_current_surah') || '112');
+  const ayahNum  = parseInt(localStorage.getItem('mahfooz_current_ayah')  || '1');
+  const cacheKey = `mahfooz_ayah_trans_${surahNum}_${ayahNum}_${lang}`;
+
+  // If cache already has it, it was already rendered in the template — nothing to do
+  if (localStorage.getItem(cacheKey)) return;
+
+  try {
+    const ayahs = await fetchSurah(surahNum);
+    const ayah  = ayahs.find(a => a.num === ayahNum);
+    if (!ayah) return;
+
+    // Write all 3 languages to cache so future renders are instant
+    ['en', 'hi', 'ur'].forEach(l => {
+      const tr = ayah[`translation_${l}`] || '';
+      if (tr) localStorage.setItem(`mahfooz_ayah_trans_${surahNum}_${ayahNum}_${l}`, tr);
+    });
+
+    // Also cache the Arabic text if it wasn't cached yet
+    const arabicKey = `mahfooz_ayah_text_${surahNum}_${ayahNum}`;
+    if (!localStorage.getItem(arabicKey)) {
+      const ar = ayah.arabic || ayah.arabic_indopak || '';
+      if (ar) localStorage.setItem(arabicKey, ar);
+    }
+
+    // Update the DOM — only if the home screen is still showing
+    const el = document.getElementById('home-ayah-trans');
+    if (el) {
+      const tr = ayah[`translation_${lang}`] || '';
+      if (tr) el.innerHTML = tr;
+    }
+  } catch (e) {
+    console.warn('[Mahfooz] hydrateLivingAyah failed:', e);
+  }
+}

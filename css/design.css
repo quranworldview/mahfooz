@@ -265,6 +265,7 @@ a { color: var(--gold); text-decoration: none; }
 /* Mobile: #app is the viewport container */
 #app {
   height: 100vh;
+  height: 100dvh;
   max-width: 480px;
   margin: 0 auto;
   position: relative;
@@ -278,7 +279,7 @@ a { color: var(--gold); text-decoration: none; }
   display: none;
   flex-direction: column;
   flex: 1;
-  height: 100vh;
+  min-height: 0;
   overflow: hidden;
 }
 .screen.active {
@@ -830,7 +831,17 @@ html[data-lang="hi"] input { font-family: var(--font-hindi); }
   #app-main {
     width: 100%;
     height: 100vh;
+    height: 100dvh;
     overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* Screen fills app-main flex column */
+  #app-main > .screen {
+    flex: 1;
+    min-height: 0;
+    height: auto;
   }
 }
 
@@ -904,12 +915,6 @@ html[data-lang="hi"] input { font-family: var(--font-hindi); }
    into the safe zone using env() with a px fallback.
    ─────────────────────────────────────────────────────────── */
 
-/* Bottom nav — sits above the home indicator */
-.bottom-nav {
-  padding-bottom: env(safe-area-inset-bottom, 0px);
-  height: calc(var(--bottomnav-h) + env(safe-area-inset-bottom, 0px));
-}
-
 /* Topbar — sits below the status bar / notch */
 .topbar {
   padding-top: env(safe-area-inset-top, 0px);
@@ -919,12 +924,6 @@ html[data-lang="hi"] input { font-family: var(--font-hindi); }
 /* Session bar (in-session header) */
 .session-bar {
   padding-top: env(safe-area-inset-top, 0px);
-}
-
-/* Scroll area — must account for bottom safe area so last
-   content isn't hidden behind home indicator */
-.scroll-area {
-  padding-bottom: env(safe-area-inset-bottom, 0px);
 }
 
 /* Prevent native iOS callout menu (magnifier, copy/paste)

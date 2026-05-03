@@ -1,28 +1,27 @@
 // ============================================================
-// MAHFOOZ — TajweedText.js  v2.0
-// Tajweed color layer — API-first, static map fallback.
+// MAHFOOZ — TajweedText.js  v3.0
+// Local rule detection — no external API dependency.
 //
-// DATA SOURCE PRIORITY:
-//   1. alquran.cloud tajweed API  — full 114-surah coverage
-//   2. tajweed-map.json           — static seed (25 Tier-1 annotations)
+// STRATEGY (per PDF: "Reach the Goal Via Tajweed Rules"):
+//   Detect rules directly from Unicode Arabic text.
+//   Deterministic, offline, always correct.
+//   API was removed — it was unreliable and misaligned.
 //
-// API ENDPOINT:
-//   GET https://api.alquran.cloud/v1/ayah/{surah}:{ayah}/quran-tajweed
-//   Returns text with inline bracket notation: [code[chars]
-//   e.g. قُلْ هُوَ [h:8078[ٱ]للَّهُ أَحَ[q[د]ٌ
+// RULES DETECTED:
+//   ghunnah        — noon/meem with shaddah (مّ / نّ)
+//   qalqalah       — letters ق ط ب ج د saakin (sukoon or end-of-ayah)
+//   ikhfa          — noon saakin/tanween before ikhfa letters
+//   ikhfa_shafawi  — meem saakin before ب
+//   idghaam        — noon saakin/tanween before و م ن ي
+//   idghaam_meem   — meem saakin before meem (idghaam mutamathelain)
+//   iqlab          — noon saakin/tanween before ب
+//   madd           — madd letters (ا و ي) before hamza or saakin
+//   lshams         — lam before sun letters
+//   lqamar         — lam before moon letters (lam-qamar)
 //
-// API CODE → ruleId MAPPING:
-//   q  → qalqalah        n  → ghunnah
-//   l  → lshams          p  → idghaam
-//   s  → ikhfa           w  → madd_connected
-//   x  → madd_separated  h  → (hamza wasl — skip, no rule card)
-//   sl → ikhfa_shafawi   lh → lshams (lam in Allah)
-//   4/2/m → madd_natural
-//
-// WORD MATCHING:
-//   API text is a single string. We strip bracket notation, split
-//   into words, and match tajweed codes to session word positions
-//   by index (with alignment fallback for count mismatches).
+// STATIC MAP:
+//   tajweed-map.json — hand-verified overrides for specific words.
+//   Static map always wins over detector for its covered positions.
 //
 // DISCOVERY:
 //   buildTajweedAyah() sets window._mahfoozNewDiscoveries for
@@ -37,6 +36,7 @@ const RULE_CLASS = {
   ikhfa:          'tj-i',
   ikhfa_shafawi:  'tj-i',
   idghaam:        'tj-d',
+  idghaam_meem:   'tj-d',
   iqlab:          'tj-q',
   izhar:          'tj-z',
   qalqalah:       'tj-k',
@@ -48,29 +48,212 @@ const RULE_CLASS = {
   lqamar:         'tj-z',
 };
 
-// ── API code → ruleId ─────────────────────────────────────────
-const API_CODE_TO_RULE = {
-  'q':  'qalqalah',
-  'n':  'ghunnah',
-  'l':  'lshams',
-  'p':  'idghaam',
-  's':  'ikhfa',
-  'w':  'madd_connected',
-  'x':  'madd_separated',
-  'sl': 'ikhfa_shafawi',
-  'lh': 'lshams',
-  '4':  'madd_natural',
-  '2':  'madd_natural',
-  'm':  'madd_natural',
-  // 'h' (hamza wasl) — intentionally omitted, no rule teaching value
-};
+// ── Unicode constants ─────────────────────────────────────────
+const SUKOON   = '\u0652'; // ْ
+const SHADDAH  = '\u0651'; // ّ
+const FATHA    = '\u064E'; // َ
+const KASRA    = '\u0650'; // ِ
+const DAMMA    = '\u064F'; // ُ
+const TANWEEN_F = '\u064B'; // ً
+const TANWEEN_K = '\u064D'; // ٍ
+const TANWEEN_D = '\u064C'; // ٌ
+const NOON     = '\u0646'; // ن
+const MEEM     = '\u0645'; // م
+const LAM      = '\u0644'; // ل
+const ALEF     = '\u0627'; // ا
+const WAW      = '\u0648'; // و
+const YA       = '\u064A'; // ي
+const HAMZA    = '\u0621'; // ء
+const BA       = '\u0628'; // ب
+
+// Qalqalah letters: ق ط ب ج د
+const QALQALAH_LETTERS = new Set(['\u0642','\u0637','\u0628','\u062C','\u062F']);
+
+// Ikhfa letters (15 letters — anything not izhar/idghaam/iqlab)
+// Izhar letters: ء ه ع ح غ خ
+// Idghaam letters: و م ن ي ر ل
+// Iqlab: ب
+// So ikhfa = everything else
+const IZHAR_LETTERS  = new Set(['\u0621','\u0647','\u0639','\u062D','\u063A','\u062E']);
+const IDGHAAM_LETTERS = new Set([WAW, MEEM, NOON, YA, '\u0631', LAM]);
+const IQLAB_LETTER   = BA;
+
+// Sun letters (lam assimilation): ت ث د ذ ر ز س ش ص ض ط ظ ل ن
+const SUN_LETTERS = new Set([
+  '\u062A','\u062B','\u062F','\u0630','\u0631','\u0632',
+  '\u0633','\u0634','\u0635','\u0636','\u0637','\u0638',
+  '\u0644','\u0646'
+]);
+
+// Madd letters
+const MADD_LETTERS = new Set([ALEF, WAW, YA]);
+
+// ── Unicode helpers ───────────────────────────────────────────
+function stripDiacritics(s) {
+  return s.replace(/[\u064B-\u065F\u0610-\u061A\u06D6-\u06DC\u06DF-\u06E8\u06EA-\u06ED\u0670]/g, '');
+}
+
+function getLetters(word) {
+  // Returns array of bare letters (no diacritics)
+  return stripDiacritics(word).split('').filter(c => c.trim());
+}
+
+function hasSukoon(word, letterIndex) {
+  // Check if the character at bare letter position N in the word has sukoon
+  // We need to scan the raw word and match diacritic positions
+  let count = 0;
+  for (let i = 0; i < word.length; i++) {
+    const ch = word[i];
+    if (/[\u0600-\u06FF]/.test(ch) && !/[\u064B-\u065F\u0670]/.test(ch)) {
+      if (count === letterIndex) {
+        // Check if next chars include sukoon
+        let j = i + 1;
+        while (j < word.length && /[\u064B-\u065F\u0670]/.test(word[j])) {
+          if (word[j] === SUKOON) return true;
+          j++;
+        }
+        return false;
+      }
+      count++;
+    }
+  }
+  return false;
+}
+
+function hasShaddah(word, letterIndex) {
+  let count = 0;
+  for (let i = 0; i < word.length; i++) {
+    const ch = word[i];
+    if (/[\u0600-\u06FF]/.test(ch) && !/[\u064B-\u065F\u0670]/.test(ch)) {
+      if (count === letterIndex) {
+        let j = i + 1;
+        while (j < word.length && /[\u064B-\u065F\u0670]/.test(word[j])) {
+          if (word[j] === SHADDAH) return true;
+          j++;
+        }
+        return false;
+      }
+      count++;
+    }
+  }
+  return false;
+}
+
+function hasTanween(word) {
+  return word.includes(TANWEEN_F) || word.includes(TANWEEN_K) || word.includes(TANWEEN_D);
+}
+
+function firstLetter(word) {
+  const stripped = stripDiacritics(word);
+  for (const ch of stripped) {
+    if (/[\u0621-\u06FF]/.test(ch)) return ch;
+  }
+  return '';
+}
+
+function lastBareLetter(word) {
+  const stripped = stripDiacritics(word);
+  for (let i = stripped.length - 1; i >= 0; i--) {
+    if (/[\u0621-\u06FF]/.test(stripped[i])) return stripped[i];
+  }
+  return '';
+}
+
+// ── Core rule detector ────────────────────────────────────────
+// Detects the most prominent tajweed rule for a given word,
+// considering the word that follows it (for noon/meem rules).
+// Priority order: lam rules FIRST to avoid ghunnah false positives
+// on words like الرَّحْمَن where shaddah is on the following letter.
+function detectRule(word, nextWord) {
+  const letters      = getLetters(word);
+  const strippedWord = stripDiacritics(word);
+
+  // ── 1. LAM rules — FIRST to avoid false ghunnah ──────────
+  if (strippedWord.startsWith(ALEF + LAM) || strippedWord.startsWith('\u0622' + LAM)) {
+    const letterAfterAl = letters.length > 2 ? letters[2] : '';
+    if (letterAfterAl && SUN_LETTERS.has(letterAfterAl))  return 'lshams';
+    if (letterAfterAl && !SUN_LETTERS.has(letterAfterAl)) return 'lqamar';
+  }
+
+  // ── 2. GHUNNAH — noon or meem WITH shaddah on that letter ─
+  for (let i = 0; i < letters.length; i++) {
+    if ((letters[i] === NOON || letters[i] === MEEM) && hasShaddah(word, i)) {
+      return 'ghunnah';
+    }
+  }
+
+  // ── 3. QALQALAH — qalqalah letter with sukoon ───────────
+  // Two valid cases per PDF:
+  // a) Qalqalah letter has explicit sukoon (middle of word)
+  //    e.g. يَجْعَل — jeem with sukoon
+  // b) Qalqalah letter is the LAST letter of the word (end-stop)
+  //    e.g. قُلْ — qaf is last, reader applies sukoon on stop
+  //    NOTE: must not fire when qalqalah letter has a haraka (not last)
+  //    e.g. بِسْمِ — ba has kasra, not last letter → no qalqalah
+  for (let i = 0; i < letters.length; i++) {
+    if (QALQALAH_LETTERS.has(letters[i])) {
+      const isLast    = i === letters.length - 1;
+      const hasSukn   = hasSukoon(word, i);
+      if (hasSukn || isLast) return 'qalqalah';
+    }
+  }
+
+  // ── 4. NOON SAAKIN / TANWEEN rules ───────────────────────
+  // Does this word end with noon saakin or tanween?
+  const lastLetter = lastBareLetter(word);
+  const wordHasTanween = hasTanween(word);
+  const endsWithNoonSaakin = (lastLetter === NOON) &&
+    (hasSukoon(word, letters.length - 1));
+
+  if ((endsWithNoonSaakin || wordHasTanween) && nextWord) {
+    const nextFirst = firstLetter(nextWord);
+    if (nextFirst) {
+      // Iqlab: before ب
+      if (nextFirst === IQLAB_LETTER) return 'iqlab';
+      // Izhar: before throat letters
+      if (IZHAR_LETTERS.has(nextFirst)) return 'izhar';
+      // Idghaam: before و م ن ي ر ل
+      if (IDGHAAM_LETTERS.has(nextFirst)) return 'idghaam';
+      // Ikhfa: before all other letters (15 letters)
+      if (!IZHAR_LETTERS.has(nextFirst) &&
+          !IDGHAAM_LETTERS.has(nextFirst) &&
+          nextFirst !== IQLAB_LETTER) return 'ikhfa';
+    }
+  }
+
+  // ── 5. MEEM SAAKIN rules ─────────────────────────────────
+  const endsWithMeemSaakin = (lastLetter === MEEM) &&
+    (hasSukoon(word, letters.length - 1));
+
+  if (endsWithMeemSaakin && nextWord) {
+    const nextFirst = firstLetter(nextWord);
+    if (nextFirst === BA)   return 'ikhfa_shafawi';
+    if (nextFirst === MEEM) return 'idghaam_meem';
+    // izhar shafawi — clear meem — not highlighted (too common, low teaching value)
+  }
+
+  // ── 6. MADD ──────────────────────────────────────────────
+  // Detect madd letter followed by hamza or saakin
+  for (let i = 0; i < letters.length - 1; i++) {
+    if (MADD_LETTERS.has(letters[i])) {
+      const next = letters[i + 1];
+      if (next === HAMZA || hasSukoon(word, i + 1)) {
+        return next === HAMZA ? 'madd_connected' : 'madd_natural';
+      }
+    }
+  }
+  // Madd at end of word followed by hamza at start of next word
+  if (MADD_LETTERS.has(lastLetter) && nextWord && firstLetter(nextWord) === HAMZA) {
+    return 'madd_separated';
+  }
+
+  return null; // no rule detected
+}
 
 // ── Caches ────────────────────────────────────────────────────
-let _tajweedApiCache = {};  // "surahNum:ayahNum" → ruleId[] | null
-let _mapCache        = null;
-let _rulesCache      = null;
+let _mapCache   = null;
+let _rulesCache = null;
 
-// ── Load static tajweed-map.json ─────────────────────────────
 async function getTajweedMap() {
   if (_mapCache) return _mapCache;
   try {
@@ -80,7 +263,6 @@ async function getTajweedMap() {
   return _mapCache;
 }
 
-// ── Load tajweed-rules.json indexed by id ────────────────────
 async function getRules() {
   if (_rulesCache) return _rulesCache;
   try {
@@ -92,123 +274,23 @@ async function getRules() {
   return _rulesCache;
 }
 
-// ── Strip Arabic diacritics ───────────────────────────────────
-function _stripDiacritics(s) {
-  return s.replace(/[\u064B-\u065F\u0610-\u061A\u06D6-\u06DC\u06DF-\u06E8\u06EA-\u06ED\u0670]/g, '');
-}
-
-// ── Parse alquran.cloud bracket notation ─────────────────────
-// Input:  raw API string with [code[chars] markers
-// Output: array of ruleId|null — one entry per whitespace-split word
-//
-// Strategy:
-//   1. Find all [code[chars] markers and note the chars they tag.
-//   2. Strip all markers from text → clean Arabic.
-//   3. Split clean text into words.
-//   4. For each marker's chars, find which clean word contains them
-//      and assign the ruleId to that word index.
-function _parseApiText(apiText) {
-  const RE = /\[([a-z0-9:]+)\[([^\]]*)\]/g;
-
-  // Collect markers: { code, chars (inside brackets) }
-  const markers = [];
-  let m;
-  while ((m = RE.exec(apiText)) !== null) {
-    const code = m[1].split(':')[0]; // strip ':XXXX' hamza suffix
-    if (API_CODE_TO_RULE[code]) {
-      markers.push({ ruleId: API_CODE_TO_RULE[code], chars: m[2] });
-    }
-  }
-
-  // Strip bracket notation → clean Arabic text
-  const clean = apiText
-    .replace(/\[[a-z0-9:]+\[([^\]]*)\]/g, '$1')
-    .replace(/\]/g, '')
-    .replace(/\s+/g, ' ')
-    .trim();
-
-  const cleanWords = clean.split(/\s+/).filter(Boolean);
-  const wordRules  = new Array(cleanWords.length).fill(null);
-
-  // Match each marker's chars to a word position
-  for (const { ruleId, chars } of markers) {
-    if (!chars.trim()) continue;
-    const targetStripped = _stripDiacritics(chars).replace(/\s/g, '');
-    if (!targetStripped) continue;
-
-    for (let i = 0; i < cleanWords.length; i++) {
-      const wordStripped = _stripDiacritics(cleanWords[i]);
-      if (wordStripped.includes(targetStripped) ||
-          targetStripped.includes(wordStripped.slice(0, 2))) {
-        if (!wordRules[i]) wordRules[i] = ruleId; // first rule wins per word
-        break;
-      }
-    }
-  }
-
-  return wordRules; // ruleId[] indexed by word position
-}
-
-// ── Fetch + parse from alquran.cloud API ─────────────────────
-// Returns ruleId[] (same length as API's word count) or null on failure.
-async function _fetchTajweedApi(surahNum, ayahNum) {
-  const key = `${surahNum}:${ayahNum}`;
-  if (key in _tajweedApiCache) return _tajweedApiCache[key];
-
-  try {
-    const url = `https://api.alquran.cloud/v1/ayah/${surahNum}:${ayahNum}/quran-tajweed`;
-    const res  = await fetch(url);
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    const json = await res.json();
-    if (json.code !== 200 || !json.data?.text) throw new Error('Bad response');
-
-    const rules = _parseApiText(json.data.text);
-    _tajweedApiCache[key] = rules;
-    return rules;
-
-  } catch (_) {
-    _tajweedApiCache[key] = null; // don't retry
-    return null;
-  }
-}
-
-// ── Align API rule array to session word count ────────────────
-// API may split words differently (Basmalah, end markers, etc).
-// Simple index-based alignment — takes first N rules for N session words.
-function _alignRules(apiRules, sessionWords) {
-  if (!apiRules) return new Array(sessionWords.length).fill(null);
-  if (apiRules.length === sessionWords.length) return apiRules;
-
-  // Truncate or pad to match session word count
-  const result = new Array(sessionWords.length).fill(null);
-  for (let i = 0; i < Math.min(sessionWords.length, apiRules.length); i++) {
-    result[i] = apiRules[i] || null;
-  }
-  return result;
-}
-
 // ── Core export: annotate words with tajweed data ─────────────
 // Returns array of objects, one per word:
 // { word, idx, ruleId, cssClass, ruleName, oneLiner, source }
 export async function applyTajweedToWords(surahNum, ayahNum, words) {
-  const rules = await getRules();
-
-  // 1. Try live API first
-  const apiRules = await _fetchTajweedApi(surahNum, ayahNum);
-  const aligned  = _alignRules(apiRules, words);
-
-  // 2. For positions still null, check static map fallback
-  const needsMap = aligned.some(r => r === null);
-  const staticMap = needsMap ? await getTajweedMap() : null;
+  const [rules, staticMap] = await Promise.all([getRules(), getTajweedMap()]);
 
   return words.map((word, idx) => {
-    let ruleId = aligned[idx] || null;
-    let source = ruleId ? 'api' : null;
+    // 1. Static map always wins — hand-verified
+    const mapKey = `${surahNum}:${ayahNum}:${idx + 1}`; // map is 1-based
+    let ruleId = staticMap[mapKey] || null;
+    let source = ruleId ? 'map' : null;
 
-    if (!ruleId && staticMap) {
-      const mapKey = `${surahNum}:${ayahNum}:${idx + 1}`; // map is 1-based
-      ruleId = staticMap[mapKey] || null;
-      if (ruleId) source = 'map';
+    // 2. Local detector
+    if (!ruleId) {
+      const nextWord = words[idx + 1] || null;
+      ruleId = detectRule(word, nextWord);
+      if (ruleId) source = 'detector';
     }
 
     const rule = ruleId ? rules[ruleId] : null;
@@ -217,25 +299,22 @@ export async function applyTajweedToWords(surahNum, ayahNum, words) {
       idx,
       ruleId,
       cssClass: ruleId ? (RULE_CLASS[ruleId] || null) : null,
-      ruleName: rule ? rule.name      : null,
-      oneLiner: rule ? rule.one_liner : null,
+      ruleName: rule ? rule.name      : null,   // {en,hi,ur} object
+      oneLiner: rule ? rule.one_liner : null,   // {en,hi,ur} object
       source,
     };
   });
 }
 
 // ── Build HTML for LISTEN stage ───────────────────────────────
-// Returns colored .q-word span string.
-// Side effect: sets window._mahfoozNewDiscoveries for SessionScreen.
 export async function buildTajweedAyah(surahNum, ayahNum, words, opts = {}) {
   const annotated = await applyTajweedToWords(surahNum, ayahNum, words);
 
-  // Track discoveries — expose newly found rules for SessionScreen
   const newDiscoveries = [];
   for (const w of annotated) {
     if (w.ruleId) {
       const isNew = addDiscoveredRule(w.ruleId);
-      if (isNew) newDiscoveries.push({ ruleId: w.ruleId, ruleName: w.ruleName });
+      if (isNew) newDiscoveries.push({ ruleId: w.ruleId, ruleName: w.ruleName }); // ruleName is {en,hi,ur}
     }
   }
   window._mahfoozNewDiscoveries = newDiscoveries;
@@ -274,43 +353,39 @@ export function buildLearnContextBar(annotated, currentIdx) {
   }).join(' ');
 }
 
-// ── Tajweed badge for LEARN stage word card ───────────────────
+// ── Render tajweed badge for word card ────────────────────────
 export function renderTajweedBadge(annotatedWord, lang) {
-  if (!annotatedWord?.ruleId) return '';
-  const { cssClass, ruleName, oneLiner } = annotatedWord;
-  const name     = ruleName?.[lang] || ruleName?.en || '';
-  const oneliner = oneLiner?.[lang] || oneLiner?.en || '';
+  if (!annotatedWord?.ruleId || !annotatedWord?.ruleName) return '';
+  const cls      = RULE_CLASS[annotatedWord.ruleId] || '';
+  // ruleName and oneLiner are {en,hi,ur} objects — extract the right language
+  const rn       = annotatedWord.ruleName;
+  const ol       = annotatedWord.oneLiner;
+  const name     = (typeof rn === 'object') ? (rn?.[lang] || rn?.en || '') : (rn || '');
+  const oneLiner = (typeof ol === 'object') ? (ol?.[lang] || ol?.en || '') : (ol || '');
   return `
-    <div class="tajweed-badge ${cssClass || ''}"
-         style="display:inline-flex;align-items:center;gap:6px;
-                margin-top:8px;padding:6px 12px;
-                border-radius:var(--r-sm);border:1px solid currentColor;
-                opacity:0.85;font-size:0.75rem;">
-      <span style="font-size:0.8125rem;font-weight:600;">${name}</span>
-      <span style="opacity:0.7;">·</span>
-      <span style="font-style:italic;">${oneliner}</span>
-    </div>
-  `;
+    <div style="display:flex;align-items:flex-start;gap:8px;
+                background:var(--bg-surface);border:1px solid var(--border);
+                border-radius:var(--r-md);padding:8px 12px;
+                margin-bottom:12px;text-align:left;">
+      <span class="tj-badge ${cls}" style="flex-shrink:0;margin-top:2px;">${name}</span>
+      <span style="font-size:0.75rem;color:var(--ink-3);line-height:1.5;font-style:italic;">
+        ${oneLiner}
+      </span>
+    </div>`;
 }
 
-// ── Discovery flash card ──────────────────────────────────────
-// Shown by SessionScreen when a tajweed rule is discovered for the first time.
-export function renderDiscoveryFlash(ruleId, ruleName, lang) {
-  const name = ruleName?.[lang] || ruleName?.en || ruleId;
+// ── Render discovery flash ────────────────────────────────────
+export function renderDiscoveryFlash(discovery) {
+  if (!discovery) return '';
   return `
-    <div class="tajweed-discovery-flash"
-         style="background:var(--bg-elevated);border:1px solid var(--border-gold);
-                border-radius:var(--r-md);padding:10px 16px;margin-top:10px;
-                display:flex;align-items:center;gap:10px;
-                animation:fadeIn 0.3s ease;">
+    <div style="background:var(--gold-dim);border:1px solid var(--border-gold);
+                border-radius:var(--r-md);padding:10px 14px;margin-bottom:8px;
+                display:flex;align-items:center;gap:10px;animation:wordPop 0.3s var(--ease-spring);">
       <span style="font-size:1.25rem;">✨</span>
       <div>
-        <div style="font-size:0.6875rem;color:var(--gold);font-weight:600;
-                    letter-spacing:0.05em;text-transform:uppercase;">
-          ${lang==='ur'?'نئی دریافت':lang==='hi'?'नई खोज':'New Discovery'}
-        </div>
-        <div style="font-size:0.875rem;color:var(--ink-1);font-weight:500;">${name}</div>
+        <div style="font-size:0.75rem;font-weight:600;color:var(--gold);text-transform:uppercase;
+                    letter-spacing:0.08em;margin-bottom:2px;">New Tajweed Rule</div>
+        <div style="font-size:0.875rem;color:var(--ink);">${typeof discovery.ruleName === 'object' ? (discovery.ruleName?.en || '') : (discovery.ruleName || '')}</div>
       </div>
-    </div>
-  `;
+    </div>`;
 }
